@@ -64,7 +64,7 @@
     "@types/react-dom": "16.9.0",
     "@types/react-helmet": "5.0.9",
     "@types/react-syntax-highlighter": "10.2.1",
-    "@types/styled-components": "4.1.18",
+    "@types/styled-components": "4.1.19",
     "@typescript-eslint/eslint-plugin": "2.1.0",
     "@typescript-eslint/parser": "2.1.0",
     "eslint": "6.2.2",
