@@ -1343,9 +1343,9 @@
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.0.tgz#d11813b9c0ff8aaca29f04cbc12817f4c7d656e5"
 
-"@types/node@12.12.15":
-  version "12.12.15"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.15.tgz#8dfb6ce22fedd469128137640a3aa8f17415422f"
+"@types/node@12.12.16":
+  version "12.12.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.16.tgz#3ebcbd7bf978fa4c5120fee8be57083271a8b3ac"
 
 "@types/prop-types@*":
   version "15.7.1"
