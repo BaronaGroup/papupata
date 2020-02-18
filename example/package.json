@@ -5,7 +5,7 @@
   "dependencies": {
     "@types/jest": "25.1.2",
     "@types/node": "12.12.21",
-    "@types/react": "16.9.19",
+    "@types/react": "16.9.20",
     "@types/react-dom": "16.9.5",
     "body-parser": "1.19.0",
     "papupata": "..",
