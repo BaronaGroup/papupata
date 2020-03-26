@@ -27,7 +27,7 @@
     "gulp": "4.0.2",
     "gulp-clean": "0.4.0",
     "gulp-typescript": "5.0.1",
-    "jest": "25.2.2",
+    "jest": "25.2.3",
     "npm-release": "1.0.0",
     "prettier": "2.0.2",
     "request": "2.88.2",
