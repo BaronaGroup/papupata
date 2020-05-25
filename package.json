@@ -13,7 +13,7 @@
     "name": "Tapani Haka"
   },
   "devDependencies": {
-    "lerna": "3.21.0",
+    "lerna": "3.22.0",
     "prettier": "2.0.5"
   }
 }
