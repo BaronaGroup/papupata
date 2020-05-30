@@ -29,7 +29,7 @@
     "request": "2.88.2",
     "request-promise": "4.2.5",
     "supertest": "4.0.2",
-    "ts-jest": "26.0.0",
+    "ts-jest": "26.1.0",
     "typescript": "3.9.3"
   },
   "dependencies": {
