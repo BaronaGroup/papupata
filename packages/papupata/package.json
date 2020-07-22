@@ -27,7 +27,7 @@
     "jest": "26.1.0",
     "npm-release": "1.0.0",
     "request": "2.88.2",
-    "request-promise": "4.2.5",
+    "request-promise": "4.2.6",
     "supertest": "4.0.2",
     "ts-jest": "26.1.3",
     "typescript": "3.9.7"
