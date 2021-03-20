@@ -29,18 +29,24 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
     return valueAsArray.map((item) => convertValue(name, item, targetType[0], mode))
   }
 
+  const singleValue = Array.isArray(value) ? value[0] : value
+
   switch (targetType) {
     case Boolean: {
-      const bool = Array.isArray(value) ? value[0] : value
+      const bool = singleValue
       if (bool !== 'false' && bool !== 'true' && bool !== '' && (bool !== undefined || mode !== Mode.LEGACY_BOOL)) {
         throw new PapupataValidationError(`${bool} is not a valid boolean for ${name}`)
       }
       return bool === 'true'
     }
     case String: {
-      const str = Array.isArray(value) ? value[0] : value
-      return str
+      return singleValue
     }
+    case Number:
+      if (!singleValue.match(/^(-|\+)?(\d+)(\.\d+)?$/)) {
+        throw new PapupataValidationError(`${singleValue} is not a valid number for ${name}`)
+      }
+      return +singleValue
     default:
       throw new Error('Type conversion to ' + targetType + ' not supported.')
   }

@@ -10,7 +10,7 @@ const getUniquePath = (function () {
 })()
 
 const API = new APIDeclaration()
-describe('typed-queries/boolean', function () {
+describe('typed-queries/number', function () {
   const testServer = prepareTestServerFor(API)
 
   beforeAll(() => {
@@ -22,90 +22,67 @@ describe('typed-queries/boolean', function () {
   })
 
   describe('single', function () {
-    it('client, value true', async function () {
+    it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path).query({ q1: Boolean }).response<string>()
+      const api = API.declareGetAPI(path).query({ q1: Number }).response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1))
 
       // When
-      const response = await api({ q1: true })
+      const response = await api({ q1: 5 })
 
       // Then
-      expect(response).toEqual('Value: true')
+      expect(response).toEqual('Value: 5')
     })
 
-    it('client, value false', async function () {
+    it('server and client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path).query({ q1: Boolean }).response<string>()
-      testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1))
-
-      // When
-      const response = await api({ q1: false })
-
-      // Then
-      expect(response).toEqual('Value: false')
-    })
-
-    it('server and client (true)', async function () {
-      const path = getUniquePath()
-      const api = API.declareGetAPI(path).query({ q1: Boolean }).response<string>()
+      const api = API.declareGetAPI(path).query({ q1: Number }).response<string>()
       api.implement((req) => `Value: ${req.query.q1}, ${typeof req.query.q1}`)
 
       // When
-      const response = await api({ q1: true })
+      const response = await api({ q1: 9 })
 
       // Then
-      expect(response).toEqual('Value: true, boolean')
-    })
-
-    it('server and client (false)', async function () {
-      const path = getUniquePath()
-      const api = API.declareGetAPI(path).query({ q1: Boolean }).response<string>()
-      api.implement((req) => `Value: ${req.query.q1}, ${typeof req.query.q1}`)
-
-      // When
-      const response = await api({ q1: false })
-
-      // Then
-      expect(response).toEqual('Value: false, boolean')
+      expect(response).toEqual('Value: 9, number')
     })
 
     it('server only accepts one if sent many', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path).query({ q1: Boolean }).response<string>()
+      const api = API.declareGetAPI(path).query({ q1: Number }).response<string>()
       api.implement((req) => `Value: ${req.query.q1}`)
 
       // When
-      const response = await requestPromise.get(api.getURL({}) + '?q1=true&q1=false')
+      const response = await requestPromise.get(api.getURL({}) + '?q1=8&q1=9')
 
       // Then
-      expect(response).toEqual('Value: true')
+      expect(response).toEqual('Value: 8')
     })
 
     it('server rejects invalid values', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path).query({ q1: Boolean }).response<string>()
+      const api = API.declareGetAPI(path).query({ q1: Number }).response<string>()
       api.implement((req) => `Value: ${req.query.q1}`)
 
       await expect(requestPromise.get(api.getURL({}) + '?q1=banana')).rejects.toMatchObject({
-        message: /banana is not a valid boolean for q1/,
+        message: /banana is not a valid Number for q1/,
       })
     })
+    
     it('optional (value present)', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path).optionalQuery({ q1: Boolean }).response<string>()
+      const api = API.declareGetAPI(path).optionalQuery({ q1: Number }).response<string>()
       api.implement((req) => `Value: ${req.query.q1}`)
 
       // When
-      const response = await api({ q1: false })
+      const response = await api({ q1: 10 })
 
       // Then
-      expect(response).toEqual('Value: false')
+      expect(response).toEqual('Value: 10')
     })
 
     it('optional (value missing)', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path).optionalQuery({ q1: Boolean }).response<string>()
+      const api = API.declareGetAPI(path).optionalQuery({ q1: Number }).response<string>()
       api.implement((req) => `Value: ${req.query.q1}`)
 
       // When
@@ -120,49 +97,49 @@ describe('typed-queries/boolean', function () {
     it('client', async function () {
       const path = getUniquePath()
       const api = API.declareGetAPI(path)
-        .query({ q1: [Boolean] })
+        .query({ q1: [Number] })
         .response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1.join('*')))
 
       // When
-      const response = await api({ q1: [false, true] })
+      const response = await api({ q1: [11, 12] })
 
       // Then
-      expect(response).toEqual('Value: false*true')
+      expect(response).toEqual('Value: 11*12')
     })
 
     it('server', async function () {
       const path = getUniquePath()
       const api = API.declareGetAPI(path)
-        .query({ q1: [Boolean] })
+        .query({ q1: [Number] })
         .response<string>()
       api.implement((req) => `Value: ${req.query.q1.join('*')} ${req.query.q1.map((q) => typeof q).join('*')}`)
 
       // When
-      const response = await api({ q1: [false, true, false] })
+      const response = await api({ q1: [13, 14] })
 
       // Then
-      expect(response).toEqual('Value: false*true*false boolean*boolean*boolean')
+      expect(response).toEqual('Value: 13*14 number*number')
     })
 
     it('optional (value present)', async function () {
       const path = getUniquePath()
       const api = API.declareGetAPI(path)
-        .optionalQuery({ q1: [Boolean] })
+        .optionalQuery({ q1: [Number] })
         .response<string>()
       api.implement((req) => `Value: ${req.query.q1?.join('*')} ${req.query.q1?.map((q) => typeof q).join('*')}`)
 
       // When
-      const response = await api({ q1: [false, true, false] })
+      const response = await api({ q1: [15, 16] })
 
       // Then
-      expect(response).toEqual('Value: false*true*false boolean*boolean*boolean')
+      expect(response).toEqual('Value: 15*16 number*number')
     })
 
     it('optional (value missing)', async function () {
       const path = getUniquePath()
       const api = API.declareGetAPI(path)
-        .optionalQuery({ q1: [Boolean] })
+        .optionalQuery({ q1: [Number] })
         .response<string>()
       api.implement((req) => `Value: ${req.query.q1?.join('*')}`)
 
