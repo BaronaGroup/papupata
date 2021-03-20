@@ -9,7 +9,7 @@ export interface PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, Rou
     query: QueryType
   ): PartiallyDeclaredAPIAtQuery<readonly [], QueryType, RequestOptions, RequestType, RouteOptions>
   /** @deprecated */
-  query<QueryType extends string[]>(
+  query<QueryType extends readonly string[]>(
     query: QueryType
   ): PartiallyDeclaredAPIAtQuery<
     readonly [],
