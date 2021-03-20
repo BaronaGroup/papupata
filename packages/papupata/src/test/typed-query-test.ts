@@ -58,8 +58,31 @@ describe('typed-query-test', function () {
         // Then
         expect(response).toEqual('Value: alpha')
       })
-      it.todo('optional')
+      it('optional (value present)', async function () {
+        const path = getUniquePath()
+        const api = API.declareGetAPI(path).optionalQuery({ q1: String }).response<string>()
+        api.implement((req) => `Value: ${req.query.q1}`)
+
+        // When
+        const response = await api({ q1: 'hello' })
+
+        // Then
+        expect(response).toEqual('Value: hello')
+      })
+
+      it('optional (value missing)', async function () {
+        const path = getUniquePath()
+        const api = API.declareGetAPI(path).optionalQuery({ q1: String }).response<string>()
+        api.implement((req) => `Value: ${req.query.q1}`)
+
+        // When
+        const response = await api({})
+
+        // Then
+        expect(response).toEqual('Value: undefined')
+      })
     })
+
     describe('array', function () {
       it.todo('client')
       it.todo('server')
