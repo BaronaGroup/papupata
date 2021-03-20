@@ -18,7 +18,6 @@ export default function handleQueryParameterTypes(query: any, types: TypedQueryT
 
 function convertValue(name: string, value: any, targetType: any, mode: Mode): any {
   if (mode === Mode.OPTIONAL && value === undefined) return undefined
-  console.log(value, targetType)
   if (!targetType) return value
 
   if (Array.isArray(targetType)) {

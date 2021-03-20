@@ -59,9 +59,7 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
         api.apiUrlParameters.optionalQuery,
         Mode.OPTIONAL
       )
-
-      console.log('RQ', req.query, api.apiUrlParameters)
-
+    
       resp = await api.implementation(req, res)
     }
 
