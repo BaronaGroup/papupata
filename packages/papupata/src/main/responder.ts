@@ -254,13 +254,9 @@ export function responder<
         }
 
         if (!impl) {
-          if (parent.getConfig()?.autoImplementAllAPIs !== false && !papupataOptions.disableAutoImplement) {
-            res.status(501)
-            res.send('Not implemented')
-          } else {
+          if (parent.getConfig()?.autoImplementAllAPIs === false || papupataOptions.disableAutoImplement) {
             return next()
           }
-          return
         }
         try {
           const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
@@ -295,8 +291,13 @@ export function responder<
         }
 
         async function getImplVal() {
-          const unmappedValue = await impl(req as any, res)
-          return mapper ? await mapper(unmappedValue) : unmappedValue
+          if (!impl) {
+            res.status(501)
+            res.send('Not implemented')
+          } else {
+            const unmappedValue = await impl(req as any, res)
+            return mapper ? await mapper(unmappedValue) : unmappedValue
+          }
         }
       }
 
