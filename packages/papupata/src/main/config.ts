@@ -20,6 +20,8 @@ export type MakeRequestAdapter<RequestOptions = void> = (
 
 export interface Config<RequestType = void, RouteOptions = void, RequestOptions = void> {
   baseURL?: string
+  requestAdapter?: MakeRequestAdapter<RequestOptions>
+  /** @deprecated Use the field requestAdapter instead */
   makeRequest?: MakeRequestAdapter<RequestOptions>
   router?: Router
   routerAt?: string

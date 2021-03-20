@@ -41,6 +41,7 @@ Other:
 
 - boolQuery is now deprecated; use query or optionalQuery with the boolean type instead
 - query and optionalQuery with string array parameters are now deprecated, though jsdoc does not indicate them as such as we cannot deprecate only some overloads
+- the configuration option "makeRequest" has been deprecated in favor of "requestAdapter"; this is just a rename however.
 
   1.8.1
 

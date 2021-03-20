@@ -150,11 +150,14 @@ export function responder<
         }
 
         const config = parent.getConfig()
-        if (!config || !config.makeRequest) throw new Error('Request adapter not configured')
+        const requestAdapter = config?.requestAdapter ?? config?.makeRequest
+        if (!requestAdapter) throw new Error('Request adapter not configured')
+        if (config?.requestAdapter && config.makeRequest)
+          throw new Error('Cannot have makeRequest and requestAdapter configured at the same time.')
 
         const pathWithParams = getURL(reqParams as any)
 
-        return config.makeRequest(method, pathWithParams, reqQuery, reqBody, reqParams, call, requestOptions)
+        return requestAdapter(method, pathWithParams, reqQuery, reqBody, reqParams, call, requestOptions)
       }
 
       function isValidAsNonBodyRequestData(obj: any) {
