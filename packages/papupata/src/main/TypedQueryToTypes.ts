@@ -1,4 +1,4 @@
-import { regexStringToken } from '../customQueryTypes'
+import { integerToken, regexStringToken } from '../customQueryTypes'
 
 type GetType<T> = T extends { new (...args: any): any }
   ? InstanceType<T> extends String
@@ -12,6 +12,8 @@ type GetType<T> = T extends { new (...args: any): any }
     : never
   : T extends { type: typeof regexStringToken; regex: RegExp }
   ? string
+  : T extends { type: typeof integerToken }
+  ? number
   : never
 
 type SingleMapper<T> = T extends { new (...args: any): any } | { type: any }
