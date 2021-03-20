@@ -40,6 +40,17 @@
   },
   "main": "dist/main/index",
   "types": "dist/main/index.d.ts",
+  "exports": {
+    ".": "./dist/main/index.js",
+    "./queryTypes": "./dist/main/customQueryTypes.js",
+    "./adapters/fetch": "./dist/main/fetchAdapter.js",
+    "./adapters/invokeImplementation": "./dist/main/invokeImplementationAdapter.js",
+    "./adapters/requestPromise": "./dist/main/requestPromiseAdapter.js",
+    "./adapters/supertest": "./dist/main/supertestAdapter.js",
+    "./invokers/supertest": "./dist/main/supertestInvoker.js",
+    "./invokers/test": "./dist/main/testInvoker.js",
+    "./ValidationError": "./dist/main/PapupataValidationError"
+  },
   "scripts": {
     "build": "npx tsc --project tsconfig.json",
     "clean": "rm -rf ./dist",

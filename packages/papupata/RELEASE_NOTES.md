@@ -7,6 +7,20 @@ Breaking changes:
 - PapupataValidationError is throw on server if required query parameters are missing
 - While arrays were not supported in a reasonable way, the values were not processed in any way and qs has in practice probably added them amongst the query parameters,
   though they could be not accessed with types. Now anything declared to be a string is exactly one string.
+- Deep imports have been completely changed; see the mapping below for what needs to be changed and how. If you had something like `import adapter from 'papupata/dist/main/fetchAdapter`
+  you'll have to change it to `import adapter from 'papupata/adapters/fetch`
+
+  "exports": {
+  ".": "./dist/main/index.js",
+  "./queryTypes": "./dist/main/customQueryTypes.js",
+  "./adapters/fetch": "./dist/main/fetchAdapter.js",
+  "./adapters/invokeImplementation": "./dist/main/invokeImplementationAdapter.js",
+  "./adapters/requestPromise": "./dist/main/requestPromiseAdapter.js",
+  "./adapters/supertest": "./dist/main/supertestAdapter.js",
+  "./invokers/supertest": "./dist/main/supertestInvoker.js",
+  "./invokers/test": "./dist/main/testInvoker.js",
+  "./ValidationError": "./dist/main/PapupataValidationError"
+  },
 
 Bug fixes:
 
