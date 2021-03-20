@@ -32,6 +32,9 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
 
   const singleValue = Array.isArray(value) ? value[0] : value
 
+  if (typeof singleValue !== 'string' && mode !== Mode.LEGACY_BOOL)
+    throw new Error(`Query parameters must be strings; got a ${typeof singleValue} (${singleValue})`)
+
   switch (targetType) {
     case Boolean: {
       const bool = singleValue
