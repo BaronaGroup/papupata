@@ -1,9 +1,15 @@
 import { Request as ExpressRequest, RequestHandler, Response } from 'express'
 import { PapupataMiddleware, TypedRequest } from '.'
+import { regexStringToken } from '../customQueryTypes'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
 import { ActualTypeMap, Method, StringTupleElementTypes } from './types'
 
-type TypedQueryFieldType = typeof String | typeof Number | typeof Boolean | typeof Date
+type TypedQueryFieldType =
+  | typeof String
+  | typeof Number
+  | typeof Boolean
+  | typeof Date
+  | { type: typeof regexStringToken; regex: RegExp }
 
 export type TypedQueryType = {
   [key: string]: TypedQueryFieldType | [TypedQueryFieldType]
