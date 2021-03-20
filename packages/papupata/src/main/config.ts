@@ -1,6 +1,11 @@
 import { Application, Router, Response } from 'express'
 import { Method } from './types'
 
+export enum ValidationBehavior {
+  THROW = 'THROW',
+  REROUTE = 'REROUTE',
+}
+
 export type PapupataMiddleware<RequestType, RouteOptions> = (
   req: RequestType,
   res: Response,
@@ -28,8 +33,10 @@ export interface Config<RequestType = void, RouteOptions = void, RequestOptions 
   app?: Application
   inherentMiddleware?: Array<PapupataMiddleware<RequestType, RouteOptions>>
   autoImplementAllAPIs?: boolean
+  validationBehavior?: ValidationBehavior
 }
 
 export interface PapupataRouteOptions {
   disableAutoImplement?: boolean
+  validationBehavior?: ValidationBehavior
 }

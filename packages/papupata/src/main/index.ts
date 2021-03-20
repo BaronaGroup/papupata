@@ -52,6 +52,10 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
     }
   }
 
+  public updateConfig(config: Config<RequestType, RouteOptions, RequestOptions> | null) {
+    this.configure({ ...this.getConfig(), ...config })
+  }
+
   public declareGetAPI(path: string, routeOptions?: RouteOptions, papupataOptions: PapupataRouteOptions = {}) {
     return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'get', path, routeOptions, papupataOptions)
   }

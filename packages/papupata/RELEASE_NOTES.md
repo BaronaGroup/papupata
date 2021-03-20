@@ -2,6 +2,7 @@
 
 Breaking changes:
 
+- Typescript compilation now targets ES6 instead of ES5
 - The apiUrlParameters field of a declared API is quite different
 - Values other than true, false and empty string to a boolean field cause a PapupataValidationError to be thrown on the server
 - PapupataValidationError is throw on server if required query parameters are missing
@@ -37,8 +38,11 @@ Bug fixes:
 
 New features:
 
-- Query parameters can now be of more types: string, boolean, number, date, or array of any of them.
-- Also applies to path parameters, albeit without array support
+- Query parameters can now be of more types: string, boolean, number, date, or array of any of them. A few more constrained types are also available: string enum, regex-constrained strings and integers
+- The above also applies to path parameters, albeit without array support
+- A default value for dealing with query and path parameter value problems can be configured for the whole API set, overridable for individual APIs, allowing for either throwing upon error (letting your
+  error handling code take over from there) or rerouting, basically making the types routing constraints rather than plain validation.
+- APIDeclaration now has updateConfig method, for changing parts of the config without having to do getConfig -> setConfig
 
 Other:
 

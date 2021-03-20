@@ -1,5 +1,6 @@
 import { Integer, StringEnum, StringMatching } from '../customQueryTypes'
 import { APIDeclaration } from '../main'
+import { ValidationBehavior } from '../main/config'
 import middleware204 from '../main/middleware204'
 import createRequestAdapter from '../main/request-promise-adapter'
 import { expectFailure, prepareTestServerFor } from './test-utils'
@@ -270,6 +271,87 @@ describe('typed-path-params', function () {
       api.implement((req) => `${req.params.param} / ${typeof req.params.param}`)
 
       expect((await expectFailure(api({ param: 'test' as any }))).message).toMatch(/test is not a valid date for param/)
+    })
+  })
+
+  describe('validation behavior', function () {
+    // using StringMatching here is kind nice here as there are no type errors from invalid values
+    beforeEach(() => {
+      API.updateConfig({
+        validationBehavior: undefined,
+      })
+    })
+
+    it('throws by default', async function () {
+      const path = getUniquePath() + '/:param'
+      const api = API.declareGetAPI(path)
+        .params({ param: StringMatching(/^ok$/) })
+        .response<string>()
+
+      api.implement(() => `entered handler, this should not happen`)
+
+      // When
+      const err = await expectFailure(api({ param: 'bad' }))
+
+      // Then
+      expect(err.statusCode).toEqual(500)
+    })
+
+    it('rerouting is possible', async function () {
+      API.updateConfig({
+        validationBehavior: ValidationBehavior.REROUTE,
+      })
+      const path = getUniquePath() + '/:param'
+      const api = API.declareGetAPI(path)
+        .params({ param: StringMatching(/^ok$/) })
+        .response<string>()
+
+      const fallbackAPI = API.declareGetAPI(path).params({ param: String }).response<string>()
+
+      api.implement(() => `entered handler, this should not happen`)
+      fallbackAPI.implement(() => `rerouted, nice!`)
+
+      // When
+      const response = await api({ param: 'bad' })
+
+      // Then
+      expect(response).toEqual('rerouted, nice!')
+    })
+
+    it('API itself can override (to throw)', async function () {
+      API.updateConfig({
+        validationBehavior: ValidationBehavior.REROUTE,
+      })
+      const path = getUniquePath() + '/:param'
+      const api = API.declareGetAPI(path, void 0, { validationBehavior: ValidationBehavior.THROW })
+        .params({ param: StringMatching(/^ok$/) })
+        .response<string>()
+
+      api.implement(() => `entered handler, this should not happen`)
+
+      // When
+      const err = await expectFailure(api({ param: 'bad' }))
+
+      // Then
+      expect(err.statusCode).toEqual(500)
+    })
+
+    it('API itself can override (to reroute)', async function () {
+      const path = getUniquePath() + '/:param'
+      const api = API.declareGetAPI(path, void 0, { validationBehavior: ValidationBehavior.REROUTE })
+        .params({ param: StringMatching(/^ok$/) })
+        .response<string>()
+
+      const fallbackAPI = API.declareGetAPI(path).params({ param: String }).response<string>()
+
+      api.implement(() => `entered handler, this should not happen`)
+      fallbackAPI.implement(() => `rerouted, nice!`)
+
+      // When
+      const response = await api({ param: 'bad' })
+
+      // Then
+      expect(response).toEqual('rerouted, nice!')
     })
   })
 })

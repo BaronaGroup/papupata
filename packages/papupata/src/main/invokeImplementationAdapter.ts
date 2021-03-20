@@ -59,7 +59,9 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
         api.apiUrlParameters.optionalQuery,
         Mode.OPTIONAL
       )
-    
+
+      req.params = handleQueryParameterTypes(req.params, api.apiUrlParameters.params, Mode.REQUIRED)
+
       resp = await api.implementation(req, res)
     }
 

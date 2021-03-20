@@ -4,7 +4,8 @@ import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import qs from 'qs'
 import handleQueryParameterTypes, { Mode } from '../handleQueryParameterTypes'
-import { PapupataRouteOptions } from './config'
+import PapupataValidationError from '../PapupataValidationError'
+import { PapupataRouteOptions, ValidationBehavior } from './config'
 import { IAPIDeclaration, skipHandlingRoute } from './index'
 import {
   CallArgParam,
@@ -254,6 +255,8 @@ export function responder<
             return next()
           }
         }
+        const validationBehavior =
+          papupataOptions.validationBehavior ?? parent.getConfig()?.validationBehavior ?? ValidationBehavior.THROW
         try {
           const convertedParams = handleQueryParameterTypes(req.params, params, Mode.REQUIRED)
           const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
@@ -287,7 +290,11 @@ export function responder<
             res.send(value)
           }
         } catch (err) {
-          next(err)
+          if (validationBehavior === ValidationBehavior.REROUTE && err instanceof PapupataValidationError) {
+            return next()
+          } else {
+            next(err) // TODO: should there be a "next" here?
+          }
         }
 
         async function getImplVal() {
