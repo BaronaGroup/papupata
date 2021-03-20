@@ -80,6 +80,17 @@ describe('typed-queries/number', function () {
       expect(response).toEqual('Value: Infinity, number')
     })
 
+    it('decimal', async function () {
+      const path = getUniquePath()
+      const api = API.declareGetAPI(path).query({ q1: Number }).response<string>()
+      api.implement((req) => `Value: ${req.query.q1}, ${typeof req.query.q1}`)
+
+      // When
+      const response = await api({ q1: 1.23 })
+
+      // Then
+      expect(response).toEqual('Value: 1.23, number')
+    })
     it('nan', async function () {
       const path = getUniquePath()
       const api = API.declareGetAPI(path).query({ q1: Number }).response<string>()
@@ -91,7 +102,6 @@ describe('typed-queries/number', function () {
       // Then
       expect(response).toEqual('Value: NaN, number')
     })
-
 
     it('optional (value present)', async function () {
       const path = getUniquePath()
