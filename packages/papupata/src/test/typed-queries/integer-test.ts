@@ -78,7 +78,7 @@ describe('typed-queries/integer', function () {
       const err = await expectFailure(api({ q1: Infinity }))
 
       // Then
-      expect(err.message).toMatch('Infinity is not a valid number for q1')
+      expect(err.message).toMatch('Infinity is not a valid integer for q1')
     })
 
     it('decimal', async function () {
@@ -90,7 +90,7 @@ describe('typed-queries/integer', function () {
       const err = await expectFailure(api({ q1: 1.23 }))
 
       // Then
-      expect(err.message).toMatch('1.23 is not a valid number for q1')
+      expect(err.message).toMatch('1.23 is not a valid integer for q1')
     })
 
     it('nan', async function () {
@@ -102,7 +102,7 @@ describe('typed-queries/integer', function () {
       const err = await expectFailure(api({ q1: NaN }))
 
       // Then
-      expect(err.message).toMatch('NaN is not a valid number for q1')
+      expect(err.message).toMatch('NaN is not a valid integer for q1')
     })
 
     it('optional (value present)', async function () {

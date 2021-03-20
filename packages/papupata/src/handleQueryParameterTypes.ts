@@ -51,8 +51,11 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
         throw new PapupataValidationError(`${singleValue} is not a valid number for ${name}`)
       }
       return +singleValue
-    case Date:
-      return new Date(singleValue)
+    case Date: {
+      const date = new Date(singleValue)
+      if (isNaN(date.valueOf())) throw new PapupataValidationError(`${singleValue} is not a valid date for ${name}`)
+      return date
+    }
     default:
       if ('type' in targetType)
         switch (targetType.type) {
@@ -65,7 +68,7 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
           }
           case integerToken: {
             if (!singleValue.match(/^(-|\+)?(\d+)$/)) {
-              throw new PapupataValidationError(`${singleValue} is not a valid number for ${name}`)
+              throw new PapupataValidationError(`${singleValue} is not a valid integer for ${name}`)
             }
             return +singleValue
           }

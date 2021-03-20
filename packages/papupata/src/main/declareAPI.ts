@@ -16,15 +16,18 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
   papupataOptions: PapupataRouteOptions
 ): PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, RouteOptions> {
   function params() {
-    return <PT extends readonly string[]>(params: PT) => {
-      const q = query(params)
+    return <PT extends readonly string[] | TypedQueryType>(params: PT) => {
+      const convertedParams: ConvertIfArray<PT, typeof String> = Array.isArray(params)
+        ? (fromPairs(params.map((name) => [name, String])) as any)
+        : params
+      const q = query(convertedParams)
       return {
         query: q,
         ...q([] as const),
       }
     }
   }
-  function query<PT extends readonly string[]>(params: PT) {
+  function query<PT extends TypedQueryType>(params: PT) {
     return <QT extends readonly string[] | TypedQueryType>(query: QT) => {
       const convertedQuery: ConvertIfArray<QT, typeof String> = Array.isArray(query)
         ? (fromPairs(query.map((name) => [name, String])) as any)
@@ -36,7 +39,7 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
       }
     }
   }
-  function optionalQuery<PT extends readonly string[], QT extends TypedQueryType>(params: PT, query: QT) {
+  function optionalQuery<PT extends TypedQueryType, QT extends TypedQueryType>(params: PT, query: QT) {
     return <OQT extends readonly string[] | TypedQueryType>(optionalQuery: OQT) => {
       const convertedOptionalQuery: ConvertIfArray<OQT, typeof String> = Array.isArray(optionalQuery)
         ? (fromPairs(optionalQuery.map((name) => [name, String])) as any)
@@ -48,7 +51,7 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
       }
     }
   }
-  function queryBool<PT extends readonly string[], QT extends TypedQueryType, OQT extends TypedQueryType>(
+  function queryBool<PT extends TypedQueryType, QT extends TypedQueryType, OQT extends TypedQueryType>(
     params: PT,
     query: QT,
     optionalQuery: OQT
@@ -66,7 +69,7 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
   }
 
   function body<
-    PT extends readonly string[],
+    PT extends TypedQueryType,
     QT extends TypedQueryType,
     OQT extends TypedQueryType,
     BQT extends TypedQueryType

@@ -2,7 +2,7 @@ import { Request as ExpressRequest, RequestHandler, Response } from 'express'
 import { PapupataMiddleware, TypedRequest } from '.'
 import { integerToken, regexStringToken, stringEnumToken } from '../customQueryTypes'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
-import { ActualTypeMap, Method, StringTupleElementTypes } from './types'
+import { Method } from './types'
 
 type TypedQueryFieldType =
   | typeof String
@@ -26,31 +26,30 @@ export type CallArgParam<CallArgs, BodyInputType, CallArgsWithoutBody, RequestOp
       | [BodyInputType, CallArgsWithoutBody, RequestOptions]
 
 export type CallArgsWithoutBody<
-  ParamsType extends readonly string[],
+  ParamsType extends TypedQueryType,
   QueryType extends TypedQueryType,
   OptionalQueryType extends TypedQueryType,
   BoolQueryType extends TypedQueryType
-> = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-  TypedQueryToTypes<QueryType & BoolQueryType> &
+> = TypedQueryToTypes<QueryType & BoolQueryType & ParamsType> &
   Partial<TypedQueryToTypes<OptionalQueryType & BoolQueryType>>
 
 type ActualRequestType<
   RequestType,
-  ParamsType extends readonly string[],
+  ParamsType extends TypedQueryType,
   QueryType extends TypedQueryType,
   OptionalQueryType extends TypedQueryType,
   BoolQueryType extends TypedQueryType,
   BodyType
 > = TypedRequest<
   RequestType,
-  ActualTypeMap<StringTupleElementTypes<ParamsType>, string>,
+  TypedQueryToTypes<ParamsType>,
   TypedQueryToTypes<QueryType & BoolQueryType> & Partial<TypedQueryToTypes<OptionalQueryType & BoolQueryType>>,
   BodyType
 >
 
 export type ImplFn<
   RequestType,
-  ParamsType extends readonly string[],
+  ParamsType extends TypedQueryType,
   QueryType extends TypedQueryType,
   OptionalQueryType extends TypedQueryType,
   BoolQueryType extends TypedQueryType,
@@ -69,7 +68,7 @@ export type MiddlewareContainer<RequestType, RouteOptions> = {
 export type Mock<CallArgs, ResponseType> = ResponseType | ((args: CallArgs) => ResponseType | Promise<ResponseType>)
 
 export type CallArgs<
-  ParamsType extends readonly string[],
+  ParamsType extends TypedQueryType,
   QueryType extends TypedQueryType,
   OptionalQueryType extends TypedQueryType,
   BoolQueryType extends TypedQueryType,
@@ -81,7 +80,7 @@ export interface MockOptions {
 }
 
 export interface DeclaredAPI<
-  ParamsType extends readonly string[],
+  ParamsType extends TypedQueryType,
   QueryType extends TypedQueryType,
   OptionalQueryType extends TypedQueryType,
   BoolQueryType extends TypedQueryType,
@@ -139,9 +138,8 @@ export interface DeclaredAPI<
   ) => void
   getURL: (
     pathParams:
-      | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>
-      | (ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-          TypedQueryToTypes<QueryType & BoolQueryType> &
+      | TypedQueryToTypes<ParamsType>
+      | (TypedQueryToTypes<QueryType & BoolQueryType & ParamsType> &
           Partial<TypedQueryToTypes<OptionalQueryType & BoolQueryType>>)
   ) => string
   ResponseType: ResponseType

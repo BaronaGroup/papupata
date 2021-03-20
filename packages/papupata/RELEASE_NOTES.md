@@ -38,6 +38,7 @@ Bug fixes:
 New features:
 
 - Query parameters can now be of more types: string, boolean, number, date, or array of any of them.
+- Also applies to path parameters, albeit without array support
 
 Other:
 
