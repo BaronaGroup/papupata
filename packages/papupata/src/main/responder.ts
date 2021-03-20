@@ -13,9 +13,11 @@ import {
   MiddlewareContainer,
   Mock,
   MockOptions,
+  TypedQueryType,
 } from './responderTypes'
 import runExpressMiddleware from './runExpressMiddleware'
-import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
+import { TypedQueryToTypes } from './TypedQueryToTypes'
+import { ActualTypeMap, Method, StringTupleElementTypes } from './types'
 import {
   extractHardCodedParameters,
   getQueryWithHardCodedParameters,
@@ -27,9 +29,9 @@ import { runHandlerChain } from './utils/runHandlerChain'
 
 export function responder<
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[],
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType,
   BodyType,
   BodyInputType,
   RequestOptions,
@@ -89,7 +91,11 @@ export function responder<
       }
 
       const { path, hardCodedParameters } = extractHardCodedParameters(pathWithHardCodedParameters)
-      verifyHardCodedQueryParameterDeclarationLegality(hardCodedParameters, [...query, ...boolQuery], optionalQuery)
+      verifyHardCodedQueryParameterDeclarationLegality(
+        hardCodedParameters,
+        [...Object.keys(query), ...Object.keys(boolQuery)],
+        Object.keys(optionalQuery)
+      )
 
       let mockImpl: ActiveMock | null = null
 
@@ -113,11 +119,13 @@ export function responder<
 
         const reqParams = pick(args, params),
           reqQuery = getQueryWithHardCodedParameters(hardCodedParameters, {
-            ...pick(args, query),
-            ...pick(args, optionalQuery),
-            ...fromPairs(boolQuery.map((key) => [key, (!!(args as any)[key]).toString()])),
+            ...pick(args, Object.keys(query)),
+            ...pick(args, Object.keys(optionalQuery)),
+            ...fromPairs(Object.keys(boolQuery).map((key) => [key, (!!(args as any)[key]).toString()])),
           }),
-          reqBody = separateBody ? argsArr[0] : omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
+          reqBody = separateBody
+            ? argsArr[0]
+            : omit(args, [...params, ...Object.keys(query), ...Object.keys(boolQuery), ...Object.keys(optionalQuery)])
 
         if (mockImpl) {
           if (!mockImpl.includeBodySeparately) {
@@ -146,7 +154,7 @@ export function responder<
 
       function isValidAsNonBodyRequestData(obj: any) {
         if (typeof obj !== 'object') return false
-        const validKeys = [...query, ...optionalQuery, ...boolQuery, ...params]
+        const validKeys = [...Object.keys(query), ...Object.keys(optionalQuery), ...Object.keys(boolQuery), ...params]
         return Object.keys(obj).every((key) => validKeys.includes(key))
       }
 
@@ -185,9 +193,9 @@ export function responder<
       call.path = path
       call.apiUrlParameters = {
         params,
-        query,
-        optionalQuery,
-        boolQuery,
+        query: Object.assign(Object.keys(query), query),
+        optionalQuery: Object.assign(Object.keys(optionalQuery), optionalQuery),
+        boolQuery: Object.assign(Object.keys(boolQuery), boolQuery),
       }
       type MyMiddlewareContainer = MiddlewareContainer<RequestType, RouteOptions>
       call.implementation = undefined as any
@@ -247,9 +255,11 @@ export function responder<
           return
         }
         try {
-          for (const bq of boolQuery) {
+          // TODO: undo these type mutations if proceeding to another route!
+          for (const bq of Object.keys(boolQuery)) {
             req.query[bq] = req.query[bq] === 'true'
           }
+          console.log(JSON.stringify(req.query, null, 2))
           const value = await runHandlerChain(
             [
               ...(parent.getConfig()?.inherentMiddleware || []),
@@ -302,9 +312,8 @@ export function responder<
         pathParamsAndQueryParams:
           | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>
           | (ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-              ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-              ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-              ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>)
+              TypedQueryToTypes<QueryType & BoolQueryType> &
+              Partial<TypedQueryToTypes<OptionalQueryType>>)
       ) {
         const config = parent.getConfig()
         if (!config) throw new Error('Papupata not configured')

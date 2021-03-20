@@ -1,38 +1,56 @@
-import { DeclaredAPI } from './responderTypes'
+import { DeclaredAPI, TypedQueryType } from './responderTypes'
+import { ConvertLegacyQuery } from './types'
 
 export interface PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, RouteOptions> {
   params: <ParamsType extends readonly string[]>(
     params: ParamsType
   ) => PartiallyDeclaredAPIAtParams<ParamsType, RequestOptions, RequestType, RouteOptions>
-  query: <QueryType extends readonly string[]>(
+  query<QueryType extends TypedQueryType>(
     query: QueryType
-  ) => PartiallyDeclaredAPIAtQuery<readonly [], QueryType, RequestOptions, RequestType, RouteOptions>
-  optionalQuery: <OptionalQueryType extends readonly string[]>(
-    optionalQuery: OptionalQueryType
-  ) => PartiallyDeclaredAPIAtOptionalQuery<
+  ): PartiallyDeclaredAPIAtQuery<readonly [], QueryType, RequestOptions, RequestType, RouteOptions>
+  /** @deprecated */
+  query<QueryType extends string[]>(
+    query: QueryType
+  ): PartiallyDeclaredAPIAtQuery<
     readonly [],
-    readonly [],
-    OptionalQueryType,
+    ConvertLegacyQuery<QueryType, typeof String>,
     RequestOptions,
     RequestType,
     RouteOptions
   >
+  optionalQuery<OptionalQueryType extends TypedQueryType>(
+    optionalQuery: OptionalQueryType
+  ): PartiallyDeclaredAPIAtOptionalQuery<readonly [], {}, OptionalQueryType, RequestOptions, RequestType, RouteOptions>
+
+  /** @x-deprecated */
+  optionalQuery<OptionalQueryType extends readonly string[]>(
+    optionalQuery: OptionalQueryType
+  ): PartiallyDeclaredAPIAtOptionalQuery<
+    readonly [],
+    {},
+    ConvertLegacyQuery<OptionalQueryType, typeof String>,
+    RequestOptions,
+    RequestType,
+    RouteOptions
+  >
+
+  /** @deprecated */
   queryBool: <BooleanQueryType extends readonly string[]>(
     boolQuery: BooleanQueryType
   ) => PartiallyDeclaredAPIAtBoolQuery<
     readonly [],
-    readonly [],
-    readonly [],
-    BooleanQueryType,
+    {},
+    {},
+    ConvertLegacyQuery<BooleanQueryType, typeof Boolean>,
     RequestOptions,
     RequestType,
     RouteOptions
   >
   body: <BodyType, BodyTypeOnServer = BodyType>() => PartiallyDeclaredAPIAtBody<
     readonly [],
-    readonly [],
-    readonly [],
-    readonly [],
+    {},
+    {},
+    {},
     BodyType,
     BodyTypeOnServer,
     RequestOptions,
@@ -44,9 +62,9 @@ export interface PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, Rou
     mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
   ) => DeclaredAPI<
     readonly [],
-    readonly [],
-    readonly [],
-    readonly [],
+    {},
+    {},
+    {},
     {},
     {},
     RequestOptions,
@@ -63,35 +81,53 @@ export interface PartiallyDeclaredAPIAtParams<
   RequestType,
   RouteOptions
 > {
-  query: <QueryType extends readonly string[]>(
+  query<QueryType extends TypedQueryType>(
     query: QueryType
-  ) => PartiallyDeclaredAPIAtQuery<ParamsType, QueryType, RequestOptions, RequestType, RouteOptions>
-  optionalQuery: <OptionalQueryType extends readonly string[]>(
-    optionalQuery: OptionalQueryType
-  ) => PartiallyDeclaredAPIAtOptionalQuery<
+  ): PartiallyDeclaredAPIAtQuery<ParamsType, QueryType, RequestOptions, RequestType, RouteOptions>
+
+  /** @x-deprecated */
+  query<QueryType extends readonly string[]>(
+    query: QueryType
+  ): PartiallyDeclaredAPIAtQuery<
     ParamsType,
-    readonly [],
-    OptionalQueryType,
+    ConvertLegacyQuery<QueryType, typeof String>,
     RequestOptions,
     RequestType,
     RouteOptions
   >
+  optionalQuery<OptionalQueryType extends TypedQueryType>(
+    optionalQuery: OptionalQueryType
+  ): PartiallyDeclaredAPIAtOptionalQuery<ParamsType, {}, OptionalQueryType, RequestOptions, RequestType, RouteOptions>
+
+  /** @x-deprecated */
+  optionalQuery<OptionalQueryType extends readonly string[]>(
+    optionalQuery: OptionalQueryType
+  ): PartiallyDeclaredAPIAtOptionalQuery<
+    ParamsType,
+    {},
+    ConvertLegacyQuery<OptionalQueryType, typeof String>,
+    RequestOptions,
+    RequestType,
+    RouteOptions
+  >
+
+  /** @deprecated */
   queryBool: <BooleanQueryType extends readonly string[]>(
     boolQuery: BooleanQueryType
   ) => PartiallyDeclaredAPIAtBoolQuery<
     ParamsType,
-    readonly [],
-    readonly [],
-    BooleanQueryType,
+    {},
+    {},
+    ConvertLegacyQuery<BooleanQueryType, typeof Boolean>,
     RequestOptions,
     RequestType,
     RouteOptions
   >
   body: <BodyType, BodyTypeOnServer = BodyType>() => PartiallyDeclaredAPIAtBody<
     ParamsType,
-    readonly [],
-    readonly [],
-    readonly [],
+    {},
+    {},
+    {},
     BodyType,
     BodyTypeOnServer,
     RequestOptions,
@@ -103,9 +139,9 @@ export interface PartiallyDeclaredAPIAtParams<
     mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
   ) => DeclaredAPI<
     ParamsType,
-    readonly [],
-    readonly [],
-    readonly [],
+    {},
+    {},
+    {},
     {},
     {},
     RequestOptions,
@@ -118,14 +154,14 @@ export interface PartiallyDeclaredAPIAtParams<
 
 export interface PartiallyDeclaredAPIAtQuery<
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
+  QueryType extends TypedQueryType,
   RequestOptions,
   RequestType,
   RouteOptions
 > {
-  optionalQuery: <OptionalQueryType extends readonly string[]>(
+  optionalQuery<OptionalQueryType extends TypedQueryType>(
     optionalQuery: OptionalQueryType
-  ) => PartiallyDeclaredAPIAtOptionalQuery<
+  ): PartiallyDeclaredAPIAtOptionalQuery<
     ParamsType,
     QueryType,
     OptionalQueryType,
@@ -133,13 +169,26 @@ export interface PartiallyDeclaredAPIAtQuery<
     RequestType,
     RouteOptions
   >
+  /** @x-deprecated */
+  optionalQuery<OptionalQueryType extends readonly string[]>(
+    optionalQuery: OptionalQueryType
+  ): PartiallyDeclaredAPIAtOptionalQuery<
+    ParamsType,
+    QueryType,
+    ConvertLegacyQuery<OptionalQueryType, typeof String>,
+    RequestOptions,
+    RequestType,
+    RouteOptions
+  >
+
+  /** @deprecated */
   queryBool: <BooleanQueryType extends readonly string[]>(
     boolQuery: BooleanQueryType
   ) => PartiallyDeclaredAPIAtBoolQuery<
     ParamsType,
     QueryType,
-    readonly [],
-    BooleanQueryType,
+    {},
+    ConvertLegacyQuery<BooleanQueryType, typeof Boolean>,
     RequestOptions,
     RequestType,
     RouteOptions
@@ -147,8 +196,8 @@ export interface PartiallyDeclaredAPIAtQuery<
   body: <BodyType, BodyTypeOnServer = BodyType>() => PartiallyDeclaredAPIAtBody<
     ParamsType,
     QueryType,
-    readonly [],
-    readonly [],
+    {},
+    {},
     BodyType,
     BodyTypeOnServer,
     RequestOptions,
@@ -161,8 +210,8 @@ export interface PartiallyDeclaredAPIAtQuery<
   ) => DeclaredAPI<
     ParamsType,
     QueryType,
-    readonly [],
-    readonly [],
+    {},
+    {},
     {},
     {},
     RequestOptions,
@@ -175,19 +224,20 @@ export interface PartiallyDeclaredAPIAtQuery<
 
 export interface PartiallyDeclaredAPIAtOptionalQuery<
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
   RequestOptions,
   RequestType,
   RouteOptions
 > {
+  /** @deprecated */
   queryBool: <BooleanQueryType extends readonly string[]>(
     boolQuery: BooleanQueryType
   ) => PartiallyDeclaredAPIAtBoolQuery<
     ParamsType,
     QueryType,
     OptionalQueryType,
-    BooleanQueryType,
+    ConvertLegacyQuery<BooleanQueryType, typeof Boolean>,
     RequestOptions,
     RequestType,
     RouteOptions
@@ -196,7 +246,7 @@ export interface PartiallyDeclaredAPIAtOptionalQuery<
     ParamsType,
     QueryType,
     OptionalQueryType,
-    readonly [],
+    {},
     BodyType,
     BodyTypeOnServer,
     RequestOptions,
@@ -209,7 +259,7 @@ export interface PartiallyDeclaredAPIAtOptionalQuery<
     ParamsType,
     QueryType,
     OptionalQueryType,
-    readonly [],
+    {},
     {},
     {},
     RequestOptions,
@@ -222,9 +272,9 @@ export interface PartiallyDeclaredAPIAtOptionalQuery<
 
 export interface PartiallyDeclaredAPIAtBoolQuery<
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[],
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType,
   RequestOptions,
   RequestType,
   RouteOptions
@@ -260,9 +310,9 @@ export interface PartiallyDeclaredAPIAtBoolQuery<
 
 export interface PartiallyDeclaredAPIAtBody<
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[],
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType,
   BodyType,
   BodyTypeOnServer,
   RequestOptions,

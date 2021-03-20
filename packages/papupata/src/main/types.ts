@@ -7,8 +7,8 @@ export type ActualTypeMap<TKeys extends string, TValues> = {
   [key in TKeys]: string extends TKeys ? DeclareRoutePartsAsConstArraysPlease : TValues
 }
 
-export type ActualOptionalTypeMap<TKeys extends string, TValues> = {
-  [key in TKeys]?: string extends TKeys ? DeclareRoutePartsAsConstArraysPlease : TValues
-}
-
 export type Method = 'get' | 'post' | 'put' | 'delete' | 'patch'
+
+export type ConvertLegacyQuery<T extends readonly string[], TOutputType> = {
+  [K in StringTupleElementTypes<T>]: TOutputType
+}

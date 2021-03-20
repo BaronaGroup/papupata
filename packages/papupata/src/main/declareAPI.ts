@@ -1,7 +1,11 @@
-import { Method } from './types'
+import { ConvertLegacyQuery, Method } from './types'
 import { responder } from './responder'
 import { IAPIDeclaration } from './index'
 import { PartiallyDeclaredAPIAtEndpoint } from './partiallyDeclaredTypes'
+import { TypedQueryType } from './responderTypes'
+import fromPairs from 'lodash/fromPairs'
+
+type ConvertIfArray<T, U> = T extends readonly string[] ? ConvertLegacyQuery<T, U> : T
 
 export function declareAPI<RequestType, RouteOptions, RequestOptions>(
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
@@ -19,30 +23,39 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
     }
   }
   function query<PT extends readonly string[]>(params: PT) {
-    return <QT extends readonly string[]>(query: QT) => {
-      const oq = optionalQuery(params, query)
+    return <QT extends readonly string[] | TypedQueryType>(query: QT) => {
+      const convertedQuery: ConvertIfArray<QT, typeof String> = Array.isArray(query)
+        ? (fromPairs(query.map((name) => [name, String])) as any)
+        : query
+      const oq = optionalQuery(params, convertedQuery)
       return {
         optionalQuery: oq,
         ...oq([] as const),
       }
     }
   }
-  function optionalQuery<PT extends readonly string[], QT extends readonly string[]>(params: PT, query: QT) {
-    return <OQT extends readonly string[]>(optionalQuery: OQT) => {
-      const qb = queryBool(params, query, optionalQuery)
+  function optionalQuery<PT extends readonly string[], QT extends TypedQueryType>(params: PT, query: QT) {
+    return <OQT extends readonly string[] | TypedQueryType>(optionalQuery: OQT) => {
+      const convertedOptionalQuery: ConvertIfArray<OQT, typeof String> = Array.isArray(optionalQuery)
+      ? (fromPairs(optionalQuery.map((name) => [name, String])) as any)
+      : optionalQuery
+      const qb = queryBool(params, query, convertedOptionalQuery)
       return {
         queryBool: qb,
         ...qb([] as const),
       }
     }
   }
-  function queryBool<PT extends readonly string[], QT extends readonly string[], OQT extends readonly string[]>(
+  function queryBool<PT extends readonly string[], QT extends TypedQueryType, OQT extends TypedQueryType>(
     params: PT,
     query: QT,
     optionalQuery: OQT
   ) {
     return <BQT extends readonly string[]>(queryBool: BQT) => {
-      const b = body(params, query, optionalQuery, queryBool)
+      const convertedQueryBool: ConvertLegacyQuery<BQT, typeof Boolean> = fromPairs(
+        queryBool.map((name) => [name, Boolean])
+      ) as any
+      const b = body(params, query, optionalQuery, convertedQueryBool)
       return {
         body: b,
         ...b<{}>(),
@@ -52,10 +65,10 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
 
   function body<
     PT extends readonly string[],
-    QT extends readonly string[],
-    OQT extends readonly string[],
-    BQT extends readonly string[]
-  >(params: PT, query: QT, optionalQuery: OQT, boolQuery: BQT) {
+    QT extends TypedQueryType,
+    OQT extends TypedQueryType,
+    BQT extends TypedQueryType
+    >(params: PT, query: QT, optionalQuery: OQT, boolQuery: BQT) {
     return <BT, BTInput = BT>() => {
       return responder(
         params,

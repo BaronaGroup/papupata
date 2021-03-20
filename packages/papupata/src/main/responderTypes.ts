@@ -1,6 +1,11 @@
-import { ActualTypeMap, StringTupleElementTypes, ActualOptionalTypeMap, Method } from './types'
-import { TypedRequest, PapupataMiddleware } from '.'
-import { RequestHandler, Request as ExpressRequest, Response } from 'express'
+import { Request as ExpressRequest, RequestHandler, Response } from 'express'
+import { PapupataMiddleware, TypedRequest } from '.'
+import { TypedQueryToTypes } from './TypedQueryToTypes'
+import { ActualTypeMap, Method, StringTupleElementTypes } from './types'
+
+export type TypedQueryType = {
+  [key: string]: typeof String | typeof Number | typeof Boolean | typeof Date
+}
 
 export type CallArgParam<CallArgs, BodyInputType, CallArgsWithoutBody, RequestOptions> = {} extends CallArgs
   ? [] | [CallArgs] | [CallArgs, RequestOptions]
@@ -12,36 +17,33 @@ export type CallArgParam<CallArgs, BodyInputType, CallArgsWithoutBody, RequestOp
 
 export type CallArgsWithoutBody<
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[]
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType
 > = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-  ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-  ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-  ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
+  TypedQueryToTypes<QueryType & BoolQueryType> &
+  Partial<TypedQueryToTypes<OptionalQueryType & BoolQueryType>>
 
 type ActualRequestType<
   RequestType,
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[],
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType,
   BodyType
 > = TypedRequest<
   RequestType,
   ActualTypeMap<StringTupleElementTypes<ParamsType>, string>,
-  ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-    ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-    ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>,
+  TypedQueryToTypes<QueryType & BoolQueryType> & Partial<TypedQueryToTypes<OptionalQueryType & BoolQueryType>>,
   BodyType
 >
 
 export type ImplFn<
   RequestType,
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[],
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType,
   BodyType,
   ResponseTypeOnServer
 > = (
@@ -58,9 +60,9 @@ export type Mock<CallArgs, ResponseType> = ResponseType | ((args: CallArgs) => R
 
 export type CallArgs<
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[],
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType,
   BodyInputType
 > = BodyInputType & CallArgsWithoutBody<ParamsType, QueryType, OptionalQueryType, BoolQueryType>
 
@@ -70,9 +72,9 @@ export interface MockOptions {
 
 export interface DeclaredAPI<
   ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[],
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType,
   BodyType,
   BodyInputType,
   RequestOptions,
@@ -129,9 +131,8 @@ export interface DeclaredAPI<
     pathParams:
       | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>
       | (ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-          ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-          ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-          ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>)
+          TypedQueryToTypes<QueryType & BoolQueryType> &
+          Partial<TypedQueryToTypes<OptionalQueryType & BoolQueryType>>)
   ) => string
   ResponseType: ResponseType
   ServerResponseType: ResponseTypeOnServer

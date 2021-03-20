@@ -34,12 +34,15 @@ describe('testInvoker-test', function () {
     },
   }
 
-  const defaultResponder = ({ headers, body, params, query }: typeof api.RequestType) => ({
-    headers,
-    body,
-    params,
-    query,
-  })
+  const defaultResponder = ({ headers, body, params, query }: typeof api.RequestType) => {
+    console.log('Q', query)
+    return {
+      headers,
+      body,
+      params,
+      query,
+    }
+  }
 
   api.implement(defaultResponder)
 
