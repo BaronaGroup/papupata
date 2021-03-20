@@ -126,7 +126,9 @@ export function responder<
           }),
           reqBody = separateBody
             ? argsArr[0]
-            : omit(args, [...params, ...Object.keys(query), ...Object.keys(boolQuery), ...Object.keys(optionalQuery)])
+            : makeUndefinedIfEmpty(
+                omit(args, [...params, ...Object.keys(query), ...Object.keys(boolQuery), ...Object.keys(optionalQuery)])
+              )
 
         if (mockImpl) {
           if (!mockImpl.includeBodySeparately) {
@@ -353,4 +355,9 @@ export function responder<
       }
     },
   }
+}
+
+function makeUndefinedIfEmpty<T>(input: T): T | undefined {
+  if (typeof input === 'object' && input && Object.keys(input).length === 0) return undefined
+  return input
 }

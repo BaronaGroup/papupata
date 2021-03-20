@@ -82,7 +82,7 @@ describe('options-test', function () {
     it('works with no parameter requests, albeit requiring a parameter object', async function () {
       const response = await noParamsAPI({}, { specialValue: '04' })
       expect(response).toEqual({
-        body: {},
+        body: undefined,
         method: 'get',
         params: {},
         query: {},
