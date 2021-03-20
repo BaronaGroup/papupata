@@ -255,10 +255,11 @@ export function responder<
           }
           return
         }
-        const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
-        const queryConversion2 = handleQueryParameterTypes(queryConversion1, boolQuery, Mode.LEGACY_BOOL)
-        const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL)
         try {
+          const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
+          const queryConversion2 = handleQueryParameterTypes(queryConversion1, boolQuery, Mode.LEGACY_BOOL)
+          const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL)
+
           const originalQuery = req.query
           req.query = convertedQuery
           let value: any

@@ -17,7 +17,11 @@ export default function handleQueryParameterTypes(query: any, types: TypedQueryT
 }
 
 function convertValue(name: string, value: any, targetType: any, mode: Mode): any {
-  if (mode === Mode.OPTIONAL && value === undefined) return undefined
+  if (value === undefined) {
+    if (mode === Mode.OPTIONAL) return undefined
+    if (mode === Mode.REQUIRED) throw new PapupataValidationError(`${name} is required`)
+  }
+
   if (!targetType) return value
 
   if (Array.isArray(targetType)) {
