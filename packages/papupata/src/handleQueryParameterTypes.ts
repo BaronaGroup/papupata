@@ -47,6 +47,8 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
         throw new PapupataValidationError(`${singleValue} is not a valid number for ${name}`)
       }
       return +singleValue
+    case Date:
+      return new Date(singleValue)
     default:
       throw new Error('Type conversion to ' + targetType + ' not supported.')
   }
