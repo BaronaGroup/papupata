@@ -43,7 +43,7 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
       return singleValue
     }
     case Number:
-      if (!singleValue.match(/^(-|\+)?(\d+)(\.\d+)?$/)) {
+      if (!singleValue.match(/^((-|\+)?(\d+)(\.\d+)?)|-?Infinity|NaN$/)) {
         throw new PapupataValidationError(`${singleValue} is not a valid number for ${name}`)
       }
       return +singleValue

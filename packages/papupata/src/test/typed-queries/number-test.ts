@@ -67,7 +67,32 @@ describe('typed-queries/number', function () {
         message: /banana is not a valid Number for q1/,
       })
     })
-    
+
+    it('infinity', async function () {
+      const path = getUniquePath()
+      const api = API.declareGetAPI(path).query({ q1: Number }).response<string>()
+      api.implement((req) => `Value: ${req.query.q1}, ${typeof req.query.q1}`)
+
+      // When
+      const response = await api({ q1: Infinity })
+
+      // Then
+      expect(response).toEqual('Value: Infinity, number')
+    })
+
+    it('nan', async function () {
+      const path = getUniquePath()
+      const api = API.declareGetAPI(path).query({ q1: Number }).response<string>()
+      api.implement((req) => `Value: ${req.query.q1}, ${typeof req.query.q1}`)
+
+      // When
+      const response = await api({ q1: NaN })
+
+      // Then
+      expect(response).toEqual('Value: NaN, number')
+    })
+
+
     it('optional (value present)', async function () {
       const path = getUniquePath()
       const api = API.declareGetAPI(path).optionalQuery({ q1: Number }).response<string>()
