@@ -46,7 +46,7 @@ describe('typed-query-test', function () {
         // Then
         expect(response).toEqual('Value: hello')
       })
-      
+
       it('server only accepts one if sent many', async function () {
         const path = getUniquePath()
         const api = API.declareGetAPI(path).query({ q1: String }).response<string>()
@@ -84,9 +84,61 @@ describe('typed-query-test', function () {
     })
 
     describe('array', function () {
-      it.todo('client')
-      it.todo('server')
-      it.todo('optional')
+      it('client', async function () {
+        const path = getUniquePath()
+        const api = API.declareGetAPI(path)
+          .query({ q1: [String] })
+          .response<string>()
+        testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1.join('*')))
+
+        // When
+        const response = await api({ q1: ['hello', 'user'] })
+
+        // Then
+        expect(response).toEqual('Value: hello*user')
+      })
+
+      it('server', async function () {
+        const path = getUniquePath()
+        const api = API.declareGetAPI(path)
+          .query({ q1: [String] })
+          .response<string>()
+        api.implement((req) => `Value: ${req.query.q1.join('*')}`)
+
+        // When
+        const response = await api({ q1: ['hello', 'user'] })
+
+        // Then
+        expect(response).toEqual('Value: hello*user')
+      })
+
+      it('optional (value present)', async function () {
+        const path = getUniquePath()
+        const api = API.declareGetAPI(path)
+          .optionalQuery({ q1: [String] })
+          .response<string>()
+        api.implement((req) => `Value: ${req.query.q1?.join('*')}`)
+
+        // When
+        const response = await api({ q1: ['hello', 'user'] })
+
+        // Then
+        expect(response).toEqual('Value: hello*user')
+      })
+
+      it('optional (value missing)', async function () {
+        const path = getUniquePath()
+        const api = API.declareGetAPI(path)
+          .optionalQuery({ q1: [String] })
+          .response<string>()
+        api.implement((req) => `Value: ${req.query.q1?.join('*')}`)
+
+        // When
+        const response = await api({})
+
+        // Then
+        expect(response).toEqual('Value: undefined')
+      })
     })
   })
 })

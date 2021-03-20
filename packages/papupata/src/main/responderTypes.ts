@@ -3,8 +3,10 @@ import { PapupataMiddleware, TypedRequest } from '.'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
 import { ActualTypeMap, Method, StringTupleElementTypes } from './types'
 
+type TypedQueryFieldType = typeof String | typeof Number | typeof Boolean | typeof Date
+
 export type TypedQueryType = {
-  [key: string]: typeof String | typeof Number | typeof Boolean | typeof Date
+  [key: string]: TypedQueryFieldType | [TypedQueryFieldType]
 }
 
 export type CallArgParam<CallArgs, BodyInputType, CallArgsWithoutBody, RequestOptions> = {} extends CallArgs
