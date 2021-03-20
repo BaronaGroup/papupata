@@ -1,3 +1,4 @@
+import requestPromise from 'request-promise'
 import { APIDeclaration } from '../main'
 import middleware204 from '../main/middleware204'
 import createRequestAdapter from '../main/request-promise-adapter'
@@ -34,8 +35,29 @@ describe('typed-query-test', function () {
         expect(response).toEqual('Value: hello')
       })
 
-      it.todo('server')
-      it.todo('server only accepts one if sent many')
+      it('server and client', async function () {
+        const path = getUniquePath()
+        const api = API.declareGetAPI(path).query({ q1: String }).response<string>()
+        api.implement((req) => `Value: ${req.query.q1}`)
+
+        // When
+        const response = await api({ q1: 'hello' })
+
+        // Then
+        expect(response).toEqual('Value: hello')
+      })
+      
+      it('server only accepts one if sent many', async function () {
+        const path = getUniquePath()
+        const api = API.declareGetAPI(path).query({ q1: String }).response<string>()
+        api.implement((req) => `Value: ${req.query.q1}`)
+
+        // When
+        const response = await requestPromise.get(api.getURL({}) + '?q1=alpha&q1=beta&q1=gamma')
+
+        // Then
+        expect(response).toEqual('Value: alpha')
+      })
       it.todo('optional')
     })
     describe('array', function () {

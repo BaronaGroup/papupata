@@ -1,6 +1,7 @@
 import { MakeRequestAdapter } from './config'
 import { Response } from 'express'
 import createMockResponse from './utils/mockResponse'
+import handleQueryParameterTypes, { Mode } from '../handleQueryParameterTypes'
 
 export type AssertResponseFn = (res: Response) => void
 
@@ -49,9 +50,17 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
       if (nextCalled) return
     } else {
       // The middleware path takes care of this in the express request implementation
-      for (const boolParam of api.apiUrlParameters.boolQuery || []) {
-        req.query[boolParam] = req.query[boolParam] === 'true'
-      }
+      req.query = handleQueryParameterTypes(
+        handleQueryParameterTypes(
+          handleQueryParameterTypes(req.query, api.apiUrlParameters.query, Mode.REQUIRED),
+          api.apiUrlParameters.boolQuery,
+          Mode.LEGACY_BOOL
+        ),
+        api.apiUrlParameters.optionalQuery,
+        Mode.OPTIONAL
+      )
+
+      console.log('RQ', req.query, api.apiUrlParameters)
 
       resp = await api.implementation(req, res)
     }

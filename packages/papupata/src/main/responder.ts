@@ -3,6 +3,7 @@ import fromPairs from 'lodash/fromPairs'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import qs from 'qs'
+import handleQueryParameterTypes, { Mode } from '../handleQueryParameterTypes'
 import { IAPIDeclaration, skipHandlingRoute } from './index'
 import {
   CallArgParam,
@@ -193,9 +194,9 @@ export function responder<
       call.path = path
       call.apiUrlParameters = {
         params,
-        query: Object.assign(Object.keys(query), query),
-        optionalQuery: Object.assign(Object.keys(optionalQuery), optionalQuery),
-        boolQuery: Object.assign(Object.keys(boolQuery), boolQuery),
+        query,
+        optionalQuery,
+        boolQuery,
       }
       type MyMiddlewareContainer = MiddlewareContainer<RequestType, RouteOptions>
       call.implementation = undefined as any
@@ -254,22 +255,27 @@ export function responder<
           }
           return
         }
+        const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
+        const queryConversion2 = handleQueryParameterTypes(queryConversion1, boolQuery, Mode.LEGACY_BOOL)
+        const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL)
         try {
-          // TODO: undo these type mutations if proceeding to another route!
-          for (const bq of Object.keys(boolQuery)) {
-            req.query[bq] = req.query[bq] === 'true'
+          const originalQuery = req.query
+          req.query = convertedQuery
+          let value: any
+          try {
+            value = await runHandlerChain(
+              [
+                ...(parent.getConfig()?.inherentMiddleware || []),
+                ...(call.implementationMiddleware.papupata || []),
+                getImplVal,
+              ],
+              req,
+              res,
+              call
+            )
+          } finally {
+            req.query = originalQuery
           }
-          console.log(JSON.stringify(req.query, null, 2))
-          const value = await runHandlerChain(
-            [
-              ...(parent.getConfig()?.inherentMiddleware || []),
-              ...(call.implementationMiddleware.papupata || []),
-              getImplVal,
-            ],
-            req,
-            res,
-            call
-          )
           if (value === skipHandlingRoute) {
             return next()
           }

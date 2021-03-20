@@ -1,4 +1,27 @@
+2.0.0
+
+Breaking changes:
+
+- The apiUrlParameters field of a declared API is quite different
+- Values other than true, false and empty string to a boolean field cause a PapupataValidationError to be thrown
+- While arrays were not supported in a reasonable way, the values were not processed in any way and qs has in practice probably added them amongst the query parameters,
+  though they could be not accessed with types. Now anything declared to be a string is exactly one string.
+
+
+Bug fixes:
+- Query parameters are not affected from one route to another when rerouting takes place
+
+New features:
+
+- Query parameters can now be of more types: string, boolean, number, date, or array of any of them.
+
+Other:
+
+- boolQuery is now deprecated; use query or optionalQuery with the boolean type instead
+- query and optionalQuery with string array parameters are now deprecated, though jsdoc does not indicate them as such as we cannot deprecate only some overloads
+
   1.8.1
+
 - Fixed convertExpressMiddleware which treated errors as success and vice versa
 - PapupataMiddleware type now has method and path
 - PapupataMiddleware type now its options be optional, as that matches reality; breaking change for types, but there are no functional differences
