@@ -1,6 +1,6 @@
 import { Request as ExpressRequest, RequestHandler, Response } from 'express'
 import { PapupataMiddleware, TypedRequest } from '.'
-import { integerToken, regexStringToken } from '../customQueryTypes'
+import { integerToken, regexStringToken, stringEnumToken } from '../customQueryTypes'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
 import { ActualTypeMap, Method, StringTupleElementTypes } from './types'
 
@@ -11,6 +11,7 @@ type TypedQueryFieldType =
   | typeof Date
   | { type: typeof regexStringToken; regex: RegExp }
   | { type: typeof integerToken }
+  | { type: typeof stringEnumToken }
 
 export type TypedQueryType = {
   [key: string]: TypedQueryFieldType | [TypedQueryFieldType]

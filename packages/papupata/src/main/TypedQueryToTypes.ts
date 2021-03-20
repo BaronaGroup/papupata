@@ -1,4 +1,5 @@
-import { integerToken, regexStringToken } from '../customQueryTypes'
+import { integerToken, regexStringToken, stringEnumToken } from '../customQueryTypes'
+import { StringTupleElementTypes } from './types'
 
 type GetType<T> = T extends { new (...args: any): any }
   ? InstanceType<T> extends String
@@ -14,6 +15,8 @@ type GetType<T> = T extends { new (...args: any): any }
   ? string
   : T extends { type: typeof integerToken }
   ? number
+  : T extends { type: typeof stringEnumToken; values: any }
+  ? StringTupleElementTypes<T['values']>
   : never
 
 type SingleMapper<T> = T extends { new (...args: any): any } | { type: any }

@@ -2,7 +2,7 @@ import { TypedQueryType } from './main/responderTypes'
 import toPairs from 'lodash/toPairs'
 import fromPairs from 'lodash/fromPairs'
 import PapupataValidationError from './PapupataValidationError'
-import { integerToken, regexStringToken, StringMatching } from './customQueryTypes'
+import { integerToken, regexStringToken, StringEnum, stringEnumToken, StringMatching } from './customQueryTypes'
 
 export enum Mode {
   REQUIRED,
@@ -66,6 +66,12 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
             }
             return +singleValue
           }
+          case stringEnumToken:
+            const actualType: ReturnType<typeof StringEnum> = targetType
+            if (!actualType.values.includes(singleValue)) {
+              throw new PapupataValidationError(`${singleValue} failed validation for ${name}`)
+            }
+            return singleValue
         }
       throw new Error('Type conversion to ' + targetType + ' not supported.')
   }
