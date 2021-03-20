@@ -4,6 +4,7 @@ import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import qs from 'qs'
 import handleQueryParameterTypes, { Mode } from '../handleQueryParameterTypes'
+import { PapupataRouteOptions } from './config'
 import { IAPIDeclaration, skipHandlingRoute } from './index'
 import {
   CallArgParam,
@@ -48,7 +49,8 @@ export function responder<
   method: Method,
   pathWithHardCodedParameters: string,
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
-  routeOptions: RouteOptions
+  routeOptions: RouteOptions,
+  papupataOptions: PapupataRouteOptions
 ) {
   /*type CallArgsWithoutBody = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
     ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
@@ -207,7 +209,7 @@ export function responder<
 
       let expressHost: undefined | Application | Router
       const config = parent.getConfig()
-      if (config?.autoImplementAllAPIs && (config.router || config.app)) {
+      if (config && config.autoImplementAllAPIs !== false && (config.router || config.app)) {
         implement(null)
       }
 
@@ -249,7 +251,7 @@ export function responder<
         }
 
         if (!impl) {
-          if (parent.getConfig()?.autoImplementAllAPIs) {
+          if (parent.getConfig()?.autoImplementAllAPIs !== false && !papupataOptions.disableAutoImplement) {
             res.status(501)
             res.send('Not implemented')
           } else {
@@ -302,11 +304,13 @@ export function responder<
         if (!config) throw new Error('Papupata not configured')
         const host = config.router || config.app
         if (!host) {
-          if (config.autoImplementAllAPIs) return
+          if (config.autoImplementAllAPIs !== false) return
           throw new Error('Papupata: neither router nor app configured, cannot implement routes')
         }
         if (config.routerAt && !path.startsWith(config.routerAt)) {
-          throw new Error('Papupata: when routerAt is provided, all routes must be its children.')
+          throw new Error(
+            `Papupata: when routerAt is provided, all routes must be its children; attempted to declare ${path} when routerAt is ${config.routerAt}`
+          )
         }
         if (expressHost === host) {
           return

@@ -97,7 +97,7 @@ describe('auto-implement-all-apis-test', function () {
 
     prepareTestServerFor(API)
     beforeAll(() => {
-      API.configure({ ...API.getConfig(), makeRequest: createRequestAdapter('json') })
+      API.configure({ ...API.getConfig(), makeRequest: createRequestAdapter('json'), autoImplementAllAPIs: false })
     })
 
     it('does not do automatic implementation', async function () {

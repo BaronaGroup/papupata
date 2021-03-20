@@ -13,7 +13,7 @@ const getUniquePath = (function () {
 const options = ['alpha', 'beta', 'gamma'] as const
 
 const API = new APIDeclaration()
-describe('typed-queries/string', function () {
+describe('typed-queries/string enum', function () {
   const testServer = prepareTestServerFor(API)
 
   beforeAll(() => {
@@ -27,7 +27,7 @@ describe('typed-queries/string', function () {
   describe('single', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path)
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
         .query({ q1: StringEnum(options) })
         .response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1))
@@ -128,7 +128,7 @@ describe('typed-queries/string', function () {
   describe('array', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path)
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
         .query({ q1: [StringEnum(options)] })
         .response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1.join('*')))

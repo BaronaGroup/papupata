@@ -15,6 +15,7 @@ describe('hard-coded-query-parameters-test', function () {
       ...API.getConfig(),
       makeRequest: createRequestAdapter('json'),
       inherentMiddleware: [middleware204],
+      autoImplementAllAPIs: false,
     })
   })
 

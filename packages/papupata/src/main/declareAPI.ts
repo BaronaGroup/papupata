@@ -4,6 +4,7 @@ import { IAPIDeclaration } from './index'
 import { PartiallyDeclaredAPIAtEndpoint } from './partiallyDeclaredTypes'
 import { TypedQueryType } from './responderTypes'
 import fromPairs from 'lodash/fromPairs'
+import { PapupataRouteOptions } from './config'
 
 type ConvertIfArray<T, U> = T extends readonly string[] ? ConvertLegacyQuery<T, U> : T
 
@@ -11,7 +12,8 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
   method: Method,
   path: string,
-  routeOptions?: RouteOptions
+  routeOptions: RouteOptions | undefined,
+  papupataOptions: PapupataRouteOptions
 ): PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, RouteOptions> {
   function params() {
     return <PT extends readonly string[]>(params: PT) => {
@@ -37,8 +39,8 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
   function optionalQuery<PT extends readonly string[], QT extends TypedQueryType>(params: PT, query: QT) {
     return <OQT extends readonly string[] | TypedQueryType>(optionalQuery: OQT) => {
       const convertedOptionalQuery: ConvertIfArray<OQT, typeof String> = Array.isArray(optionalQuery)
-      ? (fromPairs(optionalQuery.map((name) => [name, String])) as any)
-      : optionalQuery
+        ? (fromPairs(optionalQuery.map((name) => [name, String])) as any)
+        : optionalQuery
       const qb = queryBool(params, query, convertedOptionalQuery)
       return {
         queryBool: qb,
@@ -68,7 +70,7 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
     QT extends TypedQueryType,
     OQT extends TypedQueryType,
     BQT extends TypedQueryType
-    >(params: PT, query: QT, optionalQuery: OQT, boolQuery: BQT) {
+  >(params: PT, query: QT, optionalQuery: OQT, boolQuery: BQT) {
     return <BT, BTInput = BT>() => {
       return responder(
         params,
@@ -80,7 +82,8 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
         method,
         path,
         parent,
-        routeOptions
+        routeOptions,
+        papupataOptions
       )
     }
   }

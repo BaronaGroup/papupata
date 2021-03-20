@@ -24,7 +24,7 @@ describe('typed-queries/date', function () {
   describe('single', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path).query({ q1: Date }).response<string>()
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true }).query({ q1: Date }).response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1))
 
       // When
@@ -98,7 +98,7 @@ describe('typed-queries/date', function () {
   describe('array', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path)
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
         .query({ q1: [Date] })
         .response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1.join('..')))

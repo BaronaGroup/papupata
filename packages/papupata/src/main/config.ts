@@ -4,7 +4,7 @@ import { Method } from './types'
 export type PapupataMiddleware<RequestType, RouteOptions> = (
   req: RequestType,
   res: Response,
-  route: { options?: RouteOptions, method: Method, path: string },
+  route: { options?: RouteOptions; method: Method; path: string },
   next: () => Promise<any>
 ) => Promise<any>
 
@@ -26,4 +26,8 @@ export interface Config<RequestType = void, RouteOptions = void, RequestOptions 
   app?: Application
   inherentMiddleware?: Array<PapupataMiddleware<RequestType, RouteOptions>>
   autoImplementAllAPIs?: boolean
+}
+
+export interface PapupataRouteOptions {
+  disableAutoImplement?: boolean
 }

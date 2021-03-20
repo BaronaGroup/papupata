@@ -24,7 +24,7 @@ describe('typed-queries/regex-string', function () {
   describe('single', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path)
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
         .query({ q1: StringMatching(/hello/) })
         .response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1))
@@ -68,7 +68,7 @@ describe('typed-queries/regex-string', function () {
   describe('array', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path)
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
         .query({ q1: [StringMatching(/hello/)] })
         .response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1.join('*')))

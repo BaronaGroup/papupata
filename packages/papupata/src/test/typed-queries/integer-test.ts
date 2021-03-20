@@ -11,7 +11,7 @@ const getUniquePath = (function () {
 })()
 
 const API = new APIDeclaration()
-describe('typed-queries/number', function () {
+describe('typed-queries/integer', function () {
   const testServer = prepareTestServerFor(API)
 
   beforeAll(() => {
@@ -25,7 +25,7 @@ describe('typed-queries/number', function () {
   describe('single', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path).query({ q1: Integer }).response<string>()
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true }).query({ q1: Integer }).response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1))
 
       // When
@@ -133,7 +133,7 @@ describe('typed-queries/number', function () {
   describe('array', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path)
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
         .query({ q1: [Number] })
         .response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1.join('*')))
