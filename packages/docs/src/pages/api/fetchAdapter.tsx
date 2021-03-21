@@ -26,7 +26,7 @@ export default function FetchAdapter() {
           const API = new APIDeclaration()
           API.configure({
             baseURL: '',
-            makeRequest: fetchAdapter
+            requestAdapter: fetchAdapter
           })
         `}</Example>
         </Examples>

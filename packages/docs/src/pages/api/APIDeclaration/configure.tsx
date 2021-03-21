@@ -14,6 +14,11 @@ import {
 import { Members, PropertyMember } from '../../../components/members-table'
 import { Link } from 'gatsby'
 import { ToDo } from '../../../components/ToDo'
+import styled from 'styled-components'
+
+const Deprecated = styled.span`
+  text-decoration: line-through;
+`
 
 export default function Configure() {
   return (
@@ -42,7 +47,18 @@ export default function Configure() {
             Base URL used for all API invocations. This can be an empty string, in which case the calls on the browser are made relative to
             the root of the current host.
           </PropertyMember>
-          <PropertyMember name="makeRequest" dataType="Function" required={'Conditionally *2'}>
+          <PropertyMember
+            name={
+              <div>
+                <p>requestAdapter (2.0 onwards)</p>
+                <p>
+                  <Deprecated>makeRequest</Deprecated> (1.x, deprecated but supported in 2.x)
+                </p>
+              </div>
+            }
+            dataType="Function"
+            required={'Conditionally *2'}
+          >
             <p>This function is used internally for calling APIs. The function is as follows:</p>
             <Parameters includeAvailableFrom={true}>
               <Parameter name="method" dataType="string" />
@@ -152,7 +168,7 @@ export default function Configure() {
             import {fetchAdapter} from 'papupata/dist/main/fetch-adapter'
             api.configure({
               baseURL: '',
-              makeRequest: fetchAdapter
+              requestAdapter: fetchAdapter
             })
           `}
           </Example>

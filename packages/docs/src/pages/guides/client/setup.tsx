@@ -107,7 +107,7 @@ const IndexPage = () => (
             },
             {
               heading: 'Mechanism for making requests',
-              anchor: 'makeRequest',
+              anchor: 'requestAdapter',
               content: (
                 <>
                   <p>
@@ -116,7 +116,7 @@ const IndexPage = () => (
                   </p>
                   <p>
                     Papupata makes no assumptions about the mechanism used to make the requests, instead one must be provided to it. This is
-                    done using the <FixedFont>makeRequest</FixedFont> configuration option.
+                    done using the <FixedFont>requestAdapter</FixedFont> configuration option.
                   </p>
                   <p>
                     In many cases you might want to build your implementation, but there are two simple implementations provided with
@@ -140,7 +140,7 @@ const IndexPage = () => (
                     import fetchAdapter from 'papupata/dist/main/fetch-adapter'
                     API.configure({
                       ...API.getConfig(),
-                      makeRequest: fetchAdapter
+                      requestAdapter: fetchAdapter
                     })
                   `}</Example>
                   <p>Having said that, it should be fairly straightforward to expand the implementation to suit your needs.</p>
@@ -161,7 +161,7 @@ const IndexPage = () => (
                     import createRequestPromiseAdapter from 'papupata/dist/main/request-promise-adapter'
                     API.configure({
                       ...API.getConfig(),
-                      makeRequest: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
+                      requestAdapter: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
                     })
                   `}</Example>
                   <p>

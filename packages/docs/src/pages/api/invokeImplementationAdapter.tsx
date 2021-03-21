@@ -22,7 +22,7 @@ export default function Mock() {
             import createInvokeImplementationAdapter from 'papupata/dist/main/invokeImplementationAdapter'
           `}</Example>
           <p>
-            Call the function with any options you wish and use the returned value as the <FixedFont>makeRequest</FixedFont> of the
+            Call the function with any options you wish and use the returned value as the <FixedFont>requestAdapter</FixedFont> of the
             APIDeclaration. As always, a base url needs to be set up to make calls, but its value is ultimately irrelevant when using this
             adapter.
           </p>
@@ -45,7 +45,7 @@ export default function Mock() {
             API.configure({
               app,
               baseURL: '',
-              makeRequest: createInvokeImplementationAdapter()
+              requestAdapter: createInvokeImplementationAdapter()
             })
 
           `}</Example>

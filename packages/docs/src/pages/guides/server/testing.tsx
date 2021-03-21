@@ -83,7 +83,7 @@ const IndexPage = () => (
             },
             {
               heading: 'Having papupata call the implementation',
-              anchor: 'directMakeRequest',
+              anchor: 'directRequestAdapter',
               level: 1,
               content: (
                 <>
@@ -103,7 +103,7 @@ const IndexPage = () => (
                     API.configure({
                       ...API.getConfig(),
                       baseURL: '', // the value is not relevant, but must be a string
-                      makeRequest: createAdapter()
+                      requestAdapter: createAdapter()
                     })
                     const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
                   `}</Example>
@@ -112,7 +112,7 @@ const IndexPage = () => (
                     <li>
                       <FixedFont>createRequest</FixedFont> for setting up the request as you need (with, say, headers, session etc)
                       <Example>{`
-                        const makeRequest = createAdapter({
+                        const requestAdapter = createAdapter({
                           createRequest: () => ({ headers: { 'authorization': 'bearer 123'}}) 
                         })
                       `}</Example>
@@ -120,7 +120,7 @@ const IndexPage = () => (
                     <li>
                       <FixedFont>assertResponse</FixedFont> for making assertions about the response beyond just the data
                       <Example>{`
-                        const makeRequest = createAdapter({
+                        const requestAdapter = createAdapter({
                           assertResponse: res => expect(res.statusCode).toEqual(400) 
                         })
                       `}</Example>
@@ -128,7 +128,7 @@ const IndexPage = () => (
                     <li>
                       <FixedFont>withMiddleware</FixedFont>, which enables the use of middleware for the request
                       <Example>{`
-                        const makeRequest = createAdapter({
+                        const requestAdapter = createAdapter({
                           withMiddleware: true
                         })
                       `}</Example>
@@ -174,7 +174,7 @@ const IndexPage = () => (
                     API.configure({
                       ...API.getConfig(),
                       baseURL: \`http://localhost:\${port}\`
-                      makeRequest: createRequestAdapter('json')
+                      requestAdapter: createRequestAdapter('json')
                     })
                     const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
                   `}</Example>
@@ -186,7 +186,7 @@ const IndexPage = () => (
                     API.configure({                      
                       ...API.getConfig(),
                       baseURL: '', // The value must be an empty string
-                      makeRequest: createSupertestAdapter(supertestRequest)
+                      requestAdapter: createSupertestAdapter(supertestRequest)
                     })
                     const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
                   `}</Example>

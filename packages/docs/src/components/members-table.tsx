@@ -20,7 +20,7 @@ function RequiredColumn({ children }: { children: ReactNode }) {
 
 const MemberContext = createContext({ context: '', includeRequiredColumn: false })
 
-const NameColumn: React.FC<{ name: string }> = ({ name, children }) => {
+const NameColumn: React.FC<{ name: ReactNode }> = ({ name, children }) => {
   const { context } = useContext(MemberContext)
   return (
     <NameColumnBase>
@@ -77,7 +77,7 @@ export const MethodMember: React.FC<{ name: string; dataType: any; required?: an
   )
 }
 
-export const PropertyMember: React.FC<{ name: string; dataType: any; required?: any; availableFrom?: string; link?: boolean }> = ({
+export const PropertyMember: React.FC<{ name: ReactNode; dataType: any; required?: any; availableFrom?: string; link?: boolean }> = ({
   children,
   name,
   dataType,

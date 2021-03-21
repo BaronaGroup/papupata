@@ -27,7 +27,7 @@ export default function RequestPromiseAdapter() {
           const API = new APIDeclaration()
           API.configure({
             baseURL: '',
-            makeRequest: createRequestAdapter('json')
+            requestAdapter: createRequestAdapter('json')
           })
         `}</Example>
       </Examples>

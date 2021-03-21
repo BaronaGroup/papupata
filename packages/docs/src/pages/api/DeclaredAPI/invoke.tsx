@@ -4,7 +4,7 @@ import Container from '../../../components/Container'
 import { Purpose, Usage, Parameter, Parameters, MethodReturnType, Examples, Example, Caveats } from '../../../components/api-components'
 
 const requestOptionsDescription = `Options passed to the request. These have no inherent meaning in papupata, but can be used by
-the makeRequest function defined by the application. The type of this parameter is set by the RequestOptions type parameter
+the requestAdapter function defined by the application. The type of this parameter is set by the RequestOptions type parameter
 of the API declaration.
 `
 
@@ -44,7 +44,7 @@ export default function Invoke() {
         <MethodReturnType>{'Promise<ResponseType>'}</MethodReturnType>
         <Caveats>
           <ul>
-            <li>Base URL and makeRequest function must be configured or the function will throw.</li>
+            <li>Base URL and requestAdapter function must be configured or the function will throw.</li>
             <li>There is no validation for the data returned by the server, it is assumed to be of the correct shape</li>
             <li>Error handling is adapter-dependant.</li>
           </ul>

@@ -44,7 +44,7 @@ export default function Mock() {
             API.configure({
               app,
               baseURL: '',
-              makeRequest: createSupertestAdapter(request)
+              requestAdapter: createSupertestAdapter(request)
             })
 
           `}</Example>
