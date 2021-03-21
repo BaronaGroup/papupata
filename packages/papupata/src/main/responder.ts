@@ -255,34 +255,19 @@ export function responder<
             return next()
           }
         }
-        const validationBehavior =
-          papupataOptions.validationBehavior ?? parent.getConfig()?.validationBehavior ?? ValidationBehavior.THROW
         try {
-          const convertedParams = handleQueryParameterTypes(req.params, params, Mode.REQUIRED)
-          const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
-          const queryConversion2 = handleQueryParameterTypes(queryConversion1, boolQuery, Mode.LEGACY_BOOL)
-          const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL)
+          const value = await runHandlerChain(
+            [
+              ...(parent.getConfig()?.inherentMiddleware || []),
+              parameterConverterMiddleware,
+              ...(call.implementationMiddleware.papupata || []),
+              getImplVal,
+            ],
+            req,
+            res,
+            call
+          )
 
-          const originalQuery = req.query,
-            originalParams = req.params
-          req.query = convertedQuery
-          req.params = convertedParams
-          let value: any
-          try {
-            value = await runHandlerChain(
-              [
-                ...(parent.getConfig()?.inherentMiddleware || []),
-                ...(call.implementationMiddleware.papupata || []),
-                getImplVal,
-              ],
-              req,
-              res,
-              call
-            )
-          } finally {
-            req.query = originalQuery
-            req.params = originalParams
-          }
           if (value === skipHandlingRoute) {
             return next()
           }
@@ -290,11 +275,7 @@ export function responder<
             res.send(value)
           }
         } catch (err) {
-          if (validationBehavior === ValidationBehavior.REROUTE && err instanceof PapupataValidationError) {
-            return next()
-          } else {
-            next(err) // TODO: should there be a "next" here?
-          }
+          next(err)
         }
 
         async function getImplVal() {
@@ -367,6 +348,32 @@ export function responder<
           return pathWithParams + '?' + qs.stringify(queryParams)
         } else {
           return pathWithParams
+        }
+      }
+
+      async function parameterConverterMiddleware(req: any, _res: any, _options: any, next: any) {
+        const originalQuery = req.query,
+          originalParams = req.params
+        const validationBehavior =
+          papupataOptions.validationBehavior ?? parent.getConfig()?.validationBehavior ?? ValidationBehavior.THROW
+        try {
+          const convertedParams = handleQueryParameterTypes(req.params, params, Mode.REQUIRED)
+          const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
+          const queryConversion2 = handleQueryParameterTypes(queryConversion1, boolQuery, Mode.LEGACY_BOOL)
+          const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL)
+          req.query = convertedQuery
+          req.params = convertedParams
+          const resp = await next()
+          return resp
+        } catch (err) {
+          if (validationBehavior === ValidationBehavior.REROUTE && err instanceof PapupataValidationError) {
+            return skipHandlingRoute
+          } else {
+            throw err
+          }
+        } finally {
+          req.query = originalQuery
+          req.params = originalParams
         }
       }
     },

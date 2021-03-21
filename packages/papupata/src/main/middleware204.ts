@@ -1,18 +1,23 @@
 import { PapupataMiddleware } from './config'
 
-const middleware204: PapupataMiddleware<any, any> = async (_req, res, _route, next) => {
+const middleware204: PapupataMiddleware<any, any> = async (_req, res: any, _route, next) => {
   let statusCode = res.statusCode,
     statusCodeSet = false
-  Object.defineProperty(res, 'statusCode', {
-    enumerable: true,
-    get() {
-      return statusCode
-    },
-    set(newStatusCode: number) {
-      statusCode = newStatusCode
-      statusCodeSet = true
-    },
-  })
+
+  if (!res.__papupata204setup) {
+    Object.defineProperty(res, 'statusCode', {
+      enumerable: true,
+      get() {
+        return statusCode
+      },
+      set(newStatusCode: number) {
+        statusCode = newStatusCode
+        statusCodeSet = true
+      },
+    })
+    res.__papupata204setup = true
+  }
+
   const response = await next()
   if (response === undefined) {
     if (!res.headersSent) {
