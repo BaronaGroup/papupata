@@ -2,7 +2,7 @@ import { Integer, StringEnum, StringMatching } from '../customQueryTypes'
 import { APIDeclaration } from '../main'
 import { ValidationBehavior } from '../main/config'
 import middleware204 from '../main/middleware204'
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 import { expectFailure, prepareTestServerFor } from './test-utils'
 
 const getUniquePath = (function () {

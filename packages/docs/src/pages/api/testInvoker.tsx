@@ -2,6 +2,7 @@ import * as React from 'react'
 import { AvailableFrom, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
 import Page from '../../components/Page'
+import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 import { OptionsTable } from './invokeImplementationAdapter'
 
@@ -17,9 +18,13 @@ export default function Mock() {
         <Purpose>This module allows you to use invoke implemented APIs with no express server. This is primarily used for testing.</Purpose>
         <AvailableFrom version={'1.5.0'} />
         <Usage>
-          <Example>{`
-            import testInvoke from 'papupata/dist/main/testInvoker'
-          `}</Example>
+          <VersionVariants
+            variants={{
+              '1.x': <Example>{`import testInvoke from 'papupata/dist/main/testInvoker'`}</Example>,
+              '2.x': <Example>{`import testInvoke from 'papupata/invokers/test'`}</Example>
+            }}
+          />
+
           <p>
             Call the function with the DeclaredAPI you wish to invoke and any parameters you wish to pass to it, as if you were calling it
             normally.
@@ -38,20 +43,39 @@ export default function Mock() {
         </Parameters>
         <MethodReturnType>Papupata MakeRequestAdapter</MethodReturnType>
         <Examples>
-          <Example label={'Basic case'}>{`
-            import { APIDeclaration } from 'papupata'
-            import testInvoke from 'papupata/dist/main/testInvoker'
-            import express from 'express'
-            
-            const app = express()
-            const request = supertest(app)
-            const API = new APIDeclaration()
-            const api = API.declareGetAPI('/').query(['id'] as const).response<string>()
+          <VersionVariants
+            variants={{
+              '1.x': (
+                <Example label={'Basic case'}>{`
+                  import { APIDeclaration } from 'papupata'
+                  import testInvoke from 'papupata/dist/main/testInvoker'
+                  import express from 'express'
+                  
+                  const app = express()
+                  const request = supertest(app)
+                  const API = new APIDeclaration()
+                  const api = API.declareGetAPI('/').query(['id'] as const).response<string>()
 
-            testInvoke(api, {id: '123'})
-            
+                  testInvoke(api, {id: '123'})
+                `}</Example>
+              ),
+              '2.x': (
+                <Example label={'Basic case'}>{`
+                  import { APIDeclaration } from 'papupata'
+                  import testInvoke from 'papupata/invokers/test'
+                  import express from 'express'
+                  
+                  const app = express()
+                  const request = supertest(app)
+                  const API = new APIDeclaration()
+                  const api = API.declareGetAPI('/').query(['id'] as const).response<string>()
 
-          `}</Example>
+                  testInvoke(api, {id: '123'})
+                `}</Example>
+              )
+            }}
+          />
+
           <Example label="With options">{`
             testInvoke(api, {id: '123'}, {withMiddleware: true})
           `}</Example>

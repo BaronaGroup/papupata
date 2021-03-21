@@ -149,7 +149,6 @@ const IndexPage = () => (
                   </p>
                   <p>Simply put, in its current state the adapter is only really suitable for extremely simple use cases.</p>
                   <VersionVariants
-                    isRecommendation
                     variants={{
                       '1.x': (
                         <Example>{`
@@ -162,7 +161,7 @@ const IndexPage = () => (
                       ),
                       '2.x': (
                         <Example>{`
-                          import fetchAdapter from 'papupata/dist/main/fetch-adapter'
+                          import fetchAdapter from 'papupata/adapters/fetch'
                           API.updateConfig({
                             requestAdapter: fetchAdapter
                           })
@@ -186,7 +185,6 @@ const IndexPage = () => (
                     be usable on both node.js and browser environments, supports json and form data as well as non-object bodies.
                   </p>
                   <VersionVariants
-                    isRecommendation
                     variants={{
                       '1.x': (
                         <Example>{`
@@ -195,15 +193,15 @@ const IndexPage = () => (
                             ...API.getConfig(),
                             makeRequest: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
                           })
-                  `}</Example>
+                       `}</Example>
                       ),
                       '2.x': (
                         <Example>{`
-                          import createRequestPromiseAdapter from 'papupata/dist/main/request-promise-adapter'
+                          import createRequestPromiseAdapter from 'papupata/adapters/requestPromise'
                           API.updateConfig({
                             requestAdapter: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
                           })
-                `}</Example>
+                        `}</Example>
                       )
                     }}
                   />

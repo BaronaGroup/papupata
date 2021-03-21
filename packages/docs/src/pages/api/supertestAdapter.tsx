@@ -17,9 +17,12 @@ export default function Mock() {
         <Purpose>This module allows you to use supertest to make papupata API requests.</Purpose>
         <AvailableFrom version={'1.5.0'} />
         <Usage>
-          <Example>{`
-            import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
-          `}</Example>
+          <VersionVariants
+            variants={{
+              '1.x': <Example>{`import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'`}</Example>,
+              '2.x': <Example>{`import createSupertestAdapter from 'papupata/adapters/supertest'`}</Example>
+            }}
+          />
           <p>
             To begin with, you'll want to set up a supertest request for your express application. Once done, you can create a supertest
             papupata adapter to start making API calls.
@@ -34,7 +37,6 @@ export default function Mock() {
         <MethodReturnType>Papupata MakeRequestAdapter</MethodReturnType>
         <Examples>
           <VersionVariants
-            isRecommendation
             variants={{
               '1.x': (
                 <Example>
@@ -60,7 +62,7 @@ export default function Mock() {
                 <Example>
                   {`
                     import { APIDeclaration } from 'papupata'
-                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter' 
+                    import createSupertestAdapter from 'papupata/adapters/supertest' 
                     import express from 'express'
                     import supertest from 'supertest'
                     

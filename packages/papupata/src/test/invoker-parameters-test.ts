@@ -1,6 +1,6 @@
 import { APIDeclaration } from '../main'
 import { runTestServer } from './test-utils'
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 
 describe('invoker-parameters-test', function () {
   const API = new APIDeclaration()

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { APIDeclaration } from '../main'
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 import { runTestServer } from './test-utils'
 
 describe('router-test', function () {

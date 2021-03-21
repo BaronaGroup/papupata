@@ -1,6 +1,6 @@
 import { APIDeclaration } from '../main'
 import { prepareTestServerFor } from './test-utils'
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 
 describe('combo-parameters-test', function () {
   const API = new APIDeclaration()

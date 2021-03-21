@@ -79,7 +79,6 @@ export default function Configure() {
           `}
           </Example>
           <VersionVariants
-            isRecommendation
             variants={{
               '1.x': (
                 <Example label="Configuring browser to use fetch from the local host">
@@ -98,7 +97,7 @@ export default function Configure() {
                 <Example label="Configuring browser to use fetch from the local host">
                   {`
                     import {api} from './api'
-                    import {fetchAdapter} from 'papupata/dist/main/fetch-adapter'
+                    import {fetchAdapter} from 'papupata/adapters/fetch'
                     api.configure({
                       baseURL: '',
                       requestAdapter: fetchAdapter

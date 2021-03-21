@@ -2,7 +2,7 @@ import requestPromise from 'request-promise'
 import { StringEnum } from '../../customQueryTypes'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
-import createRequestAdapter from '../../main/request-promise-adapter'
+import createRequestAdapter from '../../main/requestPromiseAdapter'
 import { expectFailure, prepareTestServerFor } from '../test-utils'
 
 const getUniquePath = (function () {

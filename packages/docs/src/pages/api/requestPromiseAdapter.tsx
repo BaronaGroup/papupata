@@ -14,7 +14,12 @@ export default function RequestPromiseAdapter() {
           <h1>API Reference</h1>
           <h2>requestPromiseAdapter</h2>
         </Container>
-        <Example>{`import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'`}</Example>
+        <VersionVariants
+          variants={{
+            '1.x': <Example>{`import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'`}</Example>,
+            '2.x': <Example>{`import createRequestAdapter from 'papupata/adapters/requestPromise'`}</Example>
+          }}
+        />
         <Purpose>An adapter that utilizes request-promise to invoke APIs</Purpose>
         <ToDo>
           <p>

@@ -100,7 +100,6 @@ const IndexPage = () => (
                     to build your own.
                   </p>
                   <VersionVariants
-                    isRecommendation
                     variants={{
                       '1.x': (
                         <Example>
@@ -118,7 +117,7 @@ const IndexPage = () => (
                       '2.x': (
                         <Example>
                           {`
-                          import createAdapter from 'papupata/dist/main/invokeImplementationAdapter'
+                          import createAdapter from 'papupata/adapters/invokeImplementation'
                           API.updateConfig({
                             baseURL: '', // the value is not relevant, but must be a string
                             requestAdapter: createAdapter()
@@ -171,10 +170,23 @@ const IndexPage = () => (
                     with an experimental function that might or might not be good enough for your use case. If you need additional features,
                     feel free to use the provided function as a template to work on.
                   </p>
-                  <Example>{`
-                    import testInvoke from 'papupata/dist/main/testInvoker'
-                    const response = await invoker(api, {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
-                  `}</Example>
+                  <VersionVariants
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          import testInvoke from 'papupata/dist/main/testInvoker'
+                          const response = await invoker(api, {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                        `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          import testInvoke from 'papupata/invokers/test'
+                          const response = await invoker(api, {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                        `}</Example>
+                      )
+                    }}
+                  />
+
                   <p>The test invoker supports the same options as invokeImplementationAdapter described above.</p>
                   <Example>{`
                     const response = await invoker(api, data, { withMiddleware: true })
@@ -193,12 +205,11 @@ const IndexPage = () => (
                     adapter or write your own if you use something else.
                   </p>
                   <VersionVariants
-                    isRecommendation
                     variants={{
                       '1.x': (
                         <Example>
                           {`
-                            import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'
+                            import createRequestAdapter from 'papupata/dist/main/request-promise-adapter'
                             API.configure({
                               ...API.getConfig(),
                               baseURL: \`http://localhost:\${port}\`
@@ -211,7 +222,7 @@ const IndexPage = () => (
                       '2.x': (
                         <Example>
                           {`
-                            import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'
+                            import createRequestAdapter from 'papupata/adapters/requestPromise'
                             API.updateConfig({                              
                               baseURL: \`http://localhost:\${port}\`
                               requestAdapter: createRequestAdapter('json')
@@ -225,7 +236,6 @@ const IndexPage = () => (
 
                   <p>If you are using supertest, you can use adapter specifically made for it instead.</p>
                   <VersionVariants
-                    isRecommendation
                     variants={{
                       '1.x': (
                         <Example>
@@ -245,7 +255,7 @@ const IndexPage = () => (
                       '2.x': (
                         <Example>
                           {`
-                            import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
+                            import createSupertestAdapter from 'papupata/adapters/supertest'
 
                             const supertestRequest = supertest(app) // express app
                             API.updateConfig({
@@ -261,7 +271,6 @@ const IndexPage = () => (
 
                   <p>If you wish to access the actual supertest request for your assertions, you can instead use supertest invoker.</p>
                   <VersionVariants
-                    isRecommendation
                     variants={{
                       '1.x': (
                         <Example>
@@ -284,7 +293,7 @@ const IndexPage = () => (
                       '2.x': (
                         <Example>
                           {`
-                            import supertestInvoker from 'papupata/dist/main/supertestInvoker'
+                            import supertestInvoker from 'papupata/invokers/supertest'
 
                             API.updateConfig({
                               baseURL: '', // The value must be an empty string

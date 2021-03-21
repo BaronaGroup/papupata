@@ -2,7 +2,7 @@ import requestPromise from 'request-promise'
 import { v4 as uuid } from 'uuid'
 import { APIDeclaration } from '../main'
 import middleware204 from '../main/middleware204'
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 import { prepareTestServerFor } from './test-utils'
 
 const API = new APIDeclaration()

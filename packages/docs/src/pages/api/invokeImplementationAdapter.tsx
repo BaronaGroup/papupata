@@ -19,9 +19,21 @@ export default function Mock() {
         <Purpose>This module allows you to use invoke implemented APIs with no express server. This is primarily used for testing.</Purpose>
         <AvailableFrom version={'1.5.0'} />
         <Usage>
-          <Example>{`
-            import createInvokeImplementationAdapter from 'papupata/dist/main/invokeImplementationAdapter'
-          `}</Example>
+          <VersionVariants
+            variants={{
+              '1.x': (
+                <Example>{`
+                  import createInvokeImplementationAdapter from 'papupata/dist/main/invokeImplementationAdapter'
+                `}</Example>
+              ),
+              '2.x': (
+                <Example>{`
+                  import createInvokeImplementationAdapter from 'papupata/adapters/invokeImplementation'
+                `}</Example>
+              )
+            }}
+          />
+
           <p>
             Call the function with any options you wish and use the returned value as the <FixedFont>requestAdapter</FixedFont> of the
             APIDeclaration. As always, a base url needs to be set up to make calls, but its value is ultimately irrelevant when using this
@@ -36,7 +48,6 @@ export default function Mock() {
         <MethodReturnType>Papupata MakeRequestAdapter</MethodReturnType>
         <Examples>
           <VersionVariants
-            isRecommendation
             variants={{
               '1.x': (
                 <Example>
@@ -60,7 +71,7 @@ export default function Mock() {
                 <Example>
                   {`
                     import { APIDeclaration } from 'papupata'
-                    import createInvokeImplementationAdapter from 'papupata/dist/main/invokeImplementationAdapter'
+                    import createInvokeImplementationAdapter from 'papupata/adapters/invokeImplementation'
                     import express from 'express'
                     
                     const app = express()
