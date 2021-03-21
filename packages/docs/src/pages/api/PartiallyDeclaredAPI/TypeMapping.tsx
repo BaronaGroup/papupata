@@ -1,3 +1,4 @@
+import { Link } from 'gatsby'
 import React from 'react'
 import { AvailableFrom, Example, Examples, Purpose, Usage } from '../../../components/api-components'
 import Container from '../../../components/Container'
@@ -24,6 +25,9 @@ export default function TypeMapping() {
           <p>
             TypeMapping is an object, that is essentially a collection of key-value pairs where the key stands for the name of the parameter
             and the value stands for the type, and when applicable, any other constraints put on the field.
+          </p>
+          <p>
+            For additional information you might want to look at the <Link to="/guide/declaring/typeMapping">TypeMapping guide</Link>
           </p>
           <Example>{`const typeMapping = { fieldName: String}`}</Example>
         </Usage>
@@ -127,7 +131,7 @@ export default function TypeMapping() {
               <td>
                 <p>
                   An array of one entry that is one of the types specified above indicates an array of that type. Not applicable to path
-                  parameters.
+                  parameters. An array parameter is never strictly required -- it being missing results in an empty array.
                 </p>
                 <Example>{`const typeMapping = { fieldName: [String]} // an array of strings`}</Example>
               </td>
