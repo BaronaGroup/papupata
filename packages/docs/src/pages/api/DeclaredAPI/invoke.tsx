@@ -2,6 +2,8 @@ import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
 import { Purpose, Usage, Parameter, Parameters, MethodReturnType, Examples, Example, Caveats } from '../../../components/api-components'
+import React from 'react'
+import VersionVariants from '../../../components/VersionVariants'
 
 const requestOptionsDescription = `Options passed to the request. These have no inherent meaning in papupata, but can be used by
 the requestAdapter function defined by the application. The type of this parameter is set by the RequestOptions type parameter
@@ -50,17 +52,38 @@ export default function Invoke() {
           </ul>
         </Caveats>
         <Examples>
-          <Example label="Declaration">
-            {`
-            import { APIDeclaration } from 'papupata'
-            const api = new APIDeclaration()
-            const myAPI = api.declarePostAPI('/do-stuff/:param')
-              .params(['param'] as const)
-              .query(['q'] as const)
-              .body({key: string})
-              .response<string>()
-          `}
-          </Example>
+          {' '}
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example label="Declaration">
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    const api = new APIDeclaration()
+                    const myAPI = api.declarePostAPI('/do-stuff/:param')
+                      .params(['param'] as const)
+                      .query(['q'] as const)
+                      .body<{key: string}>()
+                      .response<string>()
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example label="Declaration">
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    const api = new APIDeclaration()
+                    const myAPI = api.declarePostAPI('/do-stuff/:param')
+                      .params({param: String})
+                      .query({q: String})
+                      .body<{key: string}>()
+                      .response<string>()
+                  `}
+                </Example>
+              )
+            }}
+          />
           <Example label="Usage in implementation">
             {`
             myAPI.implement(req => {

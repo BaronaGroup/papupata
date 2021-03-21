@@ -12,7 +12,8 @@ import {
   Caveats,
   AvailableFrom
 } from '../../../components/api-components'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
+import VersionVariants from '../../../components/VersionVariants'
 
 interface Params {
   fnName: string
@@ -70,17 +71,38 @@ export default function ImplementBase({ availableFrom, variantPurpose, middlewar
           </ul>
         </Caveats>
         <Examples>
-          <Example label="Declaration">
-            {`
-            import { APIDeclaration } from 'papupata'
-            const api = new APIDeclaration()
-            const myAPI = api.declarePostAPI('/do-stuff/:param')
-              .params(['param'] as const)
-              .query(['q'] as const)
-              .body({key: string})
-              .response<string>()
-          `}
-          </Example>
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example label="Declaration">
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    const api = new APIDeclaration()
+                    const myAPI = api.declarePostAPI('/do-stuff/:param')
+                      .params(['param'] as const)
+                      .query(['q'] as const)
+                      .body<{key: string}>()
+                      .response<string>()
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example label="Declaration">
+                  {`
+                  import { APIDeclaration } from 'papupata'
+                  const api = new APIDeclaration()
+                  const myAPI = api.declarePostAPI('/do-stuff/:param')
+                    .params({param: String})
+                    .query({q: String})
+                    .body<{key: string}>()
+                    .response<string>()
+                `}
+                </Example>
+              )
+            }}
+          />
+
           {examples}
           <Example label="Usage in invocation">
             {`

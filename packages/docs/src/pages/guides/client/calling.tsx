@@ -6,6 +6,7 @@ import IndexLayout from '../../../layouts'
 import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import { Example } from '../../../components/api-components'
 import { Link } from 'gatsby'
+import VersionVariants from '../../../components/VersionVariants'
 
 const IndexPage = () => (
   <IndexLayout>
@@ -31,14 +32,30 @@ const IndexPage = () => (
                   <p>
                     For the examples in the guide, the following code is assumed to be present in the scope, and by this time you should be
                     fully aware of what it all means:
-                  </p>
-                  <Example>{`
-                    const API = new APIDeclaration()
-                    const api = API.declarePatchAPI('/update/:id')
-                      .params(['id'] as const)
-                      .body<{name: string}>()
-                      .response<string>()
-                  `}</Example>
+                  </p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          const API = new APIDeclaration()
+                          const api = API.declarePatchAPI('/update/:id')
+                            .params(['id'] as const)
+                            .body<{name: string}>()
+                            .response<string>()
+                        `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          const API = new APIDeclaration()
+                          const api = API.declarePatchAPI('/update/:id')
+                            .params({id: String})
+                            .body<{name: string}>()
+                            .response<string>()
+                        `}</Example>
+                      )
+                    }}
+                  />
                 </>
               )
             },

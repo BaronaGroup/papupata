@@ -6,6 +6,7 @@ import IndexLayout from '../../../layouts'
 import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import { Example } from '../../../components/api-components'
 import { Link } from 'gatsby'
+import VersionVariants from '../../../components/VersionVariants'
 
 const IndexPage = () => (
   <IndexLayout>
@@ -174,19 +175,41 @@ const IndexPage = () => (
                     you just implement the API you have declared and that is it. If you want to utilize the typescript types, it is also
                     possible to an extent.
                   </p>
-                  <Example>{`
-                    const api = API.declareGetAPI('/path/:id')
-                      .params(['id'] as const)
-                      .query(['search'] as const)
-                      .body<string>()
-                      .response<string>()
-
-                    app[api.method](api.path, (req, res, next) => {
-                      const typedRequest = req as typeof api.RequestType
-                      const response: typeof api.ResponseType = await calculateResponse()
-                      res.send(response)
-                    })
-                  `}</Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          const api = API.declareGetAPI('/path/:id')
+                            .params(['id'] as const)
+                            .query(['search'] as const)
+                            .body<string>()
+                            .response<string>()
+      
+                          app[api.method](api.path, (req, res, next) => {
+                            const typedRequest = req as typeof api.RequestType
+                            const response: typeof api.ResponseType = await calculateResponse()
+                            res.send(response)
+                          })
+                        `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          const api = API.declareGetAPI('/path/:id')
+                            .params({id: String}})
+                            .query({search: String})
+                            .body<string>()
+                            .response<string>()
+      
+                          app[api.method](api.path, (req, res, next) => {
+                            const typedRequest = req as typeof api.RequestType
+                            const response: typeof api.ResponseType = await calculateResponse()
+                            res.send(response)
+                          })
+                    `}</Example>
+                      )
+                    }}
+                  />
                   <p>
                     The main caveat is that boolean query parameters are typed as booleans when they are just strings in express. If this is
                     a problem, you can use a helper type to convert the request to express style using a helper type such as the following:

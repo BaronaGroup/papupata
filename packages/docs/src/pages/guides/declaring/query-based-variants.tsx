@@ -7,6 +7,7 @@ import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import { AvailableFrom, Example } from '../../../components/api-components'
 import styled from 'styled-components'
 import { Link } from 'gatsby'
+import VersionVariants from '../../../components/VersionVariants'
 
 const LineIndent = styled.div`
   border-left: 3px solid #eee;
@@ -147,11 +148,29 @@ const QBVPage = () => (
                     You can have an API that only applies when a parameter has a value that is not one of the ones you've specified. Instead
                     of the usual name=value notation, you instead use value!=value.
                   </p>
-                  <Example>
-                    {`
-                    const api = API.declareGetAPI('/myAPI?variant!=orange').query(['variant'] as const).response<void>()
-                    `}
-                  </Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            const api = API.declareGetAPI('/myAPI?variant!=orange')
+                              .query(['variant'] as const)
+                              .response<void>()
+                            `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            const api = API.declareGetAPI('/myAPI?variant!=orange')
+                              .query({variant: String})
+                              .response<void>()
+                            `}
+                        </Example>
+                      )
+                    }}
+                  />
                   <p>
                     requires all invocations of the API to have the query parameter <FixedFont>variant</FixedFont> not to be set to{' '}
                     <FixedFont>orange</FixedFont>
@@ -176,14 +195,30 @@ const QBVPage = () => (
                     While it is a bit odd, this way the non-matching value is the exact opposite of the specific value routing, covering all
                     cases. If you specifically want there to be a value which is not one of the ones you've provided, you can combine this
                     with "any value" routing rule.
-                  </p>
-                  <Example>
-                    {`
-                    const api = API.declareGetAPI('/myAPI?variant!=orange&variant')
-                      .query(['variant'] as const)
-                      .response<void>()
-                    `}
-                  </Example>
+                  </p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            const api = API.declareGetAPI('/myAPI?variant!=orange&variant')
+                              .query(['variant'] as const)
+                              .response<void>()
+                            `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            const api = API.declareGetAPI('/myAPI?variant!=orange&variant')
+                              .query({variant: String})
+                              .response<void>()
+                            `}
+                        </Example>
+                      )
+                    }}
+                  />
                 </>
               )
             },
@@ -230,14 +265,30 @@ const QBVPage = () => (
                   <p>
                     You can indicate that the API variant is only to be called when a query parameter is present by simply having its name,
                     with no equality or value in the query string part.
-                  </p>
-                  <Example>
-                    {`
-                    const api = API.declareGetAPI('/myAPI?variant')
-                      .query(['variant'] as const)
-                      .response<void>()
-                    `}
-                  </Example>
+                  </p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            const api = API.declareGetAPI('/myAPI?variant')
+                              .query(['variant'] as const)
+                              .response<void>()
+                            `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            const api = API.declareGetAPI('/myAPI?variant')
+                              .query({variant: String})
+                              .response<void>()
+                            `}
+                        </Example>
+                      )
+                    }}
+                  />
                   <p>
                     Do note that an empty value (calling the REST API with something like <FixedFont>/myAPI?variant=</FixedFont> or{' '}
                     <FixedFont>/myAPI?variant</FixedFont>) <strong>is</strong> considered to be a call with the parameter present and is
@@ -324,17 +375,38 @@ const QBVPage = () => (
                   </p>
                   <p>So let's have an example of an API with different sets of inputs:</p>
                   <LineIndent>
-                    <Example>
-                      {`
-                    const simpleSearch = API.declarePostAPI('/search?advanced!=true')
-                      .query(['queryString'] as const)
-                      .response<any>()
-
-                    const advancedSearch = API.declarePostAPI('/search?advanced=true')
-                      .query(['name', 'address', 'phone', 'email'] as const)
-                      .response<any>()
-                    `}
-                    </Example>
+                    {' '}
+                    <VersionVariants
+                      isRecommendation
+                      variants={{
+                        '1.x': (
+                          <Example>
+                            {`
+                              const simpleSearch = API.declarePostAPI('/search?advanced!=true')
+                                .query(['queryString'] as const)
+                                .response<any>()
+          
+                              const advancedSearch = API.declarePostAPI('/search?advanced=true')
+                                .query(['name', 'address', 'phone', 'email'] as const)
+                                .response<any>()
+                              `}
+                          </Example>
+                        ),
+                        '2.x': (
+                          <Example>
+                            {`
+                              const simpleSearch = API.declarePostAPI('/search?advanced!=true')
+                                .query({queryString: String})
+                                .response<any>()
+          
+                              const advancedSearch = API.declarePostAPI('/search?advanced=true')
+                                .query({name: String, address: String, phone: String, email: String}})
+                                .response<any>()
+                              `}
+                          </Example>
+                        )
+                      }}
+                    />
                     <p>
                       So basically a single endpoint serves two types of search functionality, but using the query-based API variants we can
                       have both of them work perfectly in a typed fashion.

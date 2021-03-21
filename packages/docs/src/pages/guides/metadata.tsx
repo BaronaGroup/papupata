@@ -23,16 +23,33 @@ const IndexPage = () => (
               content: (
                 <>
                   <p>It might be helpful fairly solid understanding of what papupata API declarations look like.</p>
-                  <p>In the examples presented in this guide, the following API declaration is assumed to be in the scope:</p>
-                  <Example>{`
-                  const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
-                    .params(['id'] as const)
-                    .query(['author'] as const)
-                    .optionalQuery(['timestamp'] as const)
-                    .queryBool(['notifyWatchers'] as const)
-                    .body<{ name: string}>()
-                    .response<{status: string }>()
-                  `}</Example>
+                  <p>In the examples presented in this guide, the following API declaration is assumed to be in the scope:</p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params(['id'] as const)
+                            .query(['author'] as const)
+                            .optionalQuery(['timestamp'] as const)
+                            .queryBool(['notifyWatchers'] as const)
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                       `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params({id: String})
+                            .query({author: String, notifyWatchers: Boolean}})
+                            .optionalQuery({timestamp: String})
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                       `}</Example>
+                      )
+                    }}
+                  />
                 </>
               )
             },

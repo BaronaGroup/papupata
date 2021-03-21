@@ -68,7 +68,7 @@ export default function Mock() {
                   const app = express()
                   const request = supertest(app)
                   const API = new APIDeclaration()
-                  const api = API.declareGetAPI('/').query(['id'] as const).response<string>()
+                  const api = API.declareGetAPI('/').query({id: String}).response<string>()
 
                   testInvoke(api, {id: '123'})
                 `}</Example>

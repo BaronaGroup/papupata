@@ -81,7 +81,7 @@ export default function Mock() {
                     app,
                     baseURL: ''
                   })
-                  const api = API.declareGetAPI('/:id').params(['id'] as const).response<string>
+                  const api = API.declareGetAPI('/:id').params({id: String}).response<string>
 
                   const req = invokeSupertest(request, api, {id: 'foo'})
                   await req.expect(200)

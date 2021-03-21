@@ -6,6 +6,7 @@ import { Purpose, Usage, Examples, Example } from '../../components/api-componen
 import { MethodMember, Members } from '../../components/members-table'
 import { IncompleteApiDeclarationLink, DeclaredAPILink } from '../../components/links'
 import { MightChange } from '../../components/MightChange'
+import VersionVariants from '../../components/VersionVariants'
 
 export default function IncompleteApiDeclaration() {
   return (
@@ -43,8 +44,7 @@ export default function IncompleteApiDeclaration() {
             Declare URL/path optional query parameters for the API.
           </MethodMember>
           <MethodMember name="queryBool" dataType={<IncompleteApiDeclarationLink />}>
-            <MightChange />
-            Declare URL/path optional query parameters for the API.
+            Declare URL/path optional query parameters for the API. Deprecated since 2.0.0.
           </MethodMember>
           <MethodMember name="body" dataType={<IncompleteApiDeclarationLink />}>
             Declare body type. At this time the body must be an object.
@@ -54,17 +54,36 @@ export default function IncompleteApiDeclaration() {
           </MethodMember>
         </Members>
         <Examples>
-          <Example>{`
-            import { APIDeclaration } from 'papupata'
-            const api = new APIDeclaration()
-            const myAPI = api.declarePostAPI('/do-stuff/:pathParam')
-              .params(['pathParam'] as const)
-              .query(['queryParam'] as const)
-              .optionalQuery(['opt'] as const)
-              .queryBool(['boolValue'] as const)
-              .body<{name: string}>()
-              .response<string>()
-          `}</Example>
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example>{`
+                  import { APIDeclaration } from 'papupata'
+                  const api = new APIDeclaration()
+                  const myAPI = api.declarePostAPI('/do-stuff/:pathParam')
+                    .params(['pathParam'] as const)
+                    .query(['queryParam'] as const)
+                    .optionalQuery(['opt'] as const)
+                    .queryBool(['boolValue'] as const)
+                    .body<{name: string}>()
+                    .response<string>()
+                `}</Example>
+              ),
+              '2.x': (
+                <Example>{`
+                  import { APIDeclaration } from 'papupata'
+                  const api = new APIDeclaration()
+                  const myAPI = api.declarePostAPI('/do-stuff/:pathParam')
+                    .params({pathParam: String})
+                    .query({queryParam: String})
+                    .optionalQuery({opt: String})
+                    .body<{name: string}>()
+                    .response<string>()
+                `}</Example>
+              )
+            }}
+          />
         </Examples>
       </Page>
     </IndexLayout>

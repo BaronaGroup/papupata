@@ -19,19 +19,39 @@ const IndexPage = () => (
               anchor: 'before',
               content: (
                 <div>
-                  <p>The following is assumed to be present for the examples in this guide:</p>
-                  <Example>{`
-                  import {APIDeclaration} from 'papupata'
-                  const API = new APIDeclaration()
-
-                  const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
-                    .params(['id'] as const)
-                    .query(['author'] as const)
-                    .optionalQuery(['timestamp'] as const)
-                    .queryBool(['notifyWatchers'] as const)
-                    .body<{ name: string}>()
-                    .response<{status: string }>()
-                `}</Example>
+                  <p>The following is assumed to be present for the examples in this guide:</p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          import {APIDeclaration} from 'papupata'
+                          const API = new APIDeclaration()
+        
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params(['id'] as const)
+                            .query(['author'] as const)
+                            .optionalQuery(['timestamp'] as const)
+                            .queryBool(['notifyWatchers'] as const)
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                        `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          import {APIDeclaration} from 'papupata'
+                          const API = new APIDeclaration()
+        
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params({id: String})
+                            .query({author: String, notifyWatchers: Boolean}})
+                            .optionalQuery({timestamp: String})
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                        `}</Example>
+                      )
+                    }}
+                  />
                 </div>
               )
             },

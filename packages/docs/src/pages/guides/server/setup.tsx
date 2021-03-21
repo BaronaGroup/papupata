@@ -81,7 +81,6 @@ const IndexPage = () => (
                       '2.x': <p>There is not configuration as this is enabled by default.</p>
                     }}
                   />
-
                   <p>
                     If you are going to implement all, or at least the vast majority of the APIs that have been declared using papupata with
                     papupata, it makes sense to have papupata automatically set up all routes to return 501 Not Implemented until the routes
@@ -99,11 +98,24 @@ const IndexPage = () => (
                     more important effect to this as well, as it means that routes are implemented in the order they were declared in,
                     rather than the order they are implemented in. Usually this does not make a difference, but sometimes the routing can be
                     ambiguous, with the order being the deciding factor. Consider this example:
-                  </p>
-                  <Example>{`
-                    const api1 = API.declareGetAPI('/entries/all').response<any>()
-                    const api2 = API.declareGetAPI('/entries/:id').params(['id'] as const).response<any>()
-                  `}</Example>
+                  </p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          const api1 = API.declareGetAPI('/entries/all').response<any>()
+                          const api2 = API.declareGetAPI('/entries/:id').params(['id'] as const).response<any>()
+                        `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          const api1 = API.declareGetAPI('/entries/all').response<any>()
+                          const api2 = API.declareGetAPI('/entries/:id').params({id: String}}).response<any>()
+                        `}</Example>
+                      )
+                    }}
+                  />
                   <p>
                     It's quite obvious reading it that the intent is that /entries/all goes to api1, and, say, /entries/123 goes to api2.
                     There is however nothing that inherently says that /entries/all shouldn't be handled by api2. Unless the{' '}

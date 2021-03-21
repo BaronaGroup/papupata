@@ -2,6 +2,8 @@ import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
 import { Purpose, Usage, Parameter, Parameters, MethodReturnType, Examples, Example } from '../../../components/api-components'
+import React from 'react'
+import VersionVariants from '../../../components/VersionVariants'
 
 export default function GetURL() {
   return (
@@ -29,47 +31,101 @@ export default function GetURL() {
         </Parameters>
         <MethodReturnType>string</MethodReturnType>
         <Examples>
-          <Example label="Path only">
-            {`
-            import { APIDeclaration } from 'papupata'
-            const api = new APIDeclaration()
-            api.configure({baseURL: 'https://example.com'})
-            const myAPI = api.declarePostAPI('/do-stuff/:param')
-              .params(['param'] as const)
-              .response<string>()
-
-            const URL = myAPI.getURL({param: 'value'})
-            // URL is now https://example.com/do-stuff/value
-          `}
-          </Example>
-          <Example label="Path and query (query omitted)">
-            {`
-            import { APIDeclaration } from 'papupata'
-            const api = new APIDeclaration()
-            api.configure({baseURL: 'https://example.com'})
-            const myAPI = api.declarePostAPI('/do-stuff/:param')
-              .params(['param'] as const)
-              .query(['qval'] as const)
-              .response<string>()
-
-            const URL = myAPI.getURL({param: 'value'})
-            // URL is now https://example.com/do-stuff/value
-          `}
-          </Example>{' '}
-          <Example label="Path and query (query present)">
-            {`
-            import { APIDeclaration } from 'papupata'
-            const api = new APIDeclaration()
-            api.configure({baseURL: 'https://example.com'})
-            const myAPI = api.declarePostAPI('/do-stuff/:param')
-              .params(['param'] as const)
-              .query(['qval'] as const)
-              .response<string>()
-
-            const URL = myAPI.getURL({param: 'value', qval: 'hello'})
-            // URL is now https://example.com/do-stuff/value?qval=hello
-          `}
-          </Example>
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <>
+                  <Example label="Path only">
+                    {`
+                      import { APIDeclaration } from 'papupata'
+                      const api = new APIDeclaration()
+                      api.configure({baseURL: 'https://example.com'})
+                      const myAPI = api.declarePostAPI('/do-stuff/:param')
+                        .params(['param'] as const)
+                        .response<string>()
+          
+                      const URL = myAPI.getURL({param: 'value'})
+                      // URL is now https://example.com/do-stuff/value
+                    `}
+                  </Example>
+                  <Example label="Path and query (query omitted)">
+                    {`
+                      import { APIDeclaration } from 'papupata'
+                      const api = new APIDeclaration()
+                      api.configure({baseURL: 'https://example.com'})
+                      const myAPI = api.declarePostAPI('/do-stuff/:param')
+                        .params(['param'] as const)
+                        .query(['qval'] as const)
+                        .response<string>()
+          
+                      const URL = myAPI.getURL({param: 'value'})
+                      // URL is now https://example.com/do-stuff/value
+                    `}
+                  </Example>{' '}
+                  <Example label="Path and query (query present)">
+                    {`
+                      import { APIDeclaration } from 'papupata'
+                      const api = new APIDeclaration()
+                      api.configure({baseURL: 'https://example.com'})
+                      const myAPI = api.declarePostAPI('/do-stuff/:param')
+                        .params(['param'] as const)
+                        .query(['qval'] as const)
+                        .response<string>()
+          
+                      const URL = myAPI.getURL({param: 'value', qval: 'hello'})
+                      // URL is now https://example.com/do-stuff/value?qval=hello
+                    `}
+                  </Example>
+                </>
+              ),
+              '2.x': (
+                <>
+                  <Example label="Path only">
+                    {`
+                  import { APIDeclaration } from 'papupata'
+                  const api = new APIDeclaration()
+                  api.configure({baseURL: 'https://example.com'})
+                  const myAPI = api.declarePostAPI('/do-stuff/:param')
+                    .params({param: String})
+                    .response<string>()
+      
+                  const URL = myAPI.getURL({param: 'value'})
+                  // URL is now https://example.com/do-stuff/value
+                `}
+                  </Example>
+                  <Example label="Path and query (query omitted)">
+                    {`
+                  import { APIDeclaration } from 'papupata'
+                  const api = new APIDeclaration()
+                  api.configure({baseURL: 'https://example.com'})
+                  const myAPI = api.declarePostAPI('/do-stuff/:param')
+                    .params({param: String})
+                    .query({qval: String})
+                    .response<string>()
+      
+                  const URL = myAPI.getURL({param: 'value'})
+                  // URL is now https://example.com/do-stuff/value
+                `}
+                  </Example>{' '}
+                  <Example label="Path and query (query present)">
+                    {`
+                  import { APIDeclaration } from 'papupata'
+                  const api = new APIDeclaration()
+                  api.configure({baseURL: 'https://example.com'})
+                  const myAPI = api.declarePostAPI('/do-stuff/:param')
+                    .params({param: String})
+                    .query({qval: String})
+                    .response<string>()
+      
+                  const URL = myAPI.getURL({param: 'value', qval: 'hello'})
+                  // URL is now https://example.com/do-stuff/value?qval=hello
+                `}
+                  </Example>
+                </>
+              )
+            }}
+          />
         </Examples>
       </Page>
     </IndexLayout>
