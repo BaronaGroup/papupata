@@ -18,9 +18,12 @@ export default function handleQueryParameterTypes(query: any, types: TypedQueryT
 }
 
 function convertValue(name: string, value: any, targetType: any, mode: Mode): any {
+  if (mode === Mode.LEGACY_BOOL) {
+    return value === 'true'
+  }
   if (value === undefined) {
     if (mode === Mode.OPTIONAL) return undefined
-    if (mode === Mode.REQUIRED) throw new PapupataValidationError(`${name} is required`)
+    throw new PapupataValidationError(`${name} is required`)
   }
 
   if (!targetType) return value
@@ -32,13 +35,13 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
 
   const singleValue = Array.isArray(value) ? value[0] : value
 
-  if (typeof singleValue !== 'string' && mode !== Mode.LEGACY_BOOL)
+  if (typeof singleValue !== 'string')
     throw new Error(`Query parameters must be strings; got a ${typeof singleValue} (${singleValue})`)
 
   switch (targetType) {
     case Boolean: {
       const bool = singleValue
-      if (bool !== 'false' && bool !== 'true' && bool !== '' && (bool !== undefined || mode !== Mode.LEGACY_BOOL)) {
+      if (bool !== 'false' && bool !== 'true' && bool !== '') {
         throw new PapupataValidationError(`${bool} is not a valid boolean for ${name}`)
       }
       return bool === 'true'

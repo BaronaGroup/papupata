@@ -4,7 +4,6 @@ Breaking changes:
 
 - Typescript compilation now targets ES6 instead of ES5
 - The apiUrlParameters field of a declared API is quite different
-- Values other than true, false and empty string to a boolean field cause a PapupataValidationError to be thrown on the server
 - PapupataValidationError is throw on server if required query parameters are missing
 - While arrays were not supported in a reasonable way, the values were not processed in any way and qs has in practice probably added them amongst the query parameters,
   though they could be not accessed with types. Now anything declared to be a string is exactly one string.
