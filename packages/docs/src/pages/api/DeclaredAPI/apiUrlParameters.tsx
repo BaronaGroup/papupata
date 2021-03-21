@@ -1,11 +1,11 @@
+import React from 'react'
 import { AvailableFrom, Purpose } from '../../../components/api-components'
 import Container from '../../../components/Container'
 import { Members, PropertyMember } from '../../../components/members-table'
 import Page from '../../../components/Page'
+import TypeMappingLink from '../../../components/TypeMappingLink'
 import VersionVariants from '../../../components/VersionVariants'
 import IndexLayout from '../../../layouts'
-import React from 'react'
-import { Link } from 'gatsby'
 
 export default function ApiUrlParameters() {
   return (
@@ -39,16 +39,16 @@ export default function ApiUrlParameters() {
             '2.x': (
               <>
                 <Members context="DeclaredAPI/apiUrlParameters" includeRequiredColumn={true}>
-                  <PropertyMember dataType={<TypeMapping />} name="params" required="false">
+                  <PropertyMember dataType={<TypeMappingLink />} name="params" required="false">
                     Path parameters of the API
                   </PropertyMember>
-                  <PropertyMember dataType={<TypeMapping />} name="query" required="false">
+                  <PropertyMember dataType={<TypeMappingLink />} name="query" required="false">
                     Regular query parameters of the API
                   </PropertyMember>
-                  <PropertyMember dataType={<TypeMapping />} name="optionalQuery" required="false">
+                  <PropertyMember dataType={<TypeMappingLink />} name="optionalQuery" required="false">
                     Optional query parameters of the API
                   </PropertyMember>
-                  <PropertyMember dataType={<TypeMapping />} name="boolQuery" required="false">
+                  <PropertyMember dataType={<TypeMappingLink />} name="boolQuery" required="false">
                     Boolean query parameters of the API
                   </PropertyMember>
                 </Members>
@@ -63,8 +63,4 @@ export default function ApiUrlParameters() {
       </Page>
     </IndexLayout>
   )
-}
-
-function TypeMapping() {
-  return <Link to="/api/PartiallyDeclaredAPI/TypeMapping">TypeMapping</Link>
 }

@@ -4,6 +4,7 @@ import { Example } from '../../components/api-components'
 import Container from '../../components/Container'
 import { FixedFont, GuideContent, Overview } from '../../components/guides'
 import Page from '../../components/Page'
+import TypeMappingLink from '../../components/TypeMappingLink'
 import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 
@@ -125,8 +126,8 @@ export default function MigrationToV2() {
                   <>
                     <p>
                       The <Link to="/api/DeclaredAPI/apiUrlParameters">apiUrlParameters property</Link> has had its type changed. It used to
-                      contain arrays of strings, but now it contains <TypeMapping /> objects instead. It is not very likely that you've used
-                      this field, and if you have it's most likely in middleware.
+                      contain arrays of strings, but now it contains <TypeMappingLink /> objects instead. It is not very likely that you've
+                      used this field, and if you have it's most likely in middleware.
                     </p>
                     <p>For existing APIs you can get the old format with:</p>
                     <Example>{`
@@ -239,7 +240,7 @@ export default function MigrationToV2() {
                   <>
                     <p>
                       In papupata 1.x all path and query parameters were declared as const arrays. In 2.x it is now possible, and
-                      recommended that you instead use <TypeMapping /> objects to declare the parameters. The main advantages are never
+                      recommended that you instead use <TypeMappingLink /> objects to declare the parameters. The main advantages are never
                       again forgetting the <FixedFont>as const</FixedFont> and being able to use a variety of types for the parameters
                       instead of just strings.
                     </p>
@@ -331,30 +332,3 @@ export default function MigrationToV2() {
     </IndexLayout>
   )
 }
-function TypeMapping() {
-  return <Link to="/api/PartiallyDeclaredAPI/TypeMapping">TypeMapping</Link>
-}
-
-/*
-
-
-
-
-
-Bug fixes:
-
-- Query parameters are not affected from one route to another when rerouting takes place
-
-New features:
-
-- Query parameters can now be of more types: string, boolean, number, date, or array of any of them. A few more constrained types are also available: string enum, regex-constrained strings and integers
-- The above also applies to path parameters, albeit without array support
-- A default value for dealing with query and path parameter value problems can be configured for the whole API set, overridable for individual APIs, allowing for either throwing upon error (letting your
-  error handling code take over from there) or rerouting, basically making the types routing constraints rather than plain validation.
-- APIDeclaration now has updateConfig method, for changing parts of the config without having to do getConfig -> setConfig
-
-Other:
-
-- the configuration option "makeRequest" has been deprecated in favor of "requestAdapter"; this is just a rename however.
-
-*/

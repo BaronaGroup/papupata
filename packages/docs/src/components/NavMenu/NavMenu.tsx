@@ -25,6 +25,10 @@ const Type = styled.span`
   font-weight: lighter;
 `*/
 
+const Strikethrough = styled.span`
+  text-decoration: line-through;
+`
+
 const Property = styled.span``
 
 export const guides: NavEntries = {
@@ -134,7 +138,11 @@ export default function NavMenu() {
             '/api/PartiallyDeclaredAPI/params': <Method>params</Method>,
             '/api/PartiallyDeclaredAPI/query': <Method>query</Method>,
             '/api/PartiallyDeclaredAPI/optionalQuery': <Method>optionalQuery</Method>,
-            '/api/PartiallyDeclaredAPI/queryBool': <Method>queryBool</Method>,
+            '/api/PartiallyDeclaredAPI/queryBool': (
+              <Method>
+                <Strikethrough>queryBool</Strikethrough>
+              </Method>
+            ),
             '/api/PartiallyDeclaredAPI/body': <Method>body</Method>,
             '/api/PartiallyDeclaredAPI/response': <Method>response</Method>,
             '/api/PartiallyDeclaredAPI/TypeMapping': <Type>TypeMapping</Type>

@@ -1,9 +1,9 @@
-import IndexLayout from '../../../layouts'
-import Page from '../../../components/Page'
+import { Caveats, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../../components/api-components'
 import Container from '../../../components/Container'
-import { Purpose, Usage, Parameter, Parameters, MethodReturnType, Examples, Example, Caveats } from '../../../components/api-components'
+import { FixedFont } from '../../../components/guides'
 import { IncompleteApiDeclarationLink } from '../../../components/links'
-import { MightChange } from '../../../components/MightChange'
+import Page from '../../../components/Page'
+import IndexLayout from '../../../layouts'
 
 export default function QueryBool() {
   return (
@@ -14,7 +14,12 @@ export default function QueryBool() {
           <h2>class IncompleteAPIDeclaration</h2>
           <h3>method queryBool</h3>
         </Container>
-        <MightChange />
+
+        <h5>Deprecated</h5>
+        <p>
+          This method has been deprecated as of 2.0.0. The suggested alternative is to just use <FixedFont>query</FixedFont> and declare the
+          type of a parameter to be a boolean.
+        </p>
         <Purpose>Declares boolean query parameters for an API</Purpose>
         <Usage>
           <p>Path params and other query parameters may be defined before query.</p>
