@@ -135,7 +135,8 @@ export default function NavMenu() {
             '/api/PartiallyDeclaredAPI/optionalQuery': <Method>optionalQuery</Method>,
             '/api/PartiallyDeclaredAPI/queryBool': <Method>queryBool</Method>,
             '/api/PartiallyDeclaredAPI/body': <Method>body</Method>,
-            '/api/PartiallyDeclaredAPI/response': <Method>response</Method>
+            '/api/PartiallyDeclaredAPI/response': <Method>response</Method>,
+            '/api/PartiallyDeclaredAPI/TypeMapping': <Type>TypeMapping</Type>
           }
         },
         '/api/DeclaredAPI': {
