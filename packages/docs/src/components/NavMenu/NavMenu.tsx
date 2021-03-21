@@ -122,7 +122,9 @@ export default function NavMenu() {
             '/api/APIDeclaration/declarePostAPI': <Method>declarePostAPI</Method>,
             '/api/APIDeclaration/declarePatchAPI': <Method>declarePatchAPI</Method>,
             '/api/APIDeclaration/declarePutAPI': <Method>declarePutAPI</Method>,
-            '/api/APIDeclaration/unmockAll': <Method>unmockAll</Method>
+            '/api/APIDeclaration/getConfig': <Method>getConfig</Method>,
+            '/api/APIDeclaration/unmockAll': <Method>unmockAll</Method>,
+            '/api/APIDeclaration/updateConfig': <Method>updateConfig</Method>
           }
         },
         '/api/PartiallyDeclaredAPI': {
