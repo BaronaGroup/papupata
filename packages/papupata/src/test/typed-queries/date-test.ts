@@ -57,7 +57,7 @@ describe('typed-queries/date', function () {
       )
 
       // Then
-      expect(response).toEqual('Value: 1995-01-01T00:00:00.000Z')
+      expect(response).toEqual('Value: 1996-01-01T00:00:00.000Z')
     })
 
     it('server rejects invalid values', async function () {

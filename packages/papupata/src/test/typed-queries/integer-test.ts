@@ -56,7 +56,7 @@ describe('typed-queries/integer', function () {
       const response = await requestPromise.get(api.getURL({}) + '?q1=8&q1=9')
 
       // Then
-      expect(response).toEqual('Value: 8')
+      expect(response).toEqual('Value: 9')
     })
 
     it('server rejects invalid values', async function () {

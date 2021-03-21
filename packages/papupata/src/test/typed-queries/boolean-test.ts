@@ -79,7 +79,7 @@ describe('typed-queries/boolean', function () {
       const response = await requestPromise.get(api.getURL({}) + '?q1=true&q1=false')
 
       // Then
-      expect(response).toEqual('Value: true')
+      expect(response).toEqual('Value: false')
     })
 
     it('server rejects invalid values', async function () {

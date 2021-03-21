@@ -3,6 +3,7 @@ import toPairs from 'lodash/toPairs'
 import fromPairs from 'lodash/fromPairs'
 import PapupataValidationError from './PapupataValidationError'
 import { integerToken, regexStringToken, StringEnum, stringEnumToken, StringMatching } from './customQueryTypes'
+import { valuesIn } from 'lodash'
 
 export enum Mode {
   REQUIRED,
@@ -34,7 +35,7 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
     return valueAsArray.map((item) => convertValue(name, item, targetType[0], mode))
   }
 
-  const singleValue = Array.isArray(value) ? value[0] : value
+  const singleValue = Array.isArray(value) ? value[value.length - 1] : value
 
   if (typeof singleValue !== 'string')
     throw new Error(`Query parameters must be strings; got a ${typeof singleValue} (${singleValue})`)

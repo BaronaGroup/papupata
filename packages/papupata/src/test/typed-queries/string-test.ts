@@ -57,7 +57,7 @@ describe('typed-queries/string', function () {
       const response = await requestPromise.get(api.getURL({}) + '?q1=alpha&q1=beta&q1=gamma')
 
       // Then
-      expect(response).toEqual('Value: alpha')
+      expect(response).toEqual('Value: gamma')
     })
 
     it('server throws is value is missing', async function () {
