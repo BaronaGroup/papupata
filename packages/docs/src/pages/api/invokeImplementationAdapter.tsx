@@ -4,6 +4,7 @@ import Container from '../../components/Container'
 import { FixedFont } from '../../components/guides'
 import { Members, MethodMember, PropertyMember } from '../../components/members-table'
 import Page from '../../components/Page'
+import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 
 export default function Mock() {
@@ -34,21 +35,47 @@ export default function Mock() {
         </Parameters>
         <MethodReturnType>Papupata MakeRequestAdapter</MethodReturnType>
         <Examples>
-          <Example>{`
-            import { APIDeclaration } from 'papupata'
-            import createInvokeImplementationAdapter from 'papupata/dist/main/invokeImplementationAdapter'
-            import express from 'express'
-            
-            const app = express()
-            const request = supertest(app)
-            const API = new APIDeclaration()
-            API.configure({
-              app,
-              baseURL: '',
-              requestAdapter: createInvokeImplementationAdapter()
-            })
-
-          `}</Example>
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example>
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    import createInvokeImplementationAdapter from 'papupata/dist/main/invokeImplementationAdapter'
+                    import express from 'express'
+                    
+                    const app = express()
+                    const request = supertest(app)
+                    const API = new APIDeclaration()
+                    API.configure({
+                      app,
+                      baseURL: '',
+                      makeRequest: createInvokeImplementationAdapter()
+                    })
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example>
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    import createInvokeImplementationAdapter from 'papupata/dist/main/invokeImplementationAdapter'
+                    import express from 'express'
+                    
+                    const app = express()
+                    const request = supertest(app)
+                    const API = new APIDeclaration()
+                    API.configure({
+                      app,
+                      baseURL: '',
+                      requestAdapter: createInvokeImplementationAdapter()
+                    })
+                  `}
+                </Example>
+              )
+            }}
+          />
         </Examples>
       </Page>
     </IndexLayout>

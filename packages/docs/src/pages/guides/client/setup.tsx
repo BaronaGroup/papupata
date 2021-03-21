@@ -156,7 +156,7 @@ const IndexPage = () => (
                           import fetchAdapter from 'papupata/dist/main/fetch-adapter'
                           API.configure({
                             ...API.getConfig(),
-                            requestAdapter: fetchAdapter
+                            makeRequest: fetchAdapter
                           })
                   `}</Example>
                       ),
@@ -193,7 +193,7 @@ const IndexPage = () => (
                           import createRequestPromiseAdapter from 'papupata/dist/main/request-promise-adapter'
                           API.configure({
                             ...API.getConfig(),
-                            requestAdapter: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
+                            makeRequest: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
                           })
                   `}</Example>
                       ),

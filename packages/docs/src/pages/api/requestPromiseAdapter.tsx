@@ -4,6 +4,7 @@ import Page from '../../components/Page'
 import Container from '../../components/Container'
 import { Example, Examples, Purpose } from '../../components/api-components'
 import { ToDo } from '../../components/ToDo'
+import VersionVariants from '../../components/VersionVariants'
 
 export default function RequestPromiseAdapter() {
   return (
@@ -23,13 +24,33 @@ export default function RequestPromiseAdapter() {
         </ToDo>
       </Page>
       <Examples>
-        <Example>{`
-          const API = new APIDeclaration()
-          API.configure({
-            baseURL: '',
-            requestAdapter: createRequestAdapter('json')
-          })
-        `}</Example>
+        <VersionVariants
+          isRecommendation
+          variants={{
+            '1.x': (
+              <Example>
+                {`
+                  const API = new APIDeclaration()
+                  API.configure({
+                    baseURL: '',
+                    makeRequest: createRequestAdapter('json')
+                  })
+                `}
+              </Example>
+            ),
+            '2.x': (
+              <Example>
+                {`
+                  const API = new APIDeclaration()
+                  API.configure({
+                    baseURL: '',
+                    requestAdapter: createRequestAdapter('json')
+                  })
+                `}
+              </Example>
+            )
+          }}
+        />
       </Examples>
     </IndexLayout>
   )

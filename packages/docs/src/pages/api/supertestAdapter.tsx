@@ -2,6 +2,7 @@ import * as React from 'react'
 import { AvailableFrom, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
 import Page from '../../components/Page'
+import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 
 export default function Mock() {
@@ -32,22 +33,51 @@ export default function Mock() {
         </Parameters>
         <MethodReturnType>Papupata MakeRequestAdapter</MethodReturnType>
         <Examples>
-          <Example>{`
-            import { APIDeclaration } from 'papupata'
-            import createSupertestAdapter from 'papupata/dist/main/supertestAdapter' 
-            import express from 'express'
-            import supertest from 'supertest'
-            
-            const app = express()
-            const request = supertest(app)
-            const API = new APIDeclaration()
-            API.configure({
-              app,
-              baseURL: '',
-              requestAdapter: createSupertestAdapter(request)
-            })
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example>
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter' 
+                    import express from 'express'
+                    import supertest from 'supertest'
+                    
+                    const app = express()
+                    const request = supertest(app)
+                    const API = new APIDeclaration()
+                    API.configure({
+                      app,
+                      baseURL: '',
+                      makeRequest: createSupertestAdapter(request)
+                    })
 
-          `}</Example>
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example>
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter' 
+                    import express from 'express'
+                    import supertest from 'supertest'
+                    
+                    const app = express()
+                    const request = supertest(app)
+                    const API = new APIDeclaration()
+                    API.configure({
+                      app,
+                      baseURL: '',
+                      requestAdapter: createSupertestAdapter(request)
+                    })
+
+                  `}
+                </Example>
+              )
+            }}
+          />
         </Examples>
       </Page>
     </IndexLayout>

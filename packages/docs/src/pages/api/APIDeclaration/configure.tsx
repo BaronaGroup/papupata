@@ -16,6 +16,7 @@ import { Members, PropertyMember } from '../../../components/members-table'
 import { Link } from 'gatsby'
 import { ToDo } from '../../../components/ToDo'
 import styled from 'styled-components'
+import VersionVariants from '../../../components/VersionVariants'
 
 const Deprecated = styled.span`
   text-decoration: line-through;
@@ -77,16 +78,36 @@ export default function Configure() {
             })
           `}
           </Example>
-          <Example label="Configuring browser to use fetch from the local host">
-            {`
-            import {api} from './api'
-            import {fetchAdapter} from 'papupata/dist/main/fetch-adapter'
-            api.configure({
-              baseURL: '',
-              requestAdapter: fetchAdapter
-            })
-          `}
-          </Example>
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example label="Configuring browser to use fetch from the local host">
+                  {`
+                    import {api} from './api'
+                    import {fetchAdapter} from 'papupata/dist/main/fetch-adapter'
+                    api.configure({
+                      baseURL: '',
+                      
+                      makeRequest: fetchAdapter
+                    })
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example label="Configuring browser to use fetch from the local host">
+                  {`
+                    import {api} from './api'
+                    import {fetchAdapter} from 'papupata/dist/main/fetch-adapter'
+                    api.configure({
+                      baseURL: '',
+                      requestAdapter: fetchAdapter
+                    })
+                  `}
+                </Example>
+              )
+            }}
+          />
         </Examples>
       </Page>
     </IndexLayout>
@@ -103,12 +124,21 @@ export function ConfigObject() {
         </PropertyMember>
         <PropertyMember
           name={
-            <div>
-              <p>requestAdapter (2.0 onwards)</p>
-              <p>
-                <Deprecated>makeRequest</Deprecated> (1.x, deprecated but supported in 2.x)
-              </p>
-            </div>
+            <VersionVariants
+              variants={{
+                '1.x': (
+                  'makeRequest'
+                ),
+                '2.x': (
+                  <div>
+                    <p>requestAdapter</p>
+                    <p>
+                      <Deprecated>makeRequest</Deprecated> (deprecated)
+                    </p>
+                  </div>
+                )
+              }}
+            />
           }
           dataType="Function"
           required={'Conditionally *2'}

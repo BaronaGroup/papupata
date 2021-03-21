@@ -109,7 +109,7 @@ const IndexPage = () => (
                             API.configure({
                               ...API.getConfig(),
                               baseURL: '', // the value is not relevant, but must be a string
-                              requestAdapter: createAdapter()
+                              makeRequest: createAdapter()
                             })
                             const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
                           `}
@@ -202,7 +202,7 @@ const IndexPage = () => (
                             API.configure({
                               ...API.getConfig(),
                               baseURL: \`http://localhost:\${port}\`
-                              requestAdapter: createRequestAdapter('json')
+                              makeRequest: createRequestAdapter('json')
                             })
                             const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
                           `}
@@ -236,7 +236,7 @@ const IndexPage = () => (
                             API.configure({                      
                               ...API.getConfig(),
                               baseURL: '', // The value must be an empty string
-                              requestAdapter: createSupertestAdapter(supertestRequest)
+                              makeRequest: createSupertestAdapter(supertestRequest)
                             })
                             const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
                           `}
