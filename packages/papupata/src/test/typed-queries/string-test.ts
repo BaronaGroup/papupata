@@ -88,7 +88,7 @@ describe('typed-queries/string', function () {
     it('optional (value missing)', async function () {
       const path = getUniquePath()
       const api = API.declareGetAPI(path).optionalQuery({ q1: String }).response<string>()
-      api.implement((req) => `Value: ${req.query.q1}`)
+      api.implement((req) => `Value: ${req.query.q1?.toString}`)
 
       // When
       const response = await api({})
@@ -160,7 +160,7 @@ describe('typed-queries/string', function () {
       const api = API.declareGetAPI(path)
         .optionalQuery({ q1: [String] })
         .response<string>()
-      api.implement((req) => `Value: ${req.query.q1?.join('*')}`)
+      api.implement((req) => `Value: ${req.query.q1.join('*')}`)
 
       // When
       const response = await api({})

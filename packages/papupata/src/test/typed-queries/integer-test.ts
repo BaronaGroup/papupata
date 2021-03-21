@@ -178,7 +178,7 @@ describe('typed-queries/integer', function () {
       const api = API.declareGetAPI(path)
         .optionalQuery({ q1: [Number] })
         .response<string>()
-      api.implement((req) => `Value: ${req.query.q1?.join('*')}`)
+      api.implement((req) => `Value: ${req.query.q1.join('*')}`)
 
       // When
       const response = await api({})

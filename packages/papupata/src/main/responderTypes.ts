@@ -2,7 +2,7 @@ import { Request as ExpressRequest, RequestHandler, Response } from 'express'
 import { PapupataMiddleware, TypedRequest } from '.'
 import { integerToken, regexStringToken, stringEnumToken } from '../customQueryTypes'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
-import { Method } from './types'
+import { Method, PartialUnlessArray } from './types'
 
 type TypedQueryFieldType =
   | typeof String
@@ -43,7 +43,8 @@ type ActualRequestType<
 > = TypedRequest<
   RequestType,
   TypedQueryToTypes<ParamsType>,
-  TypedQueryToTypes<QueryType & BoolQueryType> & Partial<TypedQueryToTypes<OptionalQueryType & BoolQueryType>>,
+  TypedQueryToTypes<QueryType & BoolQueryType> &
+    PartialUnlessArray<TypedQueryToTypes<OptionalQueryType & BoolQueryType>>,
   BodyType
 >
 

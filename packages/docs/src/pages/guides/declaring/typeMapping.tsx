@@ -263,9 +263,9 @@ const TypeMappingGuide = () => (
                   </p>
                   <p>
                     One oddity of arrays is that they are always effectively optional as far as the server is concerned, as lack of any
-                    values creates an empty array, while the array is required on the browser side. If the array is used in{' '}
-                    <FixedFont>optionalQuery</FixedFont>, it is somewhat reversed as there is always an empty array even if the types do not
-                    indicate that.
+                    values creates an empty array, while the array is required to be entered on the browser side. If the array is used in{' '}
+                    <FixedFont>optionalQuery</FixedFont>, typescript is actually aware on the server of there always being an array, so
+                    there is no need to check for it possibly being undefined.
                   </p>
                 </>
               )

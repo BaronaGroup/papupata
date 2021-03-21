@@ -188,7 +188,7 @@ describe('typed-queries/string enum', function () {
       const api = API.declareGetAPI(path)
         .optionalQuery({ q1: [StringEnum(options)] })
         .response<string>()
-      api.implement((req) => `Value: ${req.query.q1?.join('*')}`)
+      api.implement((req) => `Value: ${req.query.q1.join('*')}`)
 
       // When
       const response = await api({})
