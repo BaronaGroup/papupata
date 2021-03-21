@@ -78,14 +78,7 @@ const IndexPage = () => (
                             })`}
                         </Example>
                       ),
-                      '2.x': (
-                        <Example>
-                          {`
-                            API.updateConfig({
-                              autoImplementAllAPIs: true
-                            })`}
-                        </Example>
-                      )
+                      '2.x': <p>There is not configuration as this is enabled by default.</p>
                     }}
                   />
 
@@ -94,11 +87,18 @@ const IndexPage = () => (
                     papupata, it makes sense to have papupata automatically set up all routes to return 501 Not Implemented until the routes
                     are actually implemented.
                   </p>
+                  <p>This is the default in papupata 2.x and can be turned off by explicitly setting the option to false.</p>
+                  <Example>
+                    {`
+                    API.updateConfig({                              
+                      autoImplementAllAPIs: false
+                    })`}
+                  </Example>
                   <p>
-                    This makes it obvious what is wrong if you try to invoke such an API. There is a more important effect to this as well,
-                    as it means that routes are implemented in the order they were declared in, rather than the order they are implemented
-                    in. Usually this does not make a difference, but sometimes the routing can be ambiguous, with the order being the
-                    deciding factor. Consider this example:
+                    Having the setting enabled it obvious what is wrong if you try to invoke an API that lacks implementation. There is a
+                    more important effect to this as well, as it means that routes are implemented in the order they were declared in,
+                    rather than the order they are implemented in. Usually this does not make a difference, but sometimes the routing can be
+                    ambiguous, with the order being the deciding factor. Consider this example:
                   </p>
                   <Example>{`
                     const api1 = API.declareGetAPI('/entries/all').response<any>()
@@ -119,6 +119,13 @@ const IndexPage = () => (
                   <Example>{`
                     import {skipHandlingRoute} from 'papupata'
                     api1.implement(() => skipHandlingRoute)
+                  `}</Example>
+                  <p>
+                    Papupata 2.x also allows you to declare your desire not to have a route be implemented using papupata in the
+                    declarations itself.
+                  </p>
+                  <Example>{`
+                    const api3 = API.declareGetAPI('/another', {}, { disableAutoImplement: true})
                   `}</Example>
                 </>
               )

@@ -125,9 +125,7 @@ export function ConfigObject() {
           name={
             <VersionVariants
               variants={{
-                '1.x': (
-                  'makeRequest'
-                ),
+                '1.x': 'makeRequest',
                 '2.x': (
                   <div>
                     <p>requestAdapter</p>
@@ -193,20 +191,46 @@ export function ConfigObject() {
           routes of this declaration. Only relevant for implementing, not for clients.
         </PropertyMember>
         <PropertyMember name="autoImplementAllAPIs" dataType="boolean" availableFrom="1.5.0">
-          <p>
-            If set to true, all declared but unimplemented routes are automatically set up to return 501 not implemented as a response to
-            requests. If there is an app or router present at the time of declaration, this happens immediately, otherwise it happens as
-            soon as an app or router is configured.
-          </p>
-          <p>
-            This two major effect; for one, attempts to call unimplemented papupata APIs do not end up going to other route handlers or
-            middleware (although with <Link to="/api/skipHandlingRoute">skipHandlingRoute</Link> this behavior can be restored as needed).
-            Also, routes are implemented in the order they were defined in, not in the order they were implemented in. Usually this does not
-            make a big difference, but if you have two handlers that can match the same path, say, /api/:var and /api/fixed, the only way
-            requests ever reached fixed was if it was implemented first. With this variable set to true, it has to be declared first, but
-            the implementation order is irrelevant.
-          </p>
-          <p>It is likely that from version 2.0 onwards the default value for this setting becomes true.</p>
+          <VersionVariants
+            variants={{
+              '1.x': (
+                <>
+                  <p>
+                    If set to true, all declared but unimplemented routes are automatically set up to return 501 not implemented as a
+                    response to requests. If there is an app or router present at the time of declaration, this happens immediately,
+                    otherwise it happens as soon as an app or router is configured.
+                  </p>
+                  <p>
+                    This has two major effects; for one, attempts to call unimplemented papupata APIs do not end up going to other route
+                    handlers or middleware (although with <Link to="/api/skipHandlingRoute">skipHandlingRoute</Link> this behavior can be
+                    restored as needed). Also, routes are implemented in the order they were defined in, not in the order they were
+                    implemented in. Usually this does not make a big difference, but if you have two handlers that can match the same path,
+                    say, /api/:var and /api/fixed, the only way requests ever reached fixed was if it was implemented first. With this
+                    variable set to true, it has to be declared first, but the implementation order is irrelevant.
+                  </p>
+                </>
+              ),
+              '2.x': (
+                <>
+                  <p>Note: the overall effect is the same, as in 1.x, it's just that the default value is true rather than false in 2.x.</p>
+                  <p>
+                    By default, all declared but unimplemented routes are automatically set up to return 501 not implemented as a response
+                    to requests. If there is an app or router present at the time of declaration, this happens immediately, otherwise it
+                    happens as soon as an app or router is configured. This can be prevented by setting this configuration option to false.
+                  </p>
+                  <p>
+                    This two major effect; for one, attempts to call unimplemented papupata APIs end up going to other route handlers or
+                    middleware (this can be accomplished for individual routes with either returning{' '}
+                    <Link to="/api/skipHandlingRoute">skipHandlingRoute</Link> or by disabling auto-implementation just for it). Also,
+                    routes end up being implemented not in the order they were implemented in, rather than their declaration order. Usually
+                    this does not make a big difference, but if you have two handlers that can match the same path, say, /api/:var and
+                    /api/fixed, the only way requests ever reached fixed was if it was implemented first. With this variable set to true, it
+                    has to be declared first, but the implementation order is irrelevant.
+                  </p>
+                </>
+              )
+            }}
+          />
         </PropertyMember>
       </Members>
       <div>*1: For invoking APIs or calling the getURL method on them</div>

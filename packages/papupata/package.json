@@ -49,7 +49,8 @@
     "./adapters/supertest": "./dist/main/supertestAdapter.js",
     "./invokers/supertest": "./dist/main/supertestInvoker.js",
     "./invokers/test": "./dist/main/testInvoker.js",
-    "./ValidationError": "./dist/main/PapupataValidationError"
+    "./ValidationError": "./dist/main/PapupataValidationError.js",
+    "./config": "./dist/main/config.js"
   },
   "scripts": {
     "build": "npx tsc --project tsconfig.json",

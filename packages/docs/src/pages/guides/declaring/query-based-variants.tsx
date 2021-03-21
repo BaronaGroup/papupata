@@ -297,11 +297,12 @@ const QBVPage = () => (
                   </p>
                   <ul>
                     <li>
-                      if <FixedFont>autoImplementAllAPIs</FixedFont> is set to false (default), the variants are checked in their
-                      declaration order
+                      if <FixedFont>autoImplementAllAPIs</FixedFont> is set to false (default in papupata 1.x), the variants are checked in
+                      their implementation order
                     </li>
                     <li>
-                      if <FixedFont>autoImplementAllAPIs</FixedFont> is set to true, the variants are checked in their declaration order
+                      if <FixedFont>autoImplementAllAPIs</FixedFont> is set to true (default in papupata 2.x), the variants are checked in
+                      their declaration order
                     </li>
                     <li>
                       If you encounter misrouting (whether in the route implementation or a middleware leading there), you can import{' '}

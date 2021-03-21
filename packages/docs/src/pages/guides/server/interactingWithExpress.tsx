@@ -26,8 +26,8 @@ const IndexPage = () => (
                   <p>
                     Papupata connects itself straight to the express app, or you can provide it an express router that you can embed
                     anywhere you wish in your express application. The timing of things depends on the configuration setting{' '}
-                    <FixedFont>autoImplementAllAPIs</FixedFont>: if it is enabled, the APIs are added to the app or router when the
-                    configuration happens, if disabled, they are added when they are implemented.
+                    <FixedFont>autoImplementAllAPIs</FixedFont>: if it is enabled (default in papupata 2.x), the APIs are added to the app
+                    or router when the configuration happens, if disabled, they are added when they are implemented.
                   </p>
                   <p>
                     Any middleware before and after the attachment point are used as normal -- whether they are on the router or the app.
@@ -39,7 +39,7 @@ const IndexPage = () => (
                   <p>App, no autoImplementAllAPIs:</p>
                   <Example>{`
                     const app = express()
-                    API.configure({app})                    
+                    API.configure({app, autoImplementAllAPIs: false})                    
                     app.use(before)
                     api.implement(implementation)
                     app.use(after)
@@ -48,7 +48,7 @@ const IndexPage = () => (
                   <Example>{`
                     import express, {Router} from 'express'
                     const router = Router()
-                    API.configure({router})  
+                    API.configure({router, autoImplementAllAPIs: false})  
 
                     router.use(routerBefore)
                     api.implement(implementation)
@@ -199,11 +199,11 @@ const IndexPage = () => (
                     type ExpressRequest = PapupataToExpressRequest<typeof api.RequestType>
                   `}</Example>
                   <p>
-                    If you've opted to use the <FixedFont>autoImplementAllAPIs</FixedFont> setting, any routes declared in papupata are set
-                    up to return HTTP 501 not implemented, assuming you configure papupata to your express application. This of course is
-                    undesirable when you actually want papupata to ignore the request. If you want the benefits of the setting anyway, there
-                    is a way around it; individual route implementations can return a special token value{' '}
-                    <FixedFont>papupata.skipHandlingRoute</FixedFont> to indicate that routing is to continue onwards.
+                    If you've opted to use the <FixedFont>autoImplementAllAPIs</FixedFont> setting (enabled by default in papupata 2.x), any
+                    routes declared in papupata are set up to return HTTP 501 not implemented, assuming you configure papupata to your
+                    express application. This of course is undesirable when you actually want papupata to ignore the request. If you want
+                    the benefits of the setting anyway, there is a way around it; individual route implementations can return a special
+                    token value <FixedFont>papupata.skipHandlingRoute</FixedFont> to indicate that routing is to continue onwards.
                   </p>
                   <Example>{`
                     import {skipHandlingRoute} from 'papupata'
@@ -213,9 +213,13 @@ const IndexPage = () => (
                       // this is where calls to api end up
                     })
                     `}</Example>
+                  <p>In papupata 2.x, you can also disable the auto-implementation for specific APIs within their declaration.</p>
+                  <Example>{`
+                    const api = API.declareGetAPI('/path', {}, { disableAutoImplement: true })
+                  `}</Example>
                   <p>
-                    Alternatively you could implement your express routes before papupata routes, but that could end up with mismatched API
-                    declarations and implementations so doing so is not without issues, either.
+                    As another alternative you could implement your express routes before papupata routes, but that could end up with
+                    mismatched API declarations and implementations so doing so is not without issues, either.
                   </p>
                 </>
               )
