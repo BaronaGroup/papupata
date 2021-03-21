@@ -232,6 +232,40 @@ export function ConfigObject() {
             }}
           />
         </PropertyMember>
+        <PropertyMember name="validationBehavior" dataType="ValidationBehavior" availableFrom="2.0.0">
+          <p>
+            Query and path parameter types introduced in 2.0.0 include validations. This option can be used to determine what happens when a
+            validation fails, for example a string that cannot be converted to a number is sent in a context where a number is expected.
+          </p>
+          <p>The ValidationBehavior enum can be imported from papupata/config</p>
+          <table>
+            <thead>
+              <th>Value</th>
+              <th>Is default</th>
+              <th>Description</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ValidationBehavior.THROW</td>
+                <td>Yes</td>
+                <td>
+                  A PapupataValidationError is thrown if a validation fails. This can be caught by middleware to add your own error handling
+                  to deal with the situation as you prefer.
+                </td>
+              </tr>
+              <tr>
+                <td>ValidationBehavior.REROUTE</td>
+                <td>No</td>
+                <td>
+                  Has express re-route the request to other routes that match the request. That is, validation problems are considered
+                  routing mismatches rather than errors. If there is nothing else responding to the route, this most likely means that the
+                  user gets a 404 because of the invalid request.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p>Individual APIs can override this behavior using their own validationBehavior option.</p>
+        </PropertyMember>
       </Members>
       <div>*1: For invoking APIs or calling the getURL method on them</div>
       <div>*2: For invoking APIs</div>
