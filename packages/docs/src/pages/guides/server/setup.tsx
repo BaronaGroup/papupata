@@ -6,6 +6,7 @@ import IndexLayout from '../../../layouts'
 import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import { Example } from '../../../components/api-components'
 import { Link } from 'gatsby'
+import VersionVariants from '../../../components/VersionVariants'
 
 const IndexPage = () => (
   <IndexLayout>
@@ -65,12 +66,29 @@ const IndexPage = () => (
               anchor: 'automatic',
               content: (
                 <>
-                  <Example>{`
-                  API.configure({
-                    ...API.getConfig(),
-                    autoImplementAllAPIs: true
-                  })
-                  `}</Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            API.configure({
+                              ...API.getConfig(),
+                              autoImplementAllAPIs: true
+                            })`}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            API.updateConfig({
+                              autoImplementAllAPIs: true
+                            })`}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>
                     If you are going to implement all, or at least the vast majority of the APIs that have been declared using papupata with
                     papupata, it makes sense to have papupata automatically set up all routes to return 501 Not Implemented until the routes
@@ -110,12 +128,29 @@ const IndexPage = () => (
               anchor: 'baseURL',
               content: (
                 <>
-                  <Example>{`
-                  API.configure({
-                    ...API.getConfig(),
-                    baseURL: 'https://www.example.com'
-                  })
-                  `}</Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            API.configure({
+                              ...API.getConfig(),
+                              baseURL: 'https://www.example.com'
+                            })`}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            API.updateConfig({
+                              baseURL: 'https://www.example.com'
+                            })`}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>
                     Setting up the base url is essential for clients, but it can be useful for servers as well. With a base url set up, you
                     can call the <FixedFont>getURL</FixedFont> method on the declarations, which can be useful for redirections, callback
@@ -130,12 +165,31 @@ const IndexPage = () => (
               anchor: 'nonroot',
               content: (
                 <>
-                  <Example>{`
-                  API.configure({
-                    ...API.getConfig(),
-                    routerAt: '/api'
-                  })
-                  `}</Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                          API.configure({
+                            ...API.getConfig(),
+                            routerAt: '/api'
+                          })
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            API.updateConfig({                              
+                              routerAt: '/api'
+                            })
+                            `}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>
                     You might find it convenient to set up papupata implementation on an express router that is not at the root of the
                     server. As a common example, you might want to set up the router to be under /api so that its middleware is only applied
@@ -173,12 +227,31 @@ const IndexPage = () => (
               anchor: 'middleware',
               content: (
                 <>
-                  <Example>{`
-                  API.configure({
-                    ...API.getConfig(),
-                    inherentMiddleware: [myMiddleware1, myMiddleware2]
-                  })
-                  `}</Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                          API.configure({
+                            ...API.getConfig(),
+                            inherentMiddleware: [myMiddleware1, myMiddleware2]
+                          })
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                          API.updateConfig({
+                            inherentMiddleware: [myMiddleware1, myMiddleware2]
+                          })
+                          `}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>
                     Papupata supports middleware, which can be used on the server to process both requests and responses. For more details
                     see <Link to="/guides/server/middleware">the middleware guide</Link>.
@@ -201,18 +274,42 @@ const IndexPage = () => (
                     <li>If status was not explicitly set, it sets it to 204</li>
                     <li>It sends a response to the client with no data</li>
                   </ul>
-                  <Example>{`
-                    import {handleUndefinedResponsesMiddleware} from 'papupata'
-                    API.configure({
-                      ...API.getConfig(),
-                      inherentMiddleware: [handleUndefinedResponsesMiddleware]
-                    })
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import {handleUndefinedResponsesMiddleware} from 'papupata'
+                            API.configure({
+                              ...API.getConfig(),
+                              inherentMiddleware: [handleUndefinedResponsesMiddleware]
+                            })
 
-                    api1.implement(() => {}) // results in a 204 response
-                    api2.implement((_req, res) => {res.redirect('/')}) // the redirection works as expected
-                    api3.implement((_req, res) => {res.status(400)}) // status 400, response is sent with no data
-                    api4.implement((_req, res) => {res.send('done')}) // nothing special happens
-                  `}</Example>
+                            api1.implement(() => {}) // results in a 204 response
+                            api2.implement((_req, res) => {res.redirect('/')}) // the redirection works as expected
+                            api3.implement((_req, res) => {res.status(400)}) // status 400, response is sent with no data
+                            api4.implement((_req, res) => {res.send('done')}) // nothing special happens
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            import {handleUndefinedResponsesMiddleware} from 'papupata'
+                            API.updateConfig({
+                              inherentMiddleware: [handleUndefinedResponsesMiddleware]
+                            })
+
+                            api1.implement(() => {}) // results in a 204 response
+                            api2.implement((_req, res) => {res.redirect('/')}) // the redirection works as expected
+                            api3.implement((_req, res) => {res.status(400)}) // status 400, response is sent with no data
+                            api4.implement((_req, res) => {res.send('done')}) // nothing special happens
+                          `}
+                        </Example>
+                      )
+                    }}
+                  />
                 </>
               )
             },

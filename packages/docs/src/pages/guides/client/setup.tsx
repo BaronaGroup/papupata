@@ -6,6 +6,7 @@ import IndexLayout from '../../../layouts'
 import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import { Example } from '../../../components/api-components'
 import { Link } from 'gatsby'
+import VersionVariants from '../../../components/VersionVariants'
 
 const IndexPage = () => (
   <IndexLayout>
@@ -55,13 +56,24 @@ const IndexPage = () => (
                     If you want to only update some of the settings, you can get the existing configure and reconfigure the api declaration
                     based on it.
                   </p>
-                  <Example>{`
-                    const API = new APIDeclaration()
-                    API.configure({
-                      ...api.getConfig(),
-                      baseUrl: 'https://example.com',
-                    })
-                  `}</Example>
+                  <Example>
+                    {`
+                            const API = new APIDeclaration()
+                            API.configure({
+                              ...api.getConfig(),
+                              baseUrl: 'https://example.com',
+                            })
+                          `}
+                  </Example>
+                  <p>Alternatively, from version 2.0.0 onwards you can use the updateConfig function to do the same.</p>
+                  <Example>
+                    {`
+                            const API = new APIDeclaration()
+                            API.updateConfig({
+                              baseUrl: 'https://example.com',
+                            })
+                          `}
+                  </Example>
                 </>
               )
             },
@@ -136,13 +148,29 @@ const IndexPage = () => (
                     either JSON or plain text. Any response codes above and including 400 cause a generic error to be thrown.
                   </p>
                   <p>Simply put, in its current state the adapter is only really suitable for extremely simple use cases.</p>
-                  <Example>{`
-                    import fetchAdapter from 'papupata/dist/main/fetch-adapter'
-                    API.configure({
-                      ...API.getConfig(),
-                      requestAdapter: fetchAdapter
-                    })
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          import fetchAdapter from 'papupata/dist/main/fetch-adapter'
+                          API.configure({
+                            ...API.getConfig(),
+                            requestAdapter: fetchAdapter
+                          })
                   `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          import fetchAdapter from 'papupata/dist/main/fetch-adapter'
+                          API.updateConfig({
+                            requestAdapter: fetchAdapter
+                          })
+                `}</Example>
+                      )
+                    }}
+                  />
+
                   <p>Having said that, it should be fairly straightforward to expand the implementation to suit your needs.</p>
                 </>
               )
@@ -157,13 +185,29 @@ const IndexPage = () => (
                     This adapter utilizes request-promise and while certainly simple it is much better suited for many purposes. It should
                     be usable on both node.js and browser environments, supports json and form data as well as non-object bodies.
                   </p>
-                  <Example>{`
-                    import createRequestPromiseAdapter from 'papupata/dist/main/request-promise-adapter'
-                    API.configure({
-                      ...API.getConfig(),
-                      requestAdapter: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
-                    })
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          import createRequestPromiseAdapter from 'papupata/dist/main/request-promise-adapter'
+                          API.configure({
+                            ...API.getConfig(),
+                            requestAdapter: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
+                          })
                   `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          import createRequestPromiseAdapter from 'papupata/dist/main/request-promise-adapter'
+                          API.updateConfig({
+                            requestAdapter: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads
+                          })
+                `}</Example>
+                      )
+                    }}
+                  />
+
                   <p>
                     Regardless, it is quite likely that you'll want to create your own version to add some little things you need, such as
                     headers.

@@ -3,6 +3,7 @@ import { Example } from '../../components/api-components'
 import Container from '../../components/Container'
 import { FixedFont, GuideContent, Overview } from '../../components/guides'
 import Page from '../../components/Page'
+import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 
 const IndexPage = () => (
@@ -53,17 +54,36 @@ const IndexPage = () => (
                     already in place. This can be done with the <FixedFont>getURL</FixedFont> method. Do note that the method requires{' '}
                     <FixedFont>baseURL</FixedFont> to be configured.
                   </p>
-                  <Example>{`
-                    API.configure({
-                      ...api.getConfig(),
-                      baseURL: 'https://www.example.com'
-                    })
-                    console.log(complexAPI.getURL({id: '123'})) 
-                    // https://www.example.com/update/123
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          API.configure({
+                            ...api.getConfig(),
+                            baseURL: 'https://www.example.com'
+                          })
+                          console.log(complexAPI.getURL({id: '123'})) 
+                          // https://www.example.com/update/123
 
-                    console.log(complexAPI.getURL({id: '123', author: 'Bob'})) 
-                    // https://www.example.com/update/123?author=Bob
+                          console.log(complexAPI.getURL({id: '123', author: 'Bob'})) 
+                          // https://www.example.com/update/123?author=Bob
                   `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          API.updateConfig({
+                            baseURL: 'https://www.example.com'
+                          })
+                          console.log(complexAPI.getURL({id: '123'})) 
+                          // https://www.example.com/update/123
+
+                          console.log(complexAPI.getURL({id: '123', author: 'Bob'})) 
+                          // https://www.example.com/update/123?author=Bob
+                  `}</Example>
+                      )
+                    }}
+                  />
                 </>
               )
             },

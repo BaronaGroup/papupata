@@ -3,6 +3,7 @@ import { Example } from '../../../components/api-components'
 import Container from '../../../components/Container'
 import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import Page from '../../../components/Page'
+import VersionVariants from '../../../components/VersionVariants'
 import IndexLayout from '../../../layouts'
 
 const IndexPage = () => (
@@ -98,15 +99,37 @@ const IndexPage = () => (
                     and response as well as error handling. If it is too limited for your needs, feel free to use the code for the adapter
                     to build your own.
                   </p>
-                  <Example>{`
-                    import createAdapter from 'papupata/dist/main/invokeImplementationAdapter'
-                    API.configure({
-                      ...API.getConfig(),
-                      baseURL: '', // the value is not relevant, but must be a string
-                      requestAdapter: createAdapter()
-                    })
-                    const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
-                  `}</Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import createAdapter from 'papupata/dist/main/invokeImplementationAdapter'
+                            API.configure({
+                              ...API.getConfig(),
+                              baseURL: '', // the value is not relevant, but must be a string
+                              requestAdapter: createAdapter()
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                          import createAdapter from 'papupata/dist/main/invokeImplementationAdapter'
+                          API.updateConfig({
+                            baseURL: '', // the value is not relevant, but must be a string
+                            requestAdapter: createAdapter()
+                          })
+                          const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                        `}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>The adapters supports a few options that make your life easier:</p>
                   <ul>
                     <li>
@@ -169,42 +192,114 @@ const IndexPage = () => (
                     If you are setting up the express server with your own code for your tests, you might want to use the request-promise
                     adapter or write your own if you use something else.
                   </p>
-                  <Example>{`
-                    import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'
-                    API.configure({
-                      ...API.getConfig(),
-                      baseURL: \`http://localhost:\${port}\`
-                      requestAdapter: createRequestAdapter('json')
-                    })
-                    const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
-                  `}</Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'
+                            API.configure({
+                              ...API.getConfig(),
+                              baseURL: \`http://localhost:\${port}\`
+                              requestAdapter: createRequestAdapter('json')
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'
+                            API.updateConfig({                              
+                              baseURL: \`http://localhost:\${port}\`
+                              requestAdapter: createRequestAdapter('json')
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>If you are using supertest, you can use adapter specifically made for it instead.</p>
-                  <Example>{`
-                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
 
-                    const supertestRequest = supertest(app) // express app
-                    API.configure({                      
-                      ...API.getConfig(),
-                      baseURL: '', // The value must be an empty string
-                      requestAdapter: createSupertestAdapter(supertestRequest)
-                    })
-                    const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
-                  `}</Example>
+                            const supertestRequest = supertest(app) // express app
+                            API.configure({                      
+                              ...API.getConfig(),
+                              baseURL: '', // The value must be an empty string
+                              requestAdapter: createSupertestAdapter(supertestRequest)
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
+
+                            const supertestRequest = supertest(app) // express app
+                            API.updateConfig({
+                              baseURL: '', // The value must be an empty string
+                              requestAdapter: createSupertestAdapter(supertestRequest)
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>If you wish to access the actual supertest request for your assertions, you can instead use supertest invoker.</p>
-                  <Example>{`
-                    import supertestInvoker from 'papupata/dist/main/supertestInvoker'
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import supertestInvoker from 'papupata/dist/main/supertestInvoker'
 
-                    API.configure({                      
-                      ...API.getConfig(),
-                      baseURL: '', // The value must be an empty string
-                    })
-                    
-                    const supertestRequest = supertest(app) // express app
-                    const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
+                            API.configure({                      
+                              ...API.getConfig(),
+                              baseURL: '', // The value must be an empty string
+                            })
+                            
+                            const supertestRequest = supertest(app) // express app
+                            const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
 
-                    await invokeSupertest(supertestRequest, api, data)
-                      .expect(200)                    
-                  `}</Example>
+                            await invokeSupertest(supertestRequest, api, data)
+                              .expect(200)                    
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            import supertestInvoker from 'papupata/dist/main/supertestInvoker'
+
+                            API.updateConfig({
+                              baseURL: '', // The value must be an empty string
+                            })
+                            
+                            const supertestRequest = supertest(app) // express app
+                            const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
+
+                            await invokeSupertest(supertestRequest, api, data)
+                              .expect(200)                    
+                          `}
+                        </Example>
+                      )
+                    }}
+                  />
                 </>
               )
             }
