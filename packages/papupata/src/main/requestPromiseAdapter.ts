@@ -4,11 +4,12 @@ import requestPromise from 'request-promise'
 export default function createRequestAdapter(bodyType: 'json' | 'form'): MakeRequestAdapter {
   return async (method: string, url: string, query: any, body: any) => {
     const isPlainBody = typeof body !== 'object'
-    const actualBodyType = isPlainBody ? 'body' : bodyType
+    const actualBodyType = isPlainBody ? 'body' : bodyType === 'json' ? 'body' : bodyType
     const response = await requestPromise({
       method,
       url,
       qs: query,
+      body,
       json: !isPlainBody,
       [actualBodyType]: body,
       resolveWithFullResponse: true,

@@ -145,7 +145,7 @@ export function ConfigObject() {
             <Parameter name="method" dataType="string" />
             <Parameter name="url" dataType="string" />
             <Parameter name="query" dataType="object" />
-            <Parameter name="body" dataType="object" />
+            <Parameter name="body" dataType="varies" />
             <Parameter name="params" dataType="object" availableFrom="1.2.0">
               Do note that params are already baked into the URL, there is no need for the function to do that.
             </Parameter>

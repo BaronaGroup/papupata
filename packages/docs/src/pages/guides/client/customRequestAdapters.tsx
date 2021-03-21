@@ -86,7 +86,9 @@ const IndexPage = () => (
                         <td>
                           This is the body that is to be sent with the request. No serialization or other manipulation has been done before
                           it arrives to this function, so if your library requires, say, you to do <FixedFont>JSON.stringify</FixedFont> on
-                          objects then you'll want to do that before passing it along.
+                          objects then you'll want to do that before passing it along. Typically this will be an object, or undefined if
+                          there is no data for the body, though as papupata supports other types of bodies as well it can end up being
+                          pretty much any type.
                         </td>
                       </tr>
                       <tr>
