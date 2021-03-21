@@ -98,7 +98,8 @@ export const guides: NavEntries = {
         description: 'This guide will help you with testing server code that implements APIs with papupata.'
       }
     }
-  }
+  },
+  '/guides/migrationToV2': 'Migrating to papupata 2.x'
 }
 
 export default function NavMenu() {

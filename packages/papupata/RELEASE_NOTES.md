@@ -10,12 +10,12 @@ Breaking changes:
 - Request adapters receive undefined as the body if there is nothing in the body. This should make it so that GET requests do not accidentally end up with a body.
   This does not apply when a separate body is explicitly requested, in those cases the body will be passed as is.
 - `autoImplementAllAPIs` defaults to true now; if you use papupata extensively for declaring APIs implemented without if you'll probably want to set it to false when
-  configuring papupata. If there are only a few exceptions, you can now add options to disable auto-implentation for individual APIs
+  configuring papupata. If there are only a few exceptions, you can now add options to disable auto-implementation for individual APIs
+   
+   API.declareGetAPI(path, undefined, { disableAutoImplement: true })
+
 - when `autoImplementAllAPIs` is enabled, middleware will now be applied to the requests as if it was implemented; this middleware that are relevant even in those cases,
   such as those used for logging, to still work even if the API has not been implemented.
-
-  API.declareGetAPI(path, undefined, { disableAutoImplement: true })
-
 - Deep imports have been completely changed; see the mapping below for what needs to be changed and how. If you had something like `import adapter from 'papupata/dist/main/fetchAdapter`
   you'll have to change it to `import adapter from 'papupata/adapters/fetch`
 
