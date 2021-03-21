@@ -127,6 +127,20 @@ describe('typed-queries/string', function () {
       expect(response).toEqual('Value: hello*user')
     })
 
+    it('empty', async function () {
+      const path = getUniquePath()
+      const api = API.declareGetAPI(path)
+        .query({ q1: [String] })
+        .response<string>()
+      api.implement((req) => `Value: ${req.query.q1.join('*')}`)
+
+      // When
+      const response = await api({ q1: [] })
+
+      // Then
+      expect(response).toEqual('Value: ')
+    })
+
     it('optional (value present)', async function () {
       const path = getUniquePath()
       const api = API.declareGetAPI(path)
@@ -152,7 +166,7 @@ describe('typed-queries/string', function () {
       const response = await api({})
 
       // Then
-      expect(response).toEqual('Value: undefined')
+      expect(response).toEqual('Value: ')
     })
   })
 })

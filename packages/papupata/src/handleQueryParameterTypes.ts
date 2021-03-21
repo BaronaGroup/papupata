@@ -22,6 +22,7 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
     return value === 'true'
   }
   if (value === undefined) {
+    if (Array.isArray(targetType)) return []
     if (mode === Mode.OPTIONAL) return undefined
     throw new PapupataValidationError(`${name} is required`)
   }

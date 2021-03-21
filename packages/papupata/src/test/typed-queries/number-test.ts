@@ -184,7 +184,7 @@ describe('typed-queries/number', function () {
       const response = await api({})
 
       // Then
-      expect(response).toEqual('Value: undefined')
+      expect(response).toEqual('Value: ')
     })
   })
 })
