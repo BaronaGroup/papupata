@@ -1,4 +1,4 @@
-import { StringMatching } from '../../customQueryTypes'
+import { StringMatching } from '../../main/customQueryTypes'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'

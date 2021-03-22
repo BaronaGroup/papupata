@@ -1,4 +1,4 @@
-import { TypedQueryType } from './main/responderTypes'
+import { TypedQueryType } from './responderTypes'
 import toPairs from 'lodash/toPairs'
 import fromPairs from 'lodash/fromPairs'
 import PapupataValidationError from './PapupataValidationError'

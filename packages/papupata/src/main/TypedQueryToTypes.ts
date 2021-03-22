@@ -1,4 +1,4 @@
-import { integerToken, regexStringToken, stringEnumToken } from '../customQueryTypes'
+import { integerToken, regexStringToken, stringEnumToken } from './customQueryTypes'
 import { StringTupleElementTypes } from './types'
 
 type GetType<T> = T extends { new (...args: any): any }

@@ -1,6 +1,6 @@
 import { Request as ExpressRequest, RequestHandler, Response } from 'express'
 import { PapupataMiddleware, TypedRequest } from '.'
-import { integerToken, regexStringToken, stringEnumToken } from '../customQueryTypes'
+import { integerToken, regexStringToken, stringEnumToken } from './customQueryTypes'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
 import { Method, PartialUnlessArray } from './types'
 

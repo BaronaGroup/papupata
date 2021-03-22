@@ -1,5 +1,5 @@
 import requestPromise from 'request-promise'
-import { StringEnum } from '../../customQueryTypes'
+import { StringEnum } from '../../main/customQueryTypes'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'

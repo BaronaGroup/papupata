@@ -1,9 +1,9 @@
-import { Integer, StringMatching } from '../../customQueryTypes'
+import { Integer, StringMatching } from '../../main/customQueryTypes'
 import { APIDeclaration } from '../../main'
 import { ValidationBehavior } from '../../main/config'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'
-import PapupataValidationError from '../../PapupataValidationError'
+import PapupataValidationError from '../../main/PapupataValidationError'
 import { expectFailure, prepareTestServerFor } from '../test-utils'
 
 const getUniquePath = (function () {

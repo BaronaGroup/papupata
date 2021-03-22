@@ -1,7 +1,7 @@
 import { MakeRequestAdapter } from './config'
 import { Response } from 'express'
 import createMockResponse from './utils/mockResponse'
-import handleQueryParameterTypes, { Mode } from '../handleQueryParameterTypes'
+import handleQueryParameterTypes, { Mode } from './handleQueryParameterTypes'
 
 export type AssertResponseFn = (res: Response) => void
 

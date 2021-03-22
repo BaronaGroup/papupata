@@ -1,4 +1,4 @@
-import { Integer, StringEnum, StringMatching } from '../customQueryTypes'
+import { Integer, StringEnum, StringMatching } from '../main/customQueryTypes'
 import { APIDeclaration } from '../main'
 import { ValidationBehavior } from '../main/config'
 import middleware204 from '../main/middleware204'

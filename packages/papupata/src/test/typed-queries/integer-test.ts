@@ -1,5 +1,5 @@
 import requestPromise from 'request-promise'
-import { Integer } from '../../customQueryTypes'
+import { Integer } from '../../main/customQueryTypes'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'
@@ -25,7 +25,9 @@ describe('typed-queries/integer', function () {
   describe('single', function () {
     it('client', async function () {
       const path = getUniquePath()
-      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true }).query({ q1: Integer }).response<string>()
+      const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
+        .query({ q1: Integer })
+        .response<string>()
       testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1))
 
       // When
