@@ -28,6 +28,7 @@ describe('testInvoker-test', function () {
       optionalQuery: defaultArgs.optionalQuery,
       queryBool: defaultArgs.queryBool,
       queryBool2: defaultArgs.queryBool2,
+      array: [],
     },
     params: {
       id: defaultArgs.id,
@@ -275,6 +276,37 @@ describe('testInvoker-test', function () {
     })
   })
 
+  describe('types', function () {
+    it('works with numbers', async function () {
+      const resp = await testInvoke(
+        api,
+        { ...defaultArgs, optionalQueryNumber: 10 },
+        {
+          createRequest: (req) => ({ ...req, headers: { 'Content-Type': 'application/json' } }),
+        }
+      )
+      expect(resp).toMatchObject({
+        query: {
+          optionalQueryNumber: 10,
+        },
+      })
+    })
+    it('works with arrays', async function () {
+      const resp = await testInvoke(
+        api,
+        { ...defaultArgs, array: [100, 200, 300] },
+        {
+          createRequest: (req) => ({ ...req, headers: { 'Content-Type': 'application/json' } }),
+        }
+      )
+      expect(resp).toMatchObject({
+        query: {
+          array: [100, 200, 300],
+        },
+      })
+    })
+  })
+
   function responseChecker(checkFn: AssertResponseFn) {
     return {
       assertResponse: checkFn,
@@ -285,9 +317,13 @@ describe('testInvoker-test', function () {
     // since we never have an express server overlapping paths are not an issue
     return API.declarePostAPI('/test/:id')
       .params(['id'] as const)
-      .query(['query'] as const)
-      .optionalQuery(['optionalQuery', 'optionalQuery2'] as const)
-      .queryBool(['queryBool', 'queryBool2'] as const)
+      .query({ query: String, queryBool: Boolean, queryBool2: Boolean })
+      .optionalQuery({
+        optionalQuery: String,
+        optionalQuery2: String,
+        optionalQueryNumber: Number,
+        array: [Number],
+      })
       .body<{ bodyValue: string }>()
       .response<{ headers: any; body: any; params: any; query: any }>()
   }

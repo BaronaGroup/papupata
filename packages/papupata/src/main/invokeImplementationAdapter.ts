@@ -2,6 +2,7 @@ import { MakeRequestAdapter } from './config'
 import { Response } from 'express'
 import createMockResponse from './utils/mockResponse'
 import handleQueryParameterTypes, { Mode } from './handleQueryParameterTypes'
+import qs from 'qs'
 
 export type AssertResponseFn = (res: Response) => void
 
@@ -23,9 +24,9 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
 
     const req = {
       ...requestBase,
-      query,
+      query: qs.parse(qs.stringify(query)),
       body,
-      params,
+      params: qs.parse(qs.stringify(params)),
     }
 
     const res = createMockResponse()
