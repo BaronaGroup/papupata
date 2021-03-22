@@ -1,4 +1,5 @@
 import React from 'react'
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -87,7 +88,7 @@ export default function Configure() {
                     import {fetchAdapter} from 'papupata/dist/main/fetch-adapter'
                     api.configure({
                       baseURL: '',
-                      
+
                       makeRequest: fetchAdapter
                     })
                   `}

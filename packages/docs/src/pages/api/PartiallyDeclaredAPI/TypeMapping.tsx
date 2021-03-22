@@ -1,3 +1,4 @@
+import '../../../prepare'
 import { Link } from 'gatsby'
 import React from 'react'
 import { AvailableFrom, Example, Examples, Purpose, Usage } from '../../../components/api-components'

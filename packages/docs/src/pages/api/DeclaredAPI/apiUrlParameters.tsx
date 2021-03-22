@@ -1,4 +1,6 @@
 import React from 'react'
+import '../../../prepare'
+
 import { AvailableFrom, Purpose } from '../../../components/api-components'
 import Container from '../../../components/Container'
 import { Members, PropertyMember } from '../../../components/members-table'

@@ -1,3 +1,4 @@
+import '../../../prepare'
 import ImplementBase from './implementBase'
 import { Example, Parameter } from '../../../components/api-components'
 
@@ -19,7 +20,7 @@ export default function ImplementWithPapupataMiddleware() {
               [(req, _res, _route, next) => { console.log(req.url); next() }],
               () => {
                 return 'hello'
-            })            
+            })
           `}
         </Example>
       }

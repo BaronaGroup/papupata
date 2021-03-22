@@ -1,3 +1,4 @@
+import '../../../prepare'
 import ImplementBase from './implementBase'
 import { Example, Parameter } from '../../../components/api-components'
 import { Link } from 'gatsby'
@@ -48,7 +49,7 @@ export default function ImplementWithMiddleware() {
                 return 'hello'
               }
             )
-                      
+
           `}
         </Example>
       }

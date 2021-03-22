@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -20,9 +21,9 @@ export default function Method() {
             const api = new APIDeclaration()
             const myAPI = api.declareGetAPI('/get-stuff')
               .response<string>()
-          
-            // myAPI.method === 'get' 
-            
+
+            // myAPI.method === 'get'
+
           `}
           </Example>
         </Examples>

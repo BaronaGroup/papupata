@@ -1,3 +1,4 @@
+import '../../../prepare'
 import * as React from 'react'
 import { Example } from '../../../components/api-components'
 import Container from '../../../components/Container'
@@ -34,7 +35,7 @@ const IndexPage = () => (
                       params: any,
                       api: any,
                       requestOptions?: RequestOptions
-                    ) => Promise<any>                    
+                    ) => Promise<any>
                     `}</Example>
                   <p>
                     In the table below you'll find listed typical uses for each of the parameters, from the point of view of making typical

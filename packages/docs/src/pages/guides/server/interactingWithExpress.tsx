@@ -1,3 +1,4 @@
+import '../../../prepare'
 import * as React from 'react'
 
 import Page from '../../../components/Page'
@@ -40,7 +41,7 @@ const IndexPage = () => (
                   <p>App, no autoImplementAllAPIs:</p>
                   <Example>{`
                     const app = express()
-                    API.configure({app, autoImplementAllAPIs: false})                    
+                    API.configure({app, autoImplementAllAPIs: false})
                     app.use(before)
                     api.implement(implementation)
                     app.use(after)
@@ -49,7 +50,7 @@ const IndexPage = () => (
                   <Example>{`
                     import express, {Router} from 'express'
                     const router = Router()
-                    API.configure({router, autoImplementAllAPIs: false})  
+                    API.configure({router, autoImplementAllAPIs: false})
 
                     router.use(routerBefore)
                     api.implement(implementation)
@@ -64,17 +65,17 @@ const IndexPage = () => (
                   <Example>{`
                     const app = express()
                     app.use(before)
-                    API.configure({app, autoImplementAllAPIs: true})                    
+                    API.configure({app, autoImplementAllAPIs: true})
                     app.use(after)
-                    api.implement(implementation)                    
+                    api.implement(implementation)
                   `}</Example>
                   <p>Router, using autoImplementAllAPIs:</p>
                   <Example>{`
                     import express, {Router} from 'express'
                     const router = Router()
-                    
+
                     router.use(routerBefore)
-                    API.configure({router, autoImplementAllAPIs: true})  
+                    API.configure({router, autoImplementAllAPIs: true})
                     router.use(routerAfter)
 
                     const app = express()
@@ -82,7 +83,7 @@ const IndexPage = () => (
                     app.use(router)
                     app.use(after)
 
-                    api.implement(implementation)                    
+                    api.implement(implementation)
                   `}</Example>
                 </>
               )
@@ -151,7 +152,7 @@ const IndexPage = () => (
                   <Example>{`
                     import {convertExpressMiddleware} from 'papupata'
                     api.implementWithExpressMiddleware(
-                      [myPapupataMiddleware, convertExpressMiddleware(myExpressMiddleware)], 
+                      [myPapupataMiddleware, convertExpressMiddleware(myExpressMiddleware)],
                       implementation
                     )
                   `}</Example>
@@ -185,7 +186,7 @@ const IndexPage = () => (
                             .query(['search'] as const)
                             .body<string>()
                             .response<string>()
-      
+
                           app[api.method](api.path, (req, res, next) => {
                             const typedRequest = req as typeof api.RequestType
                             const response: typeof api.ResponseType = await calculateResponse()
@@ -200,7 +201,7 @@ const IndexPage = () => (
                             .query({search: String})
                             .body<string>()
                             .response<string>()
-      
+
                           app[api.method](api.path, (req, res, next) => {
                             const typedRequest = req as typeof api.RequestType
                             const response: typeof api.ResponseType = await calculateResponse()
@@ -218,7 +219,7 @@ const IndexPage = () => (
                     type PapupataToExpressRequest<T> = T extends { query: infer U }
                       ? Omit<T, 'query'> & { query: { [t in keyof U]: string } }
                       : T
-                  
+
                     type ExpressRequest = PapupataToExpressRequest<typeof api.RequestType>
                   `}</Example>
                   <p>

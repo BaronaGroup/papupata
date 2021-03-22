@@ -1,3 +1,4 @@
+import '../../../prepare'
 import * as React from 'react'
 import { Example } from '../../../components/api-components'
 import Container from '../../../components/Container'
@@ -27,7 +28,7 @@ const IndexPage = () => (
                         <Example>{`
                           import {APIDeclaration} from 'papupata'
                           const API = new APIDeclaration()
-        
+
                           const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
                             .params(['id'] as const)
                             .query(['author'] as const)
@@ -41,7 +42,7 @@ const IndexPage = () => (
                         <Example>{`
                           import {APIDeclaration} from 'papupata'
                           const API = new APIDeclaration()
-        
+
                           const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
                             .params({id: String})
                             .query({author: String, notifyWatchers: Boolean}})
@@ -155,7 +156,7 @@ const IndexPage = () => (
                       <FixedFont>createRequest</FixedFont> for setting up the request as you need (with, say, headers, session etc)
                       <Example>{`
                         const requestAdapter = createAdapter({
-                          createRequest: () => ({ headers: { 'authorization': 'bearer 123'}}) 
+                          createRequest: () => ({ headers: { 'authorization': 'bearer 123'}})
                         })
                       `}</Example>
                     </li>
@@ -163,7 +164,7 @@ const IndexPage = () => (
                       <FixedFont>assertResponse</FixedFont> for making assertions about the response beyond just the data
                       <Example>{`
                         const requestAdapter = createAdapter({
-                          assertResponse: res => expect(res.statusCode).toEqual(400) 
+                          assertResponse: res => expect(res.statusCode).toEqual(400)
                         })
                       `}</Example>
                     </li>
@@ -243,7 +244,7 @@ const IndexPage = () => (
                         <Example>
                           {`
                             import createRequestAdapter from 'papupata/adapters/requestPromise'
-                            API.updateConfig({                              
+                            API.updateConfig({
                               baseURL: \`http://localhost:\${port}\`
                               requestAdapter: createRequestAdapter('json')
                             })
@@ -263,7 +264,7 @@ const IndexPage = () => (
                             import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
 
                             const supertestRequest = supertest(app) // express app
-                            API.configure({                      
+                            API.configure({
                               ...API.getConfig(),
                               baseURL: '', // The value must be an empty string
                               makeRequest: createSupertestAdapter(supertestRequest)
@@ -297,16 +298,16 @@ const IndexPage = () => (
                           {`
                             import supertestInvoker from 'papupata/dist/main/supertestInvoker'
 
-                            API.configure({                      
+                            API.configure({
                               ...API.getConfig(),
                               baseURL: '', // The value must be an empty string
                             })
-                            
+
                             const supertestRequest = supertest(app) // express app
                             const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
 
                             await invokeSupertest(supertestRequest, api, data)
-                              .expect(200)                    
+                              .expect(200)
                           `}
                         </Example>
                       ),
@@ -318,12 +319,12 @@ const IndexPage = () => (
                             API.updateConfig({
                               baseURL: '', // The value must be an empty string
                             })
-                            
+
                             const supertestRequest = supertest(app) // express app
                             const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
 
                             await invokeSupertest(supertestRequest, api, data)
-                              .expect(200)                    
+                              .expect(200)
                           `}
                         </Example>
                       )

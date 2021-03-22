@@ -1,3 +1,4 @@
+import '../../prepare'
 import * as React from 'react'
 import { AvailableFrom, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
@@ -42,10 +43,10 @@ export default function Mock() {
                 <Example>
                   {`
                     import { APIDeclaration } from 'papupata'
-                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter' 
+                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
                     import express from 'express'
                     import supertest from 'supertest'
-                    
+
                     const app = express()
                     const request = supertest(app)
                     const API = new APIDeclaration()
@@ -62,10 +63,10 @@ export default function Mock() {
                 <Example>
                   {`
                     import { APIDeclaration } from 'papupata'
-                    import createSupertestAdapter from 'papupata/adapters/supertest' 
+                    import createSupertestAdapter from 'papupata/adapters/supertest'
                     import express from 'express'
                     import supertest from 'supertest'
-                    
+
                     const app = express()
                     const request = supertest(app)
                     const API = new APIDeclaration()

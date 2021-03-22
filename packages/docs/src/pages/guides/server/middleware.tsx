@@ -1,3 +1,4 @@
+import '../../../prepare'
 import * as React from 'react'
 
 import Page from '../../../components/Page'
@@ -72,7 +73,7 @@ const IndexPage = () => (
                       '2.x': (
                         <Example>
                           {`
-                          API.updateConfig({                            
+                          API.updateConfig({
                             inherentMiddleware: [myMiddleware1, myMiddleware1]
                           })`}
                         </Example>

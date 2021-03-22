@@ -1,3 +1,4 @@
+import '../../prepare'
 import * as React from 'react'
 import { AvailableFrom, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
@@ -50,7 +51,7 @@ export default function Mock() {
                   import { APIDeclaration } from 'papupata'
                   import testInvoke from 'papupata/dist/main/testInvoker'
                   import express from 'express'
-                  
+
                   const app = express()
                   const request = supertest(app)
                   const API = new APIDeclaration()
@@ -64,7 +65,7 @@ export default function Mock() {
                   import { APIDeclaration } from 'papupata'
                   import testInvoke from 'papupata/invokers/test'
                   import express from 'express'
-                  
+
                   const app = express()
                   const request = supertest(app)
                   const API = new APIDeclaration()

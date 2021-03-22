@@ -1,3 +1,4 @@
+import '../../prepare'
 import * as React from 'react'
 import { Example } from '../../components/api-components'
 import Container from '../../components/Container'
@@ -80,10 +81,10 @@ const IndexPage = () => (
                             ...api.getConfig(),
                             baseURL: 'https://www.example.com'
                           })
-                          console.log(complexAPI.getURL({id: '123'})) 
+                          console.log(complexAPI.getURL({id: '123'}))
                           // https://www.example.com/update/123
 
-                          console.log(complexAPI.getURL({id: '123', author: 'Bob'})) 
+                          console.log(complexAPI.getURL({id: '123', author: 'Bob'}))
                           // https://www.example.com/update/123?author=Bob
                   `}</Example>
                       ),
@@ -92,10 +93,10 @@ const IndexPage = () => (
                           API.updateConfig({
                             baseURL: 'https://www.example.com'
                           })
-                          console.log(complexAPI.getURL({id: '123'})) 
+                          console.log(complexAPI.getURL({id: '123'}))
                           // https://www.example.com/update/123
 
-                          console.log(complexAPI.getURL({id: '123', author: 'Bob'})) 
+                          console.log(complexAPI.getURL({id: '123', author: 'Bob'}))
                           // https://www.example.com/update/123?author=Bob
                   `}</Example>
                       )

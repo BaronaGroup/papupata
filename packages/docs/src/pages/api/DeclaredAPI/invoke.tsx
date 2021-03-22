@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'

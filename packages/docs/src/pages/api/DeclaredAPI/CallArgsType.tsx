@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -35,9 +36,9 @@ export default function CallArgsType() {
                       .query(['q'] as const)
                       .body<{key: string}>
                       .response<string>()
-        
+
                     type CallArgsType = typeof myAPI['CallArgsType']
-                    // CallArgsType is now {key: string, q: string}            
+                    // CallArgsType is now {key: string, q: string}
                   `}
                 </Example>
               ),
@@ -50,9 +51,9 @@ export default function CallArgsType() {
                       .query({q: String}})
                       .body<{key: string}>
                       .response<string>()
-        
+
                     type CallArgsType = typeof myAPI['CallArgsType']
-                    // CallArgsType is now {key: string, q: string}            
+                    // CallArgsType is now {key: string, q: string}
                   `}
                 </Example>
               )

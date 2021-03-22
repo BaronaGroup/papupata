@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -23,12 +24,12 @@ export default function Implementation() {
             const api = new APIDeclaration()
             const myAPI = api.declareGetAPI('/get-stuff')
               .response<string>()
-            
+
             const implFn = () => Promise.resolve('test')
             myAPI.implement(implFn)
-            
-            // myAPI.implementation === implFn 
-              
+
+            // myAPI.implementation === implFn
+
           `}
           </Example>
         </Examples>

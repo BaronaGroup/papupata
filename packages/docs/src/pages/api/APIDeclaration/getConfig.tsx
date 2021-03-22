@@ -1,3 +1,4 @@
+import '../../../prepare'
 import { Link } from 'gatsby'
 import React from 'react'
 import { MethodReturnType, Purpose, Usage } from '../../../components/api-components'

@@ -1,5 +1,5 @@
 import * as React from 'react'
-
+import '../../prepare'
 import Page from '../../components/Page'
 import Container from '../../components/Container'
 import IndexLayout from '../../layouts'

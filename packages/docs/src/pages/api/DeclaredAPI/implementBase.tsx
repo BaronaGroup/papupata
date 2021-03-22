@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -106,7 +107,7 @@ export default function ImplementBase({ availableFrom, variantPurpose, middlewar
           {examples}
           <Example label="Usage in invocation">
             {`
-            const response = await myAPI({param: 'abc', q: 'def', key: 'ghi'})            
+            const response = await myAPI({param: 'abc', q: 'def', key: 'ghi'})
             // Response in the example will be abc,def,ghi
           `}
           </Example>

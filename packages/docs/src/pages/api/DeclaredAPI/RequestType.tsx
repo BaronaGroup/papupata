@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -37,9 +38,9 @@ export default function RequestType() {
                     const myAPI = api.declarePostAPI('/do-stuff')
                       .query(['collection'] as const)
                       .response<string>()
-        
+
                     type RequestType = typeof myAPI['RequestType']
-                    // RequestType is now the type of a modified express request    
+                    // RequestType is now the type of a modified express request
                   `}
                 </Example>
               ),
@@ -51,9 +52,9 @@ export default function RequestType() {
                 const myAPI = api.declarePostAPI('/do-stuff')
                   .query({collection: String})
                   .response<string>()
-    
+
                 type RequestType = typeof myAPI['RequestType']
-                // RequestType is now the type of a modified express request    
+                // RequestType is now the type of a modified express request
               `}
                 </Example>
               )

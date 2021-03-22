@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -53,7 +54,7 @@ export default function Response() {
             {`
             myAPI.implement(req => {
               return "Hello"
-            })            
+            })
           `}
           </Example>
           <Example label="Example 1 Usage in invocation">
@@ -74,7 +75,7 @@ export default function Response() {
             {`
             myAPI.implement(req => {
               return { date: new Date('2019-01-01T12:12:12.000Z') }
-            })            
+            })
           `}
           </Example>
           <Example label="Example 2 Usage in invocation">

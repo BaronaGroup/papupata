@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -58,7 +59,7 @@ export default function OptionalQuery() {
                       myAPI.implement(req => {
                         const {query1, query2} = req.query
                         return query1 + query2 // would return abcundefined in the example
-                      })            
+                      })
                     `}
                   </Example>
                 </Examples>
@@ -95,7 +96,7 @@ export default function OptionalQuery() {
                       myAPI.implement(req => {
                         const {query1, query2} = req.query
                         return query1 + query2 // would return abcundefined
-                      })            
+                      })
                   `}
                   </Example>
                 </Examples>

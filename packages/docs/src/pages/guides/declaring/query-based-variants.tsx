@@ -1,3 +1,4 @@
+import '../../../prepare'
 import * as React from 'react'
 
 import Page from '../../../components/Page'
@@ -385,7 +386,7 @@ const QBVPage = () => (
                               const simpleSearch = API.declarePostAPI('/search?advanced!=true')
                                 .query(['queryString'] as const)
                                 .response<any>()
-          
+
                               const advancedSearch = API.declarePostAPI('/search?advanced=true')
                                 .query(['name', 'address', 'phone', 'email'] as const)
                                 .response<any>()
@@ -398,7 +399,7 @@ const QBVPage = () => (
                               const simpleSearch = API.declarePostAPI('/search?advanced!=true')
                                 .query({queryString: String})
                                 .response<any>()
-          
+
                               const advancedSearch = API.declarePostAPI('/search?advanced=true')
                                 .query({name: String, address: String, phone: String, email: String}})
                                 .response<any>()
@@ -418,7 +419,7 @@ const QBVPage = () => (
                       {`
                     const myDetailsAPI = API.declarePostAPI('/my-details?includeRelations=false')
                       .response<UserDetails>()
-                 
+
                     const myDetailsWithRelationsAPI = API.declarePostAPI('/my-details?includeRelations=true')
                       .response<UserDetails & RelationInfo>()
                     `}

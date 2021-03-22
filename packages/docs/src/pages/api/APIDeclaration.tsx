@@ -1,3 +1,4 @@
+import '../../prepare'
 import React from 'react'
 import IndexLayout from '../../layouts'
 import Page from '../../components/Page'

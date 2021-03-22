@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -44,7 +45,7 @@ export default function GetURL() {
                       const myAPI = api.declarePostAPI('/do-stuff/:param')
                         .params(['param'] as const)
                         .response<string>()
-          
+
                       const URL = myAPI.getURL({param: 'value'})
                       // URL is now https://example.com/do-stuff/value
                     `}
@@ -58,7 +59,7 @@ export default function GetURL() {
                         .params(['param'] as const)
                         .query(['qval'] as const)
                         .response<string>()
-          
+
                       const URL = myAPI.getURL({param: 'value'})
                       // URL is now https://example.com/do-stuff/value
                     `}
@@ -72,7 +73,7 @@ export default function GetURL() {
                         .params(['param'] as const)
                         .query(['qval'] as const)
                         .response<string>()
-          
+
                       const URL = myAPI.getURL({param: 'value', qval: 'hello'})
                       // URL is now https://example.com/do-stuff/value?qval=hello
                     `}
@@ -89,7 +90,7 @@ export default function GetURL() {
                   const myAPI = api.declarePostAPI('/do-stuff/:param')
                     .params({param: String})
                     .response<string>()
-      
+
                   const URL = myAPI.getURL({param: 'value'})
                   // URL is now https://example.com/do-stuff/value
                 `}
@@ -103,7 +104,7 @@ export default function GetURL() {
                     .params({param: String})
                     .query({qval: String})
                     .response<string>()
-      
+
                   const URL = myAPI.getURL({param: 'value'})
                   // URL is now https://example.com/do-stuff/value
                 `}
@@ -117,7 +118,7 @@ export default function GetURL() {
                     .params({param: String})
                     .query({qval: String})
                     .response<string>()
-      
+
                   const URL = myAPI.getURL({param: 'value', qval: 'hello'})
                   // URL is now https://example.com/do-stuff/value?qval=hello
                 `}

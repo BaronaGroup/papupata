@@ -1,3 +1,4 @@
+import '../../prepare'
 import React from 'react'
 import { Example, Examples, Purpose, AvailableFrom, Usage } from '../../components/api-components'
 import Container from '../../components/Container'

@@ -1,3 +1,4 @@
+import '../../../prepare'
 import React from 'react'
 import { Caveats, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../../components/api-components'
 import Container from '../../../components/Container'
@@ -67,7 +68,7 @@ export default function Query() {
                       myAPI.implement(req => {
                         const {query1, query2} = req.query
                         return query1 + query2 // would return abcdef in the example
-                      })            
+                      })
                     `}
                   </Example>
                 </Examples>
@@ -105,7 +106,7 @@ export default function Query() {
                       myAPI.implement(req => {
                         const {query1, query2} = req.query
                         return query1 + query2 // would return abc55 in the example, thought it should be noted that the 55 is actually a number, not a string
-                      })            
+                      })
                   `}
                   </Example>
                 </Examples>

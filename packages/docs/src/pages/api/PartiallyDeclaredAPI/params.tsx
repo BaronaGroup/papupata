@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -47,7 +48,7 @@ export default function Params() {
                       import { APIDeclaration } from 'papupata'
                       const api = new APIDeclaration()
                       const myAPI = api.declarePostAPI('/do-stuff/:param1/:param2')
-                        .params(['param1', 'param2'] as const)             
+                        .params(['param1', 'param2'] as const)
                     `}
                   </Example>
                   <Example label="Usage in invocation">
@@ -61,7 +62,7 @@ export default function Params() {
                       myAPI.implement(req => {
                         const {param1, param1} = req.params
                         return param1 + param1 // would return abcdef in the example
-                      })            
+                      })
                     `}
                   </Example>
                 </Examples>
@@ -83,7 +84,7 @@ export default function Params() {
                       import { APIDeclaration } from 'papupata'
                       const api = new APIDeclaration()
                       const myAPI = api.declarePostAPI('/do-stuff/:param1/:param2')
-                        .params({param1: String, param2: Number})             
+                        .params({param1: String, param2: Number})
                     `}
                   </Example>
                   <Example label="Usage in invocation">
@@ -97,7 +98,7 @@ export default function Params() {
                       myAPI.implement(req => {
                         const {param1, param2} = req.params
                         return param1 + param2 // would return abc100 in the example, with param2 actually being a number
-                      })            
+                      })
                     `}
                   </Example>
                 </Examples>

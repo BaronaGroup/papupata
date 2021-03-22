@@ -1,3 +1,4 @@
+import '../../../prepare'
 import ImplementBase from './implementBase'
 import { Example } from '../../../components/api-components'
 
@@ -16,7 +17,7 @@ myAPI.implement((req, res) => {
     {key} = req.body
   res.set('x-my-header', 'Hello')
   return [param, q, key].join()
-})            
+})
 `}
         </Example>
       }

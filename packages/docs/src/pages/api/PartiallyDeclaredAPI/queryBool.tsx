@@ -1,3 +1,4 @@
+import '../../../prepare'
 import { Caveats, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../../components/api-components'
 import Container from '../../../components/Container'
 import { FixedFont } from '../../../components/guides'
@@ -61,7 +62,7 @@ export default function QueryBool() {
             myAPI.implement(req => {
               const {query1, query2} = req.query
               return query1 + query2 // would return truefalse in the example. They come in as booleans, not strings.
-            })            
+            })
           `}
           </Example>
         </Examples>

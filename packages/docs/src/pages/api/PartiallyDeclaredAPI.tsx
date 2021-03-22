@@ -1,17 +1,18 @@
+import '../../prepare'
 import React from 'react'
 import IndexLayout from '../../layouts'
 import Page from '../../components/Page'
 import Container from '../../components/Container'
-import { Purpose, Usage, Examples, Example } from '../../components/api-components'
-import { MethodMember, Members } from '../../components/members-table'
-import { IncompleteApiDeclarationLink, DeclaredAPILink } from '../../components/links'
-import { MightChange } from '../../components/MightChange'
+import { Example, Examples, Purpose, Usage } from '../../components/api-components'
+import { Members, MethodMember } from '../../components/members-table'
+import { DeclaredAPILink, IncompleteApiDeclarationLink } from '../../components/links'
 import VersionVariants from '../../components/VersionVariants'
 
 export default function IncompleteApiDeclaration() {
   return (
     <IndexLayout>
       <Page>
+        Ø
         <Container>
           <h1>API Reference</h1>
           <h2>interface IncompleteApiDeclaration</h2>

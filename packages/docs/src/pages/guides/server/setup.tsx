@@ -1,3 +1,4 @@
+import '../../../prepare'
 import * as React from 'react'
 
 import Page from '../../../components/Page'
@@ -89,7 +90,7 @@ const IndexPage = () => (
                   <p>This is the default in papupata 2.x and can be turned off by explicitly setting the option to false.</p>
                   <Example>
                     {`
-                    API.updateConfig({                              
+                    API.updateConfig({
                       autoImplementAllAPIs: false
                     })`}
                   </Example>
@@ -200,7 +201,7 @@ const IndexPage = () => (
                       '2.x': (
                         <Example>
                           {`
-                            API.updateConfig({                              
+                            API.updateConfig({
                               routerAt: '/api'
                             })
                             `}
