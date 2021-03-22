@@ -82,5 +82,15 @@
         }
       }
     }
-  }
+  },
+  "files": [
+    "dist",
+    "src",
+    "adapters",
+    "invokers",
+    "config.*",
+    "queryTypes.*",
+    "config.*",
+    "ValidationError.*"
+  ]
 }
