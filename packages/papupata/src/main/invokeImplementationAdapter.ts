@@ -8,6 +8,7 @@ export type AssertResponseFn = (res: Response) => void
 
 export interface InvokerImplementationOptions<T> {
   createRequest?(requestProps: { method: string; url: string }): T
+  createResponse?(responseProps: any): any
   assertResponse?: AssertResponseFn
   withMiddleware?: boolean
 }
@@ -29,7 +30,8 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
       params: qs.parse(qs.stringify(params)),
     }
 
-    const res = createMockResponse()
+    const mockResponse = createMockResponse()
+    const res = options?.createResponse?.(mockResponse) ?? mockResponse
 
     let resp: any
     if (options.withMiddleware) {
