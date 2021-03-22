@@ -136,7 +136,7 @@ describe('typed-queries/number', function () {
       const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
         .query({ q1: [Number] })
         .response<string>()
-      testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1.join('*')))
+      testServer.getApp().get(path, (req: any, res) => res.send('Value: ' + req.query.q1.join('*')))
 
       // When
       const response = await api({ q1: [11, 12] })

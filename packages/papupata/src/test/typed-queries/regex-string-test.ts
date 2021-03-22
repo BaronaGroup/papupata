@@ -71,7 +71,7 @@ describe('typed-queries/regex-string', function () {
       const api = API.declareGetAPI(path, undefined, { disableAutoImplement: true })
         .query({ q1: [StringMatching(/hello/)] })
         .response<string>()
-      testServer.getApp().get(path, (req, res) => res.send('Value: ' + req.query.q1.join('*')))
+      testServer.getApp().get(path, (req, res) => res.send('Value: ' + (req.query.q1 as any[]).join('*')))
 
       // When
       const response = await api({ q1: ['hello world', 'oh hello'] })

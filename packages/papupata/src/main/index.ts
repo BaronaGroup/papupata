@@ -108,7 +108,7 @@ export const skipHandlingRoute = 'papupata-skip-1d7eb033-19f8-47f7-a96c-f07d90d8
 export function convertExpressMiddleware(expressMiddleware: Handler): PapupataMiddleware<any, any> {
   return async (req, res, _route, next) => {
     const error = await new Promise((resolve, reject) =>
-      expressMiddleware(req, res, (err) => (err ? reject : resolve)(err))
+      expressMiddleware(req, res, (err: any) => (err ? reject : resolve)(err))
     )
     if (error) throw error
     return await next()
