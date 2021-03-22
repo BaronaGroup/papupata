@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[68],{QeBL:function(t,e,n){"use strict";n.r(e);n("q1tI");var l=n("NqE+"),o=n("TBFr"),c=n("+ego"),u=n("qKvR");e.default=function(){return Object(u.d)(c.a,null,Object(u.d)(l.a,null,Object(u.d)(o.a,null,Object(u.d)("h1",null,"Hello!"),Object(u.d)("p",null,"This is the documentation for the papupata typescript library."),Object(u.d)("p",null,"Pick a place to go to from the menu on the left."))))}}}]);
-//# sourceMappingURL=component---src-pages-index-tsx-fdd4b679da4debab6be7.js.map
