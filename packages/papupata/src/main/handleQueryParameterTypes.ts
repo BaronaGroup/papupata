@@ -3,7 +3,6 @@ import toPairs from 'lodash/toPairs'
 import fromPairs from 'lodash/fromPairs'
 import PapupataValidationError from './PapupataValidationError'
 import { integerToken, regexStringToken, StringEnum, stringEnumToken, StringMatching } from './customQueryTypes'
-import { valuesIn } from 'lodash'
 
 export enum Mode {
   REQUIRED,
