@@ -10,10 +10,14 @@ export enum Mode {
   LEGACY_BOOL,
 }
 
-export default function handleQueryParameterTypes(query: any, types: TypedQueryType, mode: Mode) {
+export default function handleQueryParameterTypes(query: any, types: TypedQueryType | string[], mode: Mode) {
+  const fixedTypes = Array.isArray(types)
+    ? fromPairs(types.map((type) => [type, mode === Mode.LEGACY_BOOL ? Boolean : String]))
+    : types
+
   return {
     ...query,
-    ...fromPairs(toPairs(types).map(([name, type]) => [name, convertValue(name, query[name], type, mode)])),
+    ...fromPairs(toPairs(fixedTypes).map(([name, type]) => [name, convertValue(name, query[name], type, mode)])),
   }
 }
 
