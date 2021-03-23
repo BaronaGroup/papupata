@@ -26,7 +26,7 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
     const req = {
       ...requestBase,
       query: qs.parse(qs.stringify(query)),
-      body,
+      body: body ?? {},
       params: qs.parse(qs.stringify(params)),
     }
 

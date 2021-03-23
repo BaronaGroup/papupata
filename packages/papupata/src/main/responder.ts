@@ -353,7 +353,8 @@ export function responder<
 
       async function parameterConverterMiddleware(req: any, _res: any, _options: any, next: any) {
         const originalQuery = req.query,
-          originalParams = req.params
+          originalParams = req.params,
+          originalBody = req.body
         const validationBehavior =
           papupataOptions.validationBehavior ?? parent.getConfig()?.validationBehavior ?? ValidationBehavior.THROW
         try {
@@ -363,6 +364,7 @@ export function responder<
           const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL)
           req.query = convertedQuery
           req.params = convertedParams
+          req.body = req.body ?? {}
           const resp = await next()
           return resp
         } catch (err) {
@@ -374,6 +376,7 @@ export function responder<
         } finally {
           req.query = originalQuery
           req.params = originalParams
+          req.body = originalBody
         }
       }
     },
