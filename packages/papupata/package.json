@@ -1,6 +1,6 @@
 {
   "name": "papupata",
-  "version": "1.8.1",
+  "version": "2.0.0-rc3",
   "description": "Typescript-typed REST requests and API implementations",
   "homepage": "https://baronagroup.github.io/papupata",
   "repository": {
