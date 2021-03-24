@@ -207,6 +207,10 @@ export default function MigrationToV2() {
                       of
                     </p>
                     <Example>{`const actualBody = body ?? {}`}</Example>
+                    <p>
+                      As this does easily cause the API implementation not to receive any body even if it has been declared to be an object,
+                      papupata's own middleware makes the body be an empty object if it would otherwise be undefined.
+                    </p>
                   </>
                 )
               },

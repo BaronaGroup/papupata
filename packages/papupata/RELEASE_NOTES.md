@@ -8,7 +8,8 @@ Breaking changes:
 - While arrays were not supported in a reasonable way, the values were not processed in any way and qs has in practice probably added them amongst the query parameters,
   though they could be not accessed with types. Now anything declared to be a string is exactly one string.
 - Request adapters receive undefined as the body if there is nothing in the body. This should make it so that GET requests do not accidentally end up with a body.
-  This does not apply when a separate body is explicitly requested, in those cases the body will be passed as is.
+  This does not apply when a separate body is explicitly requested, in those cases the body will be passed as is. The server implementations
+  still receive an empty object in the body when there is none, assuming that typical bodies are objects. 
 - `autoImplementAllAPIs` defaults to true now; if you use papupata extensively for declaring APIs implemented without if you'll probably want to set it to false when
   configuring papupata. If there are only a few exceptions, you can now add options to disable auto-implementation for individual APIs
    

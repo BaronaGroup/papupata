@@ -107,6 +107,15 @@ export function OptionsTable() {
            const createRequest = base => ({...base, headers: { 'content-type': 'text/html' }})
        `}</Example>
       </MethodMember>
+      <MethodMember name="createResponse" dataType="(responseBase) => Response" required={false}>
+        <p>
+          This function is used to create the response passed to the API as if it was the express response. Its sole parameter a wrapper
+          papupata uses to handle the response, which can be extended with other properties and methods as necessary.
+        </p>
+        <Example>{`
+           const createResponse = base => ({...base, myField: true})
+       `}</Example>
+      </MethodMember>
       <MethodMember name="assertResponse" dataType="(response) => void" required={false}>
         <p>
           This function is called once the response is complete. It is passed a mock express response, allowing for making assertions to
