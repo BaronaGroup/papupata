@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/enzyme": "3.10.8",
-    "@types/jsdom": "16.2.8",
+    "@types/jsdom": "16.2.9",
     "@types/lodash": "4.14.168",
     "@types/mkdirp": "1.0.1",
     "@types/node": "13.13.48",
