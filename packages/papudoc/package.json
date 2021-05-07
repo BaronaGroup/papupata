@@ -23,7 +23,7 @@
     "build": "npm run tsc"
   },
   "dependencies": {
-    "@types/express": "4.17.2",
+    "@types/express": "4.17.11",
     "common-utils": "*",
     "common-types": "*",
     "ejs": "3.1.6",
