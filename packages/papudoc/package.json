@@ -30,7 +30,7 @@
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.6",
     "express": "4.17.1",
-    "jsdom": "16.5.1",
+    "jsdom": "16.6.0",
     "lodash": "4.17.21",
     "mkdirp": "1.0.4",
     "papupata-extractor": "*",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/enzyme": "3.10.8",
-    "@types/jsdom": "16.2.9",
+    "@types/jsdom": "16.2.10",
     "@types/lodash": "4.14.168",
     "@types/mkdirp": "1.0.1",
     "@types/node": "13.13.51",
