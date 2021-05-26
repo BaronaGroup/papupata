@@ -1,7 +1,10 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
 import { Purpose, Usage, Examples, Example } from '../../../components/api-components'
+import React from 'react'
+import VersionVariants from '../../../components/VersionVariants'
 
 export default function CallArgsType() {
   return (
@@ -21,19 +24,42 @@ export default function CallArgsType() {
           <p>Although the types are presented as fields on the API, they have no runtime value.</p>
         </Usage>
         <Examples>
-          <Example label="Basic usage">
-            {`
-            import { APIDeclaration } from 'papupata'
-            const api = new APIDeclaration()
-            const myAPI = api.declarePostAPI('/do-stuff')
-              .query(['q'] as const)
-              .body<{key: string}>
-              .response<string>()
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example label="Basic usage">
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    const api = new APIDeclaration()
+                    const myAPI = api.declarePostAPI('/do-stuff')
+                      .query(['q'] as const)
+                      .body<{key: string}>
+                      .response<string>()
 
-            type CallArgsType = typeof myAPI['CallArgsType']
-            // CallArgsType is now {key: string, q: string}            
-          `}
-          </Example>
+                    type CallArgsType = typeof myAPI['CallArgsType']
+                    // CallArgsType is now {key: string, q: string}
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example label="Basic usage">
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    const api = new APIDeclaration()
+                    const myAPI = api.declarePostAPI('/do-stuff')
+                      .query({q: String}})
+                      .body<{key: string}>
+                      .response<string>()
+
+                    type CallArgsType = typeof myAPI['CallArgsType']
+                    // CallArgsType is now {key: string, q: string}
+                  `}
+                </Example>
+              )
+            }}
+          />
+
           <Example label="Practical usage">{`
             await myAPI(getRequestParams())
 

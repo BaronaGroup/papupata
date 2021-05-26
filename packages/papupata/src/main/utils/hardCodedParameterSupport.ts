@@ -126,9 +126,11 @@ export function matchesHardCodedParameters(request: ExpressRequest, hardCoded: H
   return hardCoded.every((hc) => {
     switch (hc.variant) {
       case Variant.SPECIFIC_VALUE:
-        const queryValue = query[hc.name]
+        const rawQueryValue = query[hc.name]
+        const queryValue = Array.isArray(rawQueryValue) ? rawQueryValue[rawQueryValue.length - 1] : rawQueryValue
         if (queryValue === hc.value) return true
-        return queryValue !== undefined && specificValueExistsFor(hc.name, hardCoded, queryValue)
+        const queryValueStr = typeof queryValue === 'string' ? queryValue : undefined
+        return queryValue !== undefined && specificValueExistsFor(hc.name, hardCoded, queryValueStr)
       case Variant.NOT_PRESENT:
         if (query[hc.name] === undefined) return true
         return specificValueExistsFor(hc.name, hardCoded) // specific value logic will take over from here if applicable

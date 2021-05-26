@@ -1,3 +1,4 @@
+import '../../prepare'
 import React from 'react'
 import IndexLayout from '../../layouts'
 import Page from '../../components/Page'
@@ -50,6 +51,12 @@ export default function APIDeclaration() {
           <MethodMember name="configure" dataType="void">
             Configures papupata to allow implementing and/or calling the declared APIs.
           </MethodMember>
+          <MethodMember name={'getConfig'} dataType={'Configuration'}>
+            Returns the current configuration
+          </MethodMember>
+          <MethodMember name={'getDeclaredAPIs'} dataType={'DeclaredAPI[]'} availableFrom={'1.4.0'}>
+            Returns an array of all APIs declared on this API declaration.
+          </MethodMember>
           <DeclareAPI method="delete" />
           <DeclareAPI method="get" />
           <DeclareAPI method="patch" availableFrom="1.5.0" />
@@ -58,8 +65,8 @@ export default function APIDeclaration() {
           <MethodMember name={'unmockAll'} dataType={'void'} availableFrom={'1.1.0'}>
             Undoes all mocks on the APIs of this API declaration
           </MethodMember>
-          <MethodMember name={'getDeclaredAPIs'} dataType={'DeclaredAPI[]'} availableFrom={'1.4.0'}>
-            Returns an array of all APIs declared on this API declaration.
+          <MethodMember name={'updateConfig'} dataType={'void'} availableFrom="2.0.0">
+            Updates parts of the configuration without affecting the rest of it.
           </MethodMember>
         </Members>
       </Page>

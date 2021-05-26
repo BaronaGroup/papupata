@@ -20,7 +20,7 @@ export const Purpose: React.FC = ({ children }) => {
   )
 }
 
-export type ValidVersions = '1.1.0' | '1.2.0' | '1.5.0' | '1.8.0'
+export type ValidVersions = '1.1.0' | '1.2.0' | '1.5.0' | '1.8.0' | '2.0.0'
 export const AvailableFrom = ({ version }: { version: ValidVersions }) => {
   return (
     <Section>

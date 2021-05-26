@@ -25,6 +25,10 @@ const Type = styled.span`
   font-weight: lighter;
 `*/
 
+const Strikethrough = styled.span`
+  text-decoration: line-through;
+`
+
 const Property = styled.span``
 
 export const guides: NavEntries = {
@@ -35,6 +39,11 @@ export const guides: NavEntries = {
         label: 'Basics',
         description:
           'This guide will help you declare APIs whether to model the APIs your application is going to implement them, call them or both.'
+      },
+      '/guides/declaring/typeMapping': {
+        label: 'Types for path and query',
+        description:
+          'This guide will help you understand all the possibilities and limitations of types supported in path and query parameters.'
       },
       '/guides/declaring/query-based-variants': {
         label: 'Query-based variants',
@@ -98,7 +107,8 @@ export const guides: NavEntries = {
         description: 'This guide will help you with testing server code that implements APIs with papupata.'
       }
     }
-  }
+  },
+  '/guides/migrationToV2': 'Migrating to papupata 2.x'
 }
 
 export default function NavMenu() {
@@ -122,7 +132,9 @@ export default function NavMenu() {
             '/api/APIDeclaration/declarePostAPI': <Method>declarePostAPI</Method>,
             '/api/APIDeclaration/declarePatchAPI': <Method>declarePatchAPI</Method>,
             '/api/APIDeclaration/declarePutAPI': <Method>declarePutAPI</Method>,
-            '/api/APIDeclaration/unmockAll': <Method>unmockAll</Method>
+            '/api/APIDeclaration/getConfig': <Method>getConfig</Method>,
+            '/api/APIDeclaration/unmockAll': <Method>unmockAll</Method>,
+            '/api/APIDeclaration/updateConfig': <Method>updateConfig</Method>
           }
         },
         '/api/PartiallyDeclaredAPI': {
@@ -131,9 +143,14 @@ export default function NavMenu() {
             '/api/PartiallyDeclaredAPI/params': <Method>params</Method>,
             '/api/PartiallyDeclaredAPI/query': <Method>query</Method>,
             '/api/PartiallyDeclaredAPI/optionalQuery': <Method>optionalQuery</Method>,
-            '/api/PartiallyDeclaredAPI/queryBool': <Method>queryBool</Method>,
+            '/api/PartiallyDeclaredAPI/queryBool': (
+              <Method>
+                <Strikethrough>queryBool</Strikethrough>
+              </Method>
+            ),
             '/api/PartiallyDeclaredAPI/body': <Method>body</Method>,
-            '/api/PartiallyDeclaredAPI/response': <Method>response</Method>
+            '/api/PartiallyDeclaredAPI/response': <Method>response</Method>,
+            '/api/PartiallyDeclaredAPI/TypeMapping': <Type>TypeMapping</Type>
           }
         },
         '/api/DeclaredAPI': {

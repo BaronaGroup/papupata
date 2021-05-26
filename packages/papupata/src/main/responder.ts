@@ -3,6 +3,9 @@ import fromPairs from 'lodash/fromPairs'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import qs from 'qs'
+import handleQueryParameterTypes, { Mode } from './handleQueryParameterTypes'
+import PapupataValidationError from './PapupataValidationError'
+import { PapupataRouteOptions, ValidationBehavior } from './config'
 import { IAPIDeclaration, skipHandlingRoute } from './index'
 import {
   CallArgParam,
@@ -13,9 +16,11 @@ import {
   MiddlewareContainer,
   Mock,
   MockOptions,
+  TypedQueryType,
 } from './responderTypes'
 import runExpressMiddleware from './runExpressMiddleware'
-import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
+import { TypedQueryToTypes } from './TypedQueryToTypes'
+import { Method } from './types'
 import {
   extractHardCodedParameters,
   getQueryWithHardCodedParameters,
@@ -26,10 +31,10 @@ import { paramMatchers } from './utils/paramMatchers'
 import { runHandlerChain } from './utils/runHandlerChain'
 
 export function responder<
-  ParamsType extends readonly string[],
-  QueryType extends readonly string[],
-  OptionalQueryType extends readonly string[],
-  BoolQueryType extends readonly string[],
+  ParamsType extends TypedQueryType,
+  QueryType extends TypedQueryType,
+  OptionalQueryType extends TypedQueryType,
+  BoolQueryType extends TypedQueryType,
   BodyType,
   BodyInputType,
   RequestOptions,
@@ -45,22 +50,9 @@ export function responder<
   method: Method,
   pathWithHardCodedParameters: string,
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
-  routeOptions: RouteOptions
+  routeOptions: RouteOptions,
+  papupataOptions: PapupataRouteOptions
 ) {
-  /*type CallArgsWithoutBody = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-    ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-    ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-    ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>*/
-  //type CallArgs = BodyInputType & CallArgsWithoutBody
-
-  /*type CallArgParam = {} extends CallArgs
-    ? [] | [CallArgs] | [CallArgs, RequestOptions]
-    :
-        | [CallArgs]
-        | [CallArgs, RequestOptions]
-        | [BodyInputType, CallArgsWithoutBody]
-        | [BodyInputType, CallArgsWithoutBody, RequestOptions]*/
-
   return {
     response<ResponseType, ResponseTypeOnServer = ResponseType>(
       mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
@@ -89,7 +81,11 @@ export function responder<
       }
 
       const { path, hardCodedParameters } = extractHardCodedParameters(pathWithHardCodedParameters)
-      verifyHardCodedQueryParameterDeclarationLegality(hardCodedParameters, [...query, ...boolQuery], optionalQuery)
+      verifyHardCodedQueryParameterDeclarationLegality(
+        hardCodedParameters,
+        [...Object.keys(query), ...Object.keys(boolQuery)],
+        Object.keys(optionalQuery)
+      )
 
       let mockImpl: ActiveMock | null = null
 
@@ -111,13 +107,22 @@ export function responder<
 
         const requestOptions = separateBody && hasOtherArgs ? argsArr[2] : (argsArr[1] as any)
 
-        const reqParams = pick(args, params),
+        const reqParams = pick(args, Object.keys(params)),
           reqQuery = getQueryWithHardCodedParameters(hardCodedParameters, {
-            ...pick(args, query),
-            ...pick(args, optionalQuery),
-            ...fromPairs(boolQuery.map((key) => [key, (!!(args as any)[key]).toString()])),
+            ...pick(args, Object.keys(query)),
+            ...pick(args, Object.keys(optionalQuery)),
+            ...fromPairs(Object.keys(boolQuery).map((key) => [key, (!!(args as any)[key]).toString()])),
           }),
-          reqBody = separateBody ? argsArr[0] : omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
+          reqBody = separateBody
+            ? argsArr[0]
+            : makeUndefinedIfEmpty(
+                omit(args, [
+                  ...Object.keys(params),
+                  ...Object.keys(query),
+                  ...Object.keys(boolQuery),
+                  ...Object.keys(optionalQuery),
+                ])
+              )
 
         if (mockImpl) {
           if (!mockImpl.includeBodySeparately) {
@@ -137,16 +142,24 @@ export function responder<
         }
 
         const config = parent.getConfig()
-        if (!config || !config.makeRequest) throw new Error('Request adapter not configured')
+        const requestAdapter = config?.requestAdapter ?? config?.makeRequest
+        if (!requestAdapter) throw new Error('Request adapter not configured')
+        if (config?.requestAdapter && config.makeRequest)
+          throw new Error('Cannot have makeRequest and requestAdapter configured at the same time.')
 
         const pathWithParams = getURL(reqParams as any)
 
-        return config.makeRequest(method, pathWithParams, reqQuery, reqBody, reqParams, call, requestOptions)
+        return requestAdapter(method, pathWithParams, reqQuery, reqBody, reqParams, call, requestOptions)
       }
 
       function isValidAsNonBodyRequestData(obj: any) {
         if (typeof obj !== 'object') return false
-        const validKeys = [...query, ...optionalQuery, ...boolQuery, ...params]
+        const validKeys = [
+          ...Object.keys(query),
+          ...Object.keys(optionalQuery),
+          ...Object.keys(boolQuery),
+          ...Object.keys(params),
+        ]
         return Object.keys(obj).every((key) => validKeys.includes(key))
       }
 
@@ -196,7 +209,7 @@ export function responder<
 
       let expressHost: undefined | Application | Router
       const config = parent.getConfig()
-      if (config?.autoImplementAllAPIs && (config.router || config.app)) {
+      if (config && config.autoImplementAllAPIs !== false && (config.router || config.app)) {
         implement(null)
       }
 
@@ -238,21 +251,15 @@ export function responder<
         }
 
         if (!impl) {
-          if (parent.getConfig()?.autoImplementAllAPIs) {
-            res.status(501)
-            res.send('Not implemented')
-          } else {
+          if (parent.getConfig()?.autoImplementAllAPIs === false || papupataOptions.disableAutoImplement) {
             return next()
           }
-          return
         }
         try {
-          for (const bq of boolQuery) {
-            req.query[bq] = req.query[bq] === 'true'
-          }
           const value = await runHandlerChain(
             [
               ...(parent.getConfig()?.inherentMiddleware || []),
+              parameterConverterMiddleware,
               ...(call.implementationMiddleware.papupata || []),
               getImplVal,
             ],
@@ -260,6 +267,7 @@ export function responder<
             res,
             call
           )
+
           if (value === skipHandlingRoute) {
             return next()
           }
@@ -271,8 +279,13 @@ export function responder<
         }
 
         async function getImplVal() {
-          const unmappedValue = await impl(req as any, res)
-          return mapper ? await mapper(unmappedValue) : unmappedValue
+          if (!impl) {
+            res.status(501)
+            res.send('Not implemented')
+          } else {
+            const unmappedValue = await impl(req as any, res)
+            return mapper ? await mapper(unmappedValue) : unmappedValue
+          }
         }
       }
 
@@ -283,11 +296,13 @@ export function responder<
         if (!config) throw new Error('Papupata not configured')
         const host = config.router || config.app
         if (!host) {
-          if (config.autoImplementAllAPIs) return
+          if (config.autoImplementAllAPIs !== false) return
           throw new Error('Papupata: neither router nor app configured, cannot implement routes')
         }
         if (config.routerAt && !path.startsWith(config.routerAt)) {
-          throw new Error('Papupata: when routerAt is provided, all routes must be its children.')
+          throw new Error(
+            `Papupata: when routerAt is provided, all routes must be its children; attempted to declare ${path} when routerAt is ${config.routerAt}`
+          )
         }
         if (expressHost === host) {
           return
@@ -300,11 +315,8 @@ export function responder<
 
       function getURL(
         pathParamsAndQueryParams:
-          | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>
-          | (ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-              ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-              ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-              ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>)
+          | TypedQueryToTypes<ParamsType>
+          | (TypedQueryToTypes<QueryType & BoolQueryType & ParamsType> & Partial<TypedQueryToTypes<OptionalQueryType>>)
       ) {
         const config = parent.getConfig()
         if (!config) throw new Error('Papupata not configured')
@@ -321,20 +333,57 @@ export function responder<
       call.CallArgsType = null as any
 
       return call
-      function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {
+      function applyPathParams(reqParams: TypedQueryToTypes<ParamsType>) {
         const pathWithParams = paramMatchers(params).reduce((currPath, { matcher, name }) => {
           return currPath.replace(matcher, (_, before, after) => {
             return `${before}${encodeURIComponent((reqParams as any)[name])}${after}`
           })
         }, path)
 
-        const queryParams = getQueryWithHardCodedParameters(hardCodedParameters, omit(reqParams, [...params]) as any)
+        const queryParams = getQueryWithHardCodedParameters(
+          hardCodedParameters,
+          omit(reqParams, [...Object.keys(params)]) as any
+        )
         if (Object.keys(queryParams).length) {
           return pathWithParams + '?' + qs.stringify(queryParams)
         } else {
           return pathWithParams
         }
       }
+
+      async function parameterConverterMiddleware(req: any, _res: any, _options: any, next: any) {
+        const originalQuery = req.query,
+          originalParams = req.params,
+          originalBody = req.body
+        const validationBehavior =
+          papupataOptions.validationBehavior ?? parent.getConfig()?.validationBehavior ?? ValidationBehavior.THROW
+        try {
+          const convertedParams = handleQueryParameterTypes(req.params, params, Mode.REQUIRED)
+          const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
+          const queryConversion2 = handleQueryParameterTypes(queryConversion1, boolQuery, Mode.LEGACY_BOOL)
+          const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL)
+          req.query = convertedQuery
+          req.params = convertedParams
+          req.body = req.body ?? {}
+          const resp = await next()
+          return resp
+        } catch (err) {
+          if (validationBehavior === ValidationBehavior.REROUTE && err instanceof PapupataValidationError) {
+            return skipHandlingRoute
+          } else {
+            throw err
+          }
+        } finally {
+          req.query = originalQuery
+          req.params = originalParams
+          req.body = originalBody
+        }
+      }
     },
   }
+}
+
+function makeUndefinedIfEmpty<T>(input: T): T | undefined {
+  if (typeof input === 'object' && input && Object.keys(input).length === 0) return undefined
+  return input
 }

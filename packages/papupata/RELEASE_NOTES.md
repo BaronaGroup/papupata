@@ -1,4 +1,57 @@
+2.0.0
+
+Breaking changes:
+
+- Typescript compilation now targets ES6 instead of ES5
+- The apiUrlParameters field of a declared API is quite different
+- PapupataValidationError is throw on server if required query parameters are missing
+- While arrays were not supported in a reasonable way, the values were not processed in any way and qs has in practice probably added them amongst the query parameters,
+  though they could be not accessed with types. Now anything declared to be a string is exactly one string.
+- Request adapters receive undefined as the body if there is nothing in the body. This should make it so that GET requests do not accidentally end up with a body.
+  This does not apply when a separate body is explicitly requested, in those cases the body will be passed as is. The server implementations
+  still receive an empty object in the body when there is none, assuming that typical bodies are objects. 
+- `autoImplementAllAPIs` defaults to true now; if you use papupata extensively for declaring APIs implemented without if you'll probably want to set it to false when
+  configuring papupata. If there are only a few exceptions, you can now add options to disable auto-implementation for individual APIs
+   
+   API.declareGetAPI(path, undefined, { disableAutoImplement: true })
+
+- when `autoImplementAllAPIs` is enabled, middleware will now be applied to the requests as if it was implemented; this middleware that are relevant even in those cases,
+  such as those used for logging, to still work even if the API has not been implemented.
+- Deep imports have been completely changed; see the mapping below for what needs to be changed and how. If you had something like `import adapter from 'papupata/dist/main/fetchAdapter`
+  you'll have to change it to `import adapter from 'papupata/adapters/fetch`
+
+  "exports": {
+  ".": "./dist/main/index.js",
+  "./queryTypes": "./dist/main/customQueryTypes.js",
+  "./adapters/fetch": "./dist/main/fetchAdapter.js",
+  "./adapters/invokeImplementation": "./dist/main/invokeImplementationAdapter.js",
+  "./adapters/requestPromise": "./dist/main/requestPromiseAdapter.js",
+  "./adapters/supertest": "./dist/main/supertestAdapter.js",
+  "./invokers/supertest": "./dist/main/supertestInvoker.js",
+  "./invokers/test": "./dist/main/testInvoker.js",
+  "./ValidationError": "./dist/main/PapupataValidationError"
+  },
+
+Bug fixes:
+
+- Query parameters are not affected from one route to another when rerouting takes place
+
+New features:
+
+- Query parameters can now be of more types: string, boolean, number, date, or array of any of them. A few more constrained types are also available: string enum, regex-constrained strings and integers
+- The above also applies to path parameters, albeit without array support
+- A default value for dealing with query and path parameter value problems can be configured for the whole API set, overridable for individual APIs, allowing for either throwing upon error (letting your
+  error handling code take over from there) or rerouting, basically making the types routing constraints rather than plain validation.
+- APIDeclaration now has updateConfig method, for changing parts of the config without having to do getConfig -> setConfig
+
+Other:
+
+- boolQuery is now deprecated; use query or optionalQuery with the boolean type instead
+- query and optionalQuery with string array parameters are now deprecated, though jsdoc does not indicate them as such as we cannot deprecate only some overloads
+- the configuration option "makeRequest" has been deprecated in favor of "requestAdapter"; this is just a rename however.
+
   1.8.1
+
 - Fixed convertExpressMiddleware which treated errors as success and vice versa
 - PapupataMiddleware type now has method and path
 - PapupataMiddleware type now its options be optional, as that matches reality; breaking change for types, but there are no functional differences

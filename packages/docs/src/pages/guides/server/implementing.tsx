@@ -1,3 +1,4 @@
+import '../../../prepare'
 import * as React from 'react'
 
 import Page from '../../../components/Page'
@@ -6,6 +7,7 @@ import IndexLayout from '../../../layouts'
 import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import { Example } from '../../../components/api-components'
 import { Link } from 'gatsby'
+import VersionVariants from '../../../components/VersionVariants'
 
 const IndexPage = () => (
   <IndexLayout>
@@ -28,16 +30,33 @@ const IndexPage = () => (
                     <Link to={'/guides/server/setup'}>the setup guide</Link>. You should also know how APIs are declared, see{' '}
                     <Link to={'/guides/declaring'}>Declaring APIs</Link> for more details.
                   </p>
-                  <p>Examples in this guide will use routes declared like this:</p>
-                  <Example>{`
-                  const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
-                    .params(['id'] as const)
-                    .query(['author'] as const)
-                    .optionalQuery(['timestamp'] as const)
-                    .queryBool(['notifyWatchers'] as const)
-                    .body<{ name: string}>()
-                    .response<{status: string }>()
-                  `}</Example>
+                  <p>Examples in this guide will use routes declared like this:</p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params(['id'] as const)
+                            .query(['author'] as const)
+                            .optionalQuery(['timestamp'] as const)
+                            .queryBool(['notifyWatchers'] as const)
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                          `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params({id: String})
+                            .query({author: String, notifyWatchers: Boolean}})
+                            .optionalQuery({timestamp: String})
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                          `}</Example>
+                      )
+                    }}
+                  />
                 </>
               )
             },

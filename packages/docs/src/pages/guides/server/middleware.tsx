@@ -1,3 +1,4 @@
+import '../../../prepare'
 import * as React from 'react'
 
 import Page from '../../../components/Page'
@@ -5,6 +6,7 @@ import Container from '../../../components/Container'
 import IndexLayout from '../../../layouts'
 import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import { Example } from '../../../components/api-components'
+import VersionVariants from '../../../components/VersionVariants'
 
 const IndexPage = () => (
   <IndexLayout>
@@ -56,12 +58,29 @@ const IndexPage = () => (
                     depends on, or if you want to block the execution of the middleware as well based on a condition.
                   </p>
                   <p>Configuring inherent middleware: </p>
-                  <Example>{`
-                    API.configure({
-                      ...API.getConfig(),
-                      inherentMiddleware: [myMiddleware1, myMiddleware1]
-                    })
-                  `}</Example>
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                          API.configure({
+                            ...API.getConfig(),
+                            inherentMiddleware: [myMiddleware1, myMiddleware1]
+                          })`}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                          API.updateConfig({
+                            inherentMiddleware: [myMiddleware1, myMiddleware1]
+                          })`}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>Configuring middleware for a single route: </p>
                   <Example>{`
                     const myAPI = API.declareGetAPI('/test').response<string>()

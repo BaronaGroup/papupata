@@ -1,3 +1,4 @@
+import '../../../prepare'
 import { Purpose } from '../../../components/api-components'
 import Container from '../../../components/Container'
 import Page from '../../../components/Page'

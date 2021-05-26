@@ -1,8 +1,10 @@
+import '../../prepare'
 import * as React from 'react'
 import { Example } from '../../components/api-components'
 import Container from '../../components/Container'
 import { FixedFont, GuideContent, Overview } from '../../components/guides'
 import Page from '../../components/Page'
+import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 
 const IndexPage = () => (
@@ -22,16 +24,33 @@ const IndexPage = () => (
               content: (
                 <>
                   <p>It might be helpful fairly solid understanding of what papupata API declarations look like.</p>
-                  <p>In the examples presented in this guide, the following API declaration is assumed to be in the scope:</p>
-                  <Example>{`
-                  const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
-                    .params(['id'] as const)
-                    .query(['author'] as const)
-                    .optionalQuery(['timestamp'] as const)
-                    .queryBool(['notifyWatchers'] as const)
-                    .body<{ name: string}>()
-                    .response<{status: string }>()
-                  `}</Example>
+                  <p>In the examples presented in this guide, the following API declaration is assumed to be in the scope:</p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params(['id'] as const)
+                            .query(['author'] as const)
+                            .optionalQuery(['timestamp'] as const)
+                            .queryBool(['notifyWatchers'] as const)
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                       `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params({id: String})
+                            .query({author: String, notifyWatchers: Boolean}})
+                            .optionalQuery({timestamp: String})
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                       `}</Example>
+                      )
+                    }}
+                  />
                 </>
               )
             },
@@ -53,17 +72,36 @@ const IndexPage = () => (
                     already in place. This can be done with the <FixedFont>getURL</FixedFont> method. Do note that the method requires{' '}
                     <FixedFont>baseURL</FixedFont> to be configured.
                   </p>
-                  <Example>{`
-                    API.configure({
-                      ...api.getConfig(),
-                      baseURL: 'https://www.example.com'
-                    })
-                    console.log(complexAPI.getURL({id: '123'})) 
-                    // https://www.example.com/update/123
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          API.configure({
+                            ...api.getConfig(),
+                            baseURL: 'https://www.example.com'
+                          })
+                          console.log(complexAPI.getURL({id: '123'}))
+                          // https://www.example.com/update/123
 
-                    console.log(complexAPI.getURL({id: '123', author: 'Bob'})) 
-                    // https://www.example.com/update/123?author=Bob
+                          console.log(complexAPI.getURL({id: '123', author: 'Bob'}))
+                          // https://www.example.com/update/123?author=Bob
                   `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          API.updateConfig({
+                            baseURL: 'https://www.example.com'
+                          })
+                          console.log(complexAPI.getURL({id: '123'}))
+                          // https://www.example.com/update/123
+
+                          console.log(complexAPI.getURL({id: '123', author: 'Bob'}))
+                          // https://www.example.com/update/123?author=Bob
+                  `}</Example>
+                      )
+                    }}
+                  />
                 </>
               )
             },

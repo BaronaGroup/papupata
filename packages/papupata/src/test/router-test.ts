@@ -1,7 +1,7 @@
-import { APIDeclaration } from '../main'
-import { runTestServer } from './test-utils'
-import createRequestAdapter from '../main/request-promise-adapter'
 import { Router } from 'express'
+import { APIDeclaration } from '../main'
+import createRequestAdapter from '../main/requestPromiseAdapter'
+import { runTestServer } from './test-utils'
 
 describe('router-test', function () {
   let testServer: ReturnType<typeof runTestServer>
@@ -60,11 +60,12 @@ describe('router-test', function () {
       makeRequest: createRequestAdapter('json'),
       router,
       routerAt: routerPath,
+      autoImplementAllAPIs: false,
     })
     const testAPI = API.declareGetAPI('/notcorrect/updog').response<string>()
 
     expect(() => testAPI.implement(() => 'hello')).toThrow(
-      'Papupata: when routerAt is provided, all routes must be its children.'
+      /Papupata: when routerAt is provided, all routes must be its children./
     )
   })
 })

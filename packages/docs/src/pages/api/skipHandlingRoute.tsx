@@ -1,7 +1,10 @@
+import '../../prepare'
 import React from 'react'
 import { Example, Examples, Purpose, AvailableFrom, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
+import { FixedFont } from '../../components/guides'
 import Page from '../../components/Page'
+import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 
 export default function SkipHandlingRoute() {
@@ -25,12 +28,28 @@ export default function SkipHandlingRoute() {
             the execution to other handlers. A common case would be serving HTML if the client expects it, and only running the API call
             itself for calls that have, say, Accept header requesting JSON.
           </p>
-          <p>
-            Another case would be when autoImplementAllAPIs is enabled, but you cannot actually implement all the APIs with papupata.
-            Perhaps you need a pecualiar combination of middleware that make it more difficult, maybe you even want to defer to another
-            papupata router. Or perhaps the route is implemented by a library. In these cases you can implement the route as one that always
-            returns skipHandlingRoute to indicate that other code is responsible for it.
-          </p>
+          <VersionVariants
+            variants={{
+              '1.x': (
+                <p>
+                  Another case would be when autoImplementAllAPIs is enabled, but you cannot actually implement all the APIs with papupata.
+                  Perhaps you need a pecualiar combination of middleware that make it more difficult, maybe you even want to defer to
+                  another papupata router. Or perhaps the route is implemented by a library. In these cases you can implement the route as
+                  one that always returns skipHandlingRoute to indicate that other code is responsible for it.
+                </p>
+              ),
+              '2.x': (
+                <p>
+                  Another case would be when autoImplementAllAPIs is enabled (which it is by default), but you cannot actually implement all
+                  the APIs with papupata. Perhaps you need a pecualiar combination of middleware that make it more difficult, maybe you even
+                  want to defer to another papupata router. Or perhaps the route is implemented by a library. In these cases you can
+                  implement the route as one that always returns skipHandlingRoute to indicate that other code is responsible for it.
+                  Alternatively you can declare the API with the <FixedFont>disableAutoImplement</FixedFont> option set to true, but that
+                  does leak an implementation detail to the declarations.
+                </p>
+              )
+            }}
+          />
         </Usage>
         <Examples>
           <Example label="Conditional skip">{`

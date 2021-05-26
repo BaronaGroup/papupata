@@ -1,6 +1,6 @@
 import { APIDeclaration } from '../main'
 import { prepareTestServerFor } from './test-utils'
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 import { Request, Response } from 'express'
 
 // As new papupata implements express middleware running on its own, it needs to be tested

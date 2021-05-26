@@ -3,6 +3,7 @@ import { Response } from 'express'
 interface ExtendedResponse extends Response {
   sentData: any
   sentPromise: Promise<void>
+  __papupata204setup: boolean | undefined
 }
 
 export default function createMockResponse(): ExtendedResponse {
@@ -77,6 +78,7 @@ export default function createMockResponse(): ExtendedResponse {
       return sent
     },
     sentPromise,
+    __papupata204setup: undefined,
   }
   return new Proxy(implemented, {
     get(target, key) {

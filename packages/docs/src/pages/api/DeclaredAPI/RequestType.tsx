@@ -1,7 +1,10 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
 import { Purpose, Usage, Examples, Example, Caveats } from '../../../components/api-components'
+import React from 'react'
+import VersionVariants from '../../../components/VersionVariants'
 
 export default function RequestType() {
   return (
@@ -24,18 +27,39 @@ export default function RequestType() {
           There is at this time no way to create partial typed requests objects, which should be helpful for the same purposes.
         </Caveats>
         <Examples>
-          <Example label="Basic usage">
-            {`
-            import { APIDeclaration } from 'papupata'
-            const api = new APIDeclaration()
-            const myAPI = api.declarePostAPI('/do-stuff')
-              .query(['collection'] as const)
-              .response<string>()
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example label="Basic usage">
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    const api = new APIDeclaration()
+                    const myAPI = api.declarePostAPI('/do-stuff')
+                      .query(['collection'] as const)
+                      .response<string>()
 
-            type RequestType = typeof myAPI['RequestType']
-            // RequestType is now the type of a modified express request    
-          `}
-          </Example>
+                    type RequestType = typeof myAPI['RequestType']
+                    // RequestType is now the type of a modified express request
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example label="Basic usage">
+                  {`
+                import { APIDeclaration } from 'papupata'
+                const api = new APIDeclaration()
+                const myAPI = api.declarePostAPI('/do-stuff')
+                  .query({collection: String})
+                  .response<string>()
+
+                type RequestType = typeof myAPI['RequestType']
+                // RequestType is now the type of a modified express request
+              `}
+                </Example>
+              )
+            }}
+          />
           <Example label="Practical usage">{`
             myAPI.implement(req => {
               return getCollection(req)

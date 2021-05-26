@@ -1,9 +1,11 @@
+import '../../prepare'
 import React from 'react'
 import IndexLayout from '../../layouts'
 import Page from '../../components/Page'
 import Container from '../../components/Container'
 import { Example, Examples, Purpose } from '../../components/api-components'
 import { ToDo } from '../../components/ToDo'
+import VersionVariants from '../../components/VersionVariants'
 
 export default function RequestPromiseAdapter() {
   return (
@@ -13,7 +15,12 @@ export default function RequestPromiseAdapter() {
           <h1>API Reference</h1>
           <h2>requestPromiseAdapter</h2>
         </Container>
-        <Example>{`import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'`}</Example>
+        <VersionVariants
+          variants={{
+            '1.x': <Example>{`import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'`}</Example>,
+            '2.x': <Example>{`import createRequestAdapter from 'papupata/adapters/requestPromise'`}</Example>
+          }}
+        />
         <Purpose>An adapter that utilizes request-promise to invoke APIs</Purpose>
         <ToDo>
           <p>
@@ -23,13 +30,33 @@ export default function RequestPromiseAdapter() {
         </ToDo>
       </Page>
       <Examples>
-        <Example>{`
-          const API = new APIDeclaration()
-          API.configure({
-            baseURL: '',
-            makeRequest: createRequestAdapter('json')
-          })
-        `}</Example>
+        <VersionVariants
+          isRecommendation
+          variants={{
+            '1.x': (
+              <Example>
+                {`
+                  const API = new APIDeclaration()
+                  API.configure({
+                    baseURL: '',
+                    makeRequest: createRequestAdapter('json')
+                  })
+                `}
+              </Example>
+            ),
+            '2.x': (
+              <Example>
+                {`
+                  const API = new APIDeclaration()
+                  API.configure({
+                    baseURL: '',
+                    requestAdapter: createRequestAdapter('json')
+                  })
+                `}
+              </Example>
+            )
+          }}
+        />
       </Examples>
     </IndexLayout>
   )

@@ -1,6 +1,6 @@
 import { APIDeclaration, convertExpressMiddleware } from '../main'
 import { expectFailure, prepareTestServerFor } from './test-utils'
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 
 describe('convertExpressMiddleware', function () {
   const API = new APIDeclaration()

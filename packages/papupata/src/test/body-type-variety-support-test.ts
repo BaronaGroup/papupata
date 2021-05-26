@@ -1,4 +1,4 @@
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 import { prepareTestServerFor } from './test-utils'
 import { APIDeclaration } from '../main'
 

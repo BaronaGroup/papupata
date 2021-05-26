@@ -1,6 +1,6 @@
 import { APIDeclaration, skipHandlingRoute } from '../main'
 import { expectFailure, prepareTestServerFor } from './test-utils'
-import createRequestAdapter from '../main/request-promise-adapter'
+import createRequestAdapter from '../main/requestPromiseAdapter'
 
 describe('auto-implement-all-apis-test', function () {
   describe('autoImplementAllAPIs enabled', function () {
@@ -97,7 +97,7 @@ describe('auto-implement-all-apis-test', function () {
 
     prepareTestServerFor(API)
     beforeAll(() => {
-      API.configure({ ...API.getConfig(), makeRequest: createRequestAdapter('json') })
+      API.configure({ ...API.getConfig(), makeRequest: createRequestAdapter('json'), autoImplementAllAPIs: false })
     })
 
     it('does not do automatic implementation', async function () {

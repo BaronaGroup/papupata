@@ -1,7 +1,9 @@
+import '../../prepare'
 import * as React from 'react'
 import { AvailableFrom, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
 import Page from '../../components/Page'
+import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 
 export default function Mock() {
@@ -19,9 +21,12 @@ export default function Mock() {
         </Purpose>
         <AvailableFrom version={'1.5.0'} />
         <Usage>
-          <Example>{`
-            import invokeSupertest from 'papupata/dist/main/supertestInvoker'
-          `}</Example>
+          <VersionVariants
+            variants={{
+              '1.x': <Example>{`import invokeSupertest from 'papupata/dist/main/supertestInvoker'`}</Example>,
+              '2.x': <Example>{`import invokeSupertest from 'papupata/invokers/supertest'`}</Example>
+            }}
+          />
           <p>
             To begin with, you'll want to set up a supertest request for your express application. Once done, you can create a supertest
             papupata adapter to start making API calls.
@@ -41,24 +46,50 @@ export default function Mock() {
         </Parameters>
         <MethodReturnType>Papupata MakeRequestAdapter</MethodReturnType>
         <Examples>
-          <Example>{`
-            import { APIDeclaration } from 'papupata'
-            import invokeSupertest from 'papupata/dist/main/supertestInvoker'
-            import express from 'express'
-            import supertest from 'supertest'
-            
-            const app = express()
-            const request = supertest(app)
-            const API = new APIDeclaration()
-            API.configure({
-              app,
-              baseURL: ''
-            })
-            const api = API.declareGetAPI('/:id').params(['id'] as const).response<string>
+          <VersionVariants
+            variants={{
+              '1.x': (
+                <Example>{`
+                  import { APIDeclaration } from 'papupata'
+                  import invokeSupertest from 'papupata/dist/main/supertestInvoker'
+                  import express from 'express'
+                  import supertest from 'supertest'
 
-            const req = invokeSupertest(request, api, {id: 'foo'})
-            await req.expect(200)
-          `}</Example>
+                  const app = express()
+                  const request = supertest(app)
+                  const API = new APIDeclaration()
+                  API.configure({
+                    app,
+                    baseURL: ''
+                  })
+                  const api = API.declareGetAPI('/:id').params(['id'] as const).response<string>
+
+                  const req = invokeSupertest(request, api, {id: 'foo'})
+                  await req.expect(200)
+               `}</Example>
+              ),
+              '2.x': (
+                <Example>{`
+                  import { APIDeclaration } from 'papupata'
+                  import invokeSupertest from 'papupata/invokers/supertest'
+                  import express from 'express'
+                  import supertest from 'supertest'
+
+                  const app = express()
+                  const request = supertest(app)
+                  const API = new APIDeclaration()
+                  API.configure({
+                    app,
+                    baseURL: ''
+                  })
+                  const api = API.declareGetAPI('/:id').params({id: String}).response<string>
+
+                  const req = invokeSupertest(request, api, {id: 'foo'})
+                  await req.expect(200)
+                `}</Example>
+              )
+            }}
+          />
         </Examples>
       </Page>
     </IndexLayout>

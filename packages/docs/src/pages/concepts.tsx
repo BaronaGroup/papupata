@@ -1,3 +1,5 @@
+import '../prepare'
+
 import * as React from 'react'
 import { Example, Section, SectionHeading } from '../components/api-components'
 import Container from '../components/Container'

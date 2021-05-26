@@ -2,6 +2,7 @@ import {
   Config,
   MakeRequestAdapter as MakeRequestAdapterImpl,
   PapupataMiddleware as PapupataMiddlewareType,
+  PapupataRouteOptions,
 } from './config'
 import { Request, Handler } from 'express'
 import { declareAPI } from './declareAPI'
@@ -41,7 +42,7 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
     if (config && config.router && config.app) throw new Error('Config should only have app or router, not both')
     const needsAutoImplement =
       config &&
-      config.autoImplementAllAPIs &&
+      config.autoImplementAllAPIs !== false &&
       (!this.config || config.router !== this.config.router || config.app !== this.config.app) &&
       (config.router || config.app)
 
@@ -51,24 +52,28 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
     }
   }
 
-  public declareGetAPI(path: string, routeOptions?: RouteOptions) {
-    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'get', path, routeOptions)
+  public updateConfig(config: Config<RequestType, RouteOptions, RequestOptions> | null) {
+    this.configure({ ...this.getConfig(), ...config })
   }
 
-  public declarePostAPI(path: string, routeOptions?: RouteOptions) {
-    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'post', path, routeOptions)
+  public declareGetAPI(path: string, routeOptions?: RouteOptions, papupataOptions: PapupataRouteOptions = {}) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'get', path, routeOptions, papupataOptions)
   }
 
-  public declarePutAPI(path: string, routeOptions?: RouteOptions) {
-    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'put', path, routeOptions)
+  public declarePostAPI(path: string, routeOptions?: RouteOptions, papupataOptions: PapupataRouteOptions = {}) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'post', path, routeOptions, papupataOptions)
   }
 
-  public declarePatchAPI(path: string, routeOptions?: RouteOptions) {
-    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'patch', path, routeOptions)
+  public declarePutAPI(path: string, routeOptions?: RouteOptions, papupataOptions: PapupataRouteOptions = {}) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'put', path, routeOptions, papupataOptions)
   }
 
-  public declareDeleteAPI(path: string, routeOptions?: RouteOptions) {
-    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'delete', path, routeOptions)
+  public declarePatchAPI(path: string, routeOptions?: RouteOptions, papupataOptions: PapupataRouteOptions = {}) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'patch', path, routeOptions, papupataOptions)
+  }
+
+  public declareDeleteAPI(path: string, routeOptions?: RouteOptions, papupataOptions: PapupataRouteOptions = {}) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'delete', path, routeOptions, papupataOptions)
   }
 
   public implementAllAPIs() {
@@ -103,7 +108,7 @@ export const skipHandlingRoute = 'papupata-skip-1d7eb033-19f8-47f7-a96c-f07d90d8
 export function convertExpressMiddleware(expressMiddleware: Handler): PapupataMiddleware<any, any> {
   return async (req, res, _route, next) => {
     const error = await new Promise((resolve, reject) =>
-      expressMiddleware(req, res, (err) => (err ? reject : resolve)(err))
+      expressMiddleware(req, res, (err: any) => (err ? reject : resolve)(err))
     )
     if (error) throw error
     return await next()

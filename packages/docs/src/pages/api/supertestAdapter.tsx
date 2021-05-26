@@ -1,7 +1,9 @@
+import '../../prepare'
 import * as React from 'react'
 import { AvailableFrom, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
 import Page from '../../components/Page'
+import VersionVariants from '../../components/VersionVariants'
 import IndexLayout from '../../layouts'
 
 export default function Mock() {
@@ -16,9 +18,12 @@ export default function Mock() {
         <Purpose>This module allows you to use supertest to make papupata API requests.</Purpose>
         <AvailableFrom version={'1.5.0'} />
         <Usage>
-          <Example>{`
-            import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
-          `}</Example>
+          <VersionVariants
+            variants={{
+              '1.x': <Example>{`import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'`}</Example>,
+              '2.x': <Example>{`import createSupertestAdapter from 'papupata/adapters/supertest'`}</Example>
+            }}
+          />
           <p>
             To begin with, you'll want to set up a supertest request for your express application. Once done, you can create a supertest
             papupata adapter to start making API calls.
@@ -32,22 +37,50 @@ export default function Mock() {
         </Parameters>
         <MethodReturnType>Papupata MakeRequestAdapter</MethodReturnType>
         <Examples>
-          <Example>{`
-            import { APIDeclaration } from 'papupata'
-            import createSupertestAdapter from 'papupata/dist/main/supertestAdapter' 
-            import express from 'express'
-            import supertest from 'supertest'
-            
-            const app = express()
-            const request = supertest(app)
-            const API = new APIDeclaration()
-            API.configure({
-              app,
-              baseURL: '',
-              makeRequest: createSupertestAdapter(request)
-            })
+          <VersionVariants
+            variants={{
+              '1.x': (
+                <Example>
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
+                    import express from 'express'
+                    import supertest from 'supertest'
 
-          `}</Example>
+                    const app = express()
+                    const request = supertest(app)
+                    const API = new APIDeclaration()
+                    API.configure({
+                      app,
+                      baseURL: '',
+                      makeRequest: createSupertestAdapter(request)
+                    })
+
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example>
+                  {`
+                    import { APIDeclaration } from 'papupata'
+                    import createSupertestAdapter from 'papupata/adapters/supertest'
+                    import express from 'express'
+                    import supertest from 'supertest'
+
+                    const app = express()
+                    const request = supertest(app)
+                    const API = new APIDeclaration()
+                    API.configure({
+                      app,
+                      baseURL: '',
+                      requestAdapter: createSupertestAdapter(request)
+                    })
+
+                  `}
+                </Example>
+              )
+            }}
+          />
         </Examples>
       </Page>
     </IndexLayout>

@@ -1,6 +1,6 @@
 {
   "name": "papupata",
-  "version": "1.8.1",
+  "version": "2.0.0-rc3",
   "description": "Typescript-typed REST requests and API implementations",
   "homepage": "https://baronagroup.github.io/papupata",
   "repository": {
@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@types/body-parser": "1.19.0",
-    "@types/express": "4.17.4",
+    "@types/express": "4.17.11",
     "@types/jest": "26.0.23",
     "@types/lodash": "4.14.168",
     "@types/qs": "6.9.6",
@@ -40,6 +40,18 @@
   },
   "main": "dist/main/index",
   "types": "dist/main/index.d.ts",
+  "exports": {
+    ".": "./dist/main/index.js",
+    "./queryTypes": "./dist/main/customQueryTypes.js",
+    "./adapters/fetch": "./dist/main/fetchAdapter.js",
+    "./adapters/invokeImplementation": "./dist/main/invokeImplementationAdapter.js",
+    "./adapters/requestPromise": "./dist/main/requestPromiseAdapter.js",
+    "./adapters/supertest": "./dist/main/supertestAdapter.js",
+    "./invokers/supertest": "./dist/main/supertestInvoker.js",
+    "./invokers/test": "./dist/main/testInvoker.js",
+    "./ValidationError": "./dist/main/PapupataValidationError.js",
+    "./config": "./dist/main/config.js"
+  },
   "scripts": {
     "build": "npx tsc --project tsconfig.json",
     "clean": "rm -rf ./dist",
@@ -70,5 +82,15 @@
         }
       }
     }
-  }
+  },
+  "files": [
+    "dist",
+    "src",
+    "adapters",
+    "invokers",
+    "config.*",
+    "queryTypes.*",
+    "config.*",
+    "ValidationError.*"
+  ]
 }

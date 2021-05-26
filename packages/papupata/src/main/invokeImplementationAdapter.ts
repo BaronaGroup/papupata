@@ -1,11 +1,14 @@
 import { MakeRequestAdapter } from './config'
 import { Response } from 'express'
 import createMockResponse from './utils/mockResponse'
+import handleQueryParameterTypes, { Mode } from './handleQueryParameterTypes'
+import qs from 'qs'
 
 export type AssertResponseFn = (res: Response) => void
 
 export interface InvokerImplementationOptions<T> {
   createRequest?(requestProps: { method: string; url: string }): T
+  createResponse?(responseProps: any): any
   assertResponse?: AssertResponseFn
   withMiddleware?: boolean
 }
@@ -22,12 +25,13 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
 
     const req = {
       ...requestBase,
-      query,
-      body,
-      params,
+      query: qs.parse(qs.stringify(query)),
+      body: body ?? {},
+      params: qs.parse(qs.stringify(params)),
     }
 
-    const res = createMockResponse()
+    const mockResponse = createMockResponse()
+    const res = options?.createResponse?.(mockResponse) ?? mockResponse
 
     let resp: any
     if (options.withMiddleware) {
@@ -49,9 +53,17 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
       if (nextCalled) return
     } else {
       // The middleware path takes care of this in the express request implementation
-      for (const boolParam of api.apiUrlParameters.boolQuery || []) {
-        req.query[boolParam] = req.query[boolParam] === 'true'
-      }
+      req.query = handleQueryParameterTypes(
+        handleQueryParameterTypes(
+          handleQueryParameterTypes(req.query, api.apiUrlParameters.query, Mode.REQUIRED),
+          api.apiUrlParameters.boolQuery,
+          Mode.LEGACY_BOOL
+        ),
+        api.apiUrlParameters.optionalQuery,
+        Mode.OPTIONAL
+      )
+
+      req.params = handleQueryParameterTypes(req.params, api.apiUrlParameters.params, Mode.REQUIRED)
 
       resp = await api.implementation(req, res)
     }

@@ -1,8 +1,10 @@
+import '../../../prepare'
 import * as React from 'react'
 import { Example } from '../../../components/api-components'
 import Container from '../../../components/Container'
 import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import Page from '../../../components/Page'
+import VersionVariants from '../../../components/VersionVariants'
 import IndexLayout from '../../../layouts'
 
 const IndexPage = () => (
@@ -18,19 +20,39 @@ const IndexPage = () => (
               anchor: 'before',
               content: (
                 <div>
-                  <p>The following is assumed to be present for the examples in this guide:</p>
-                  <Example>{`
-                  import {APIDeclaration} from 'papupata'
-                  const API = new APIDeclaration()
+                  <p>The following is assumed to be present for the examples in this guide:</p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          import {APIDeclaration} from 'papupata'
+                          const API = new APIDeclaration()
 
-                  const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
-                    .params(['id'] as const)
-                    .query(['author'] as const)
-                    .optionalQuery(['timestamp'] as const)
-                    .queryBool(['notifyWatchers'] as const)
-                    .body<{ name: string}>()
-                    .response<{status: string }>()
-                `}</Example>
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params(['id'] as const)
+                            .query(['author'] as const)
+                            .optionalQuery(['timestamp'] as const)
+                            .queryBool(['notifyWatchers'] as const)
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                        `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          import {APIDeclaration} from 'papupata'
+                          const API = new APIDeclaration()
+
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params({id: String})
+                            .query({author: String, notifyWatchers: Boolean}})
+                            .optionalQuery({timestamp: String})
+                            .body<{ name: string}>()
+                            .response<{status: string }>()
+                        `}</Example>
+                      )
+                    }}
+                  />
                 </div>
               )
             },
@@ -83,7 +105,7 @@ const IndexPage = () => (
             },
             {
               heading: 'Having papupata call the implementation',
-              anchor: 'directMakeRequest',
+              anchor: 'directRequestAdapter',
               level: 1,
               content: (
                 <>
@@ -98,37 +120,58 @@ const IndexPage = () => (
                     and response as well as error handling. If it is too limited for your needs, feel free to use the code for the adapter
                     to build your own.
                   </p>
-                  <Example>{`
-                    import createAdapter from 'papupata/dist/main/invokeImplementationAdapter'
-                    API.configure({
-                      ...API.getConfig(),
-                      baseURL: '', // the value is not relevant, but must be a string
-                      makeRequest: createAdapter()
-                    })
-                    const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
-                  `}</Example>
+                  <VersionVariants
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import createAdapter from 'papupata/dist/main/invokeImplementationAdapter'
+                            API.configure({
+                              ...API.getConfig(),
+                              baseURL: '', // the value is not relevant, but must be a string
+                              makeRequest: createAdapter()
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                          import createAdapter from 'papupata/adapters/invokeImplementation'
+                          API.updateConfig({
+                            baseURL: '', // the value is not relevant, but must be a string
+                            requestAdapter: createAdapter()
+                          })
+                          const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                        `}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>The adapters supports a few options that make your life easier:</p>
                   <ul>
                     <li>
                       <FixedFont>createRequest</FixedFont> for setting up the request as you need (with, say, headers, session etc)
                       <Example>{`
-                        const makeRequest = createAdapter({
-                          createRequest: () => ({ headers: { 'authorization': 'bearer 123'}}) 
+                        const requestAdapter = createAdapter({
+                          createRequest: () => ({ headers: { 'authorization': 'bearer 123'}})
                         })
                       `}</Example>
                     </li>
                     <li>
                       <FixedFont>assertResponse</FixedFont> for making assertions about the response beyond just the data
                       <Example>{`
-                        const makeRequest = createAdapter({
-                          assertResponse: res => expect(res.statusCode).toEqual(400) 
+                        const requestAdapter = createAdapter({
+                          assertResponse: res => expect(res.statusCode).toEqual(400)
                         })
                       `}</Example>
                     </li>
                     <li>
                       <FixedFont>withMiddleware</FixedFont>, which enables the use of middleware for the request
                       <Example>{`
-                        const makeRequest = createAdapter({
+                        const requestAdapter = createAdapter({
                           withMiddleware: true
                         })
                       `}</Example>
@@ -148,10 +191,23 @@ const IndexPage = () => (
                     with an experimental function that might or might not be good enough for your use case. If you need additional features,
                     feel free to use the provided function as a template to work on.
                   </p>
-                  <Example>{`
-                    import testInvoke from 'papupata/dist/main/testInvoker'
-                    const response = await invoker(api, {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
-                  `}</Example>
+                  <VersionVariants
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          import testInvoke from 'papupata/dist/main/testInvoker'
+                          const response = await invoker(api, {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                        `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          import testInvoke from 'papupata/invokers/test'
+                          const response = await invoker(api, {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                        `}</Example>
+                      )
+                    }}
+                  />
+
                   <p>The test invoker supports the same options as invokeImplementationAdapter described above.</p>
                   <Example>{`
                     const response = await invoker(api, data, { withMiddleware: true })
@@ -169,42 +225,111 @@ const IndexPage = () => (
                     If you are setting up the express server with your own code for your tests, you might want to use the request-promise
                     adapter or write your own if you use something else.
                   </p>
-                  <Example>{`
-                    import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'
-                    API.configure({
-                      ...API.getConfig(),
-                      baseURL: \`http://localhost:\${port}\`
-                      makeRequest: createRequestAdapter('json')
-                    })
-                    const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
-                  `}</Example>
+                  <VersionVariants
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import createRequestAdapter from 'papupata/dist/main/request-promise-adapter'
+                            API.configure({
+                              ...API.getConfig(),
+                              baseURL: \`http://localhost:\${port}\`
+                              makeRequest: createRequestAdapter('json')
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            import createRequestAdapter from 'papupata/adapters/requestPromise'
+                            API.updateConfig({
+                              baseURL: \`http://localhost:\${port}\`
+                              requestAdapter: createRequestAdapter('json')
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>If you are using supertest, you can use adapter specifically made for it instead.</p>
-                  <Example>{`
-                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
+                  <VersionVariants
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
 
-                    const supertestRequest = supertest(app) // express app
-                    API.configure({                      
-                      ...API.getConfig(),
-                      baseURL: '', // The value must be an empty string
-                      makeRequest: createSupertestAdapter(supertestRequest)
-                    })
-                    const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
-                  `}</Example>
+                            const supertestRequest = supertest(app) // express app
+                            API.configure({
+                              ...API.getConfig(),
+                              baseURL: '', // The value must be an empty string
+                              makeRequest: createSupertestAdapter(supertestRequest)
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            import createSupertestAdapter from 'papupata/adapters/supertest'
+
+                            const supertestRequest = supertest(app) // express app
+                            API.updateConfig({
+                              baseURL: '', // The value must be an empty string
+                              requestAdapter: createSupertestAdapter(supertestRequest)
+                            })
+                            const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                          `}
+                        </Example>
+                      )
+                    }}
+                  />
+
                   <p>If you wish to access the actual supertest request for your assertions, you can instead use supertest invoker.</p>
-                  <Example>{`
-                    import supertestInvoker from 'papupata/dist/main/supertestInvoker'
+                  <VersionVariants
+                    variants={{
+                      '1.x': (
+                        <Example>
+                          {`
+                            import supertestInvoker from 'papupata/dist/main/supertestInvoker'
 
-                    API.configure({                      
-                      ...API.getConfig(),
-                      baseURL: '', // The value must be an empty string
-                    })
-                    
-                    const supertestRequest = supertest(app) // express app
-                    const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
+                            API.configure({
+                              ...API.getConfig(),
+                              baseURL: '', // The value must be an empty string
+                            })
 
-                    await invokeSupertest(supertestRequest, api, data)
-                      .expect(200)                    
-                  `}</Example>
+                            const supertestRequest = supertest(app) // express app
+                            const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
+
+                            await invokeSupertest(supertestRequest, api, data)
+                              .expect(200)
+                          `}
+                        </Example>
+                      ),
+                      '2.x': (
+                        <Example>
+                          {`
+                            import supertestInvoker from 'papupata/invokers/supertest'
+
+                            API.updateConfig({
+                              baseURL: '', // The value must be an empty string
+                            })
+
+                            const supertestRequest = supertest(app) // express app
+                            const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
+
+                            await invokeSupertest(supertestRequest, api, data)
+                              .expect(200)
+                          `}
+                        </Example>
+                      )
+                    }}
+                  />
                 </>
               )
             }

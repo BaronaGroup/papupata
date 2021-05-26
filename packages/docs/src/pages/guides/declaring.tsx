@@ -1,5 +1,5 @@
 import * as React from 'react'
-
+import '../../prepare'
 import Page from '../../components/Page'
 import Container from '../../components/Container'
 import IndexLayout from '../../layouts'
@@ -7,6 +7,8 @@ import { FixedFont, GuideContent, Overview } from '../../components/guides'
 import { Example } from '../../components/api-components'
 import styled from 'styled-components'
 import { Link } from 'gatsby'
+import VersionVariants from '../../components/VersionVariants'
+import TypeMappingLink from '../../components/TypeMappingLink'
 
 const LineIndent = styled.div`
   border-left: 3px solid #eee;
@@ -80,16 +82,33 @@ const IndexPage = () => (
               content: (
                 <>
                   <p>API declarations often contain many things, and many of those can be modeled using papupata.</p>
-                  <p>Let's start by looking at an API declaration which utilizes all of the possibilities provided by papupata</p>
-                  <Example>{`
-                const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
-                  .params(['id'] as const)
-                  .query(['author'] as const)
-                  .optionalQuery(['timestamp'] as const)
-                  .queryBool(['notifyWatchers'] as const)
-                  .body<string, Date>()
-                  .response<string, Date>()
-                `}</Example>
+                  <p>Let's start by looking at an API declaration which utilizes all of the possibilities provided by papupata</p>{' '}
+                  <VersionVariants
+                    isRecommendation
+                    variants={{
+                      '1.x': (
+                        <Example>{`
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params(['id'] as const)
+                            .query(['author'] as const)
+                            .optionalQuery(['timestamp'] as const)
+                            .queryBool(['notifyWatchers'] as const)
+                            .body<string, Date>()
+                            .response<string, Date>()
+                          `}</Example>
+                      ),
+                      '2.x': (
+                        <Example>{`
+                          const complexAPI = API.declarePostAPI('/update/:id', routeOptions)
+                            .params({id: String})
+                            .query({author: String, notifyWatchers: Boolean}})
+                            .optionalQuery({timestamp: String})
+                            .body<string, Date>()
+                            .response<string, Date>()
+                          `}</Example>
+                      )
+                    }}
+                  />
                   <p>
                     Having easy-to-read API declarations was one of the main goals of papupata, and hopefully we've been reasonably
                     successful. It is rare to see everything present in the example in real APIs, so it is something of an abomination.
@@ -165,43 +184,96 @@ const IndexPage = () => (
                     `}</Example>
                   </LineIndent>
                   <LineIndent>
-                    <Example>.params(['id'] as const)</Example>
-                    <p>
-                      In addition to being declared in the URL, path parameters need to be declared in a way that lets typescript know they
-                      exist. This call to params serves that purpose.
-                    </p>
-                    <p>
-                      Just add all the parameters into an array (omitting the leading colon used in the URL), and add{' '}
-                      <FixedFont>as const</FixedFont> after the array.
-                    </p>
-                    <p>
-                      At this time path parameters cannot be optional; if you need to support that case, you have to declare multiple APIs
-                      that match the different cases.
-                    </p>
-                    <p>
-                      Knowing or understanging <FixedFont>as const</FixedFont> is not necessary to use papupata, but in case you are
-                      interested, causes the array not to be just an array of strings. In the example case, it is a tuple where the first
-                      element is <FixedFont>id</FixedFont>. From this it is possible to extract the type needed both for implementing and
-                      calling the API.
-                    </p>
+                    <VersionVariants
+                      isRecommendation
+                      variants={{
+                        '1.x': (
+                          <>
+                            <Example>{`.params(['id'] as const)`}</Example>
+                            <p>
+                              In addition to being declared in the URL, path parameters need to be declared in a way that lets typescript
+                              know they exist. This call to params serves that purpose.
+                            </p>
+                            <p>
+                              Just add all the parameters into an array (omitting the leading colon used in the URL), and add{' '}
+                              <FixedFont>as const</FixedFont> after the array.
+                            </p>
+                            <p>
+                              At this time path parameters cannot be optional; if you need to support that case, you have to declare
+                              multiple APIs that match the different cases.
+                            </p>
+                            <p>
+                              Knowing or understanding <FixedFont>as const</FixedFont> is not necessary to use papupata, but in case you are
+                              interested, causes the array not to be just an array of strings. In the example case, it is a tuple where the
+                              first element is <FixedFont>id</FixedFont>. From this it is possible to extract the type needed both for
+                              implementing and calling the API.
+                            </p>
+                          </>
+                        ),
+                        '2.x': (
+                          <>
+                            <Example>{`.params({id: String})`}</Example>
+                            <p>
+                              In addition to being declared in the URL, path parameters need to be declared in a way that lets typescript
+                              know they exist. This call to params serves that purpose.
+                            </p>
+                            <p>
+                              Just create an object where the keys are the names of the path parameters and the values represent their
+                              types. See <TypeMappingLink /> for more information on the types.
+                            </p>
+                            <p>
+                              At this time path parameters cannot be optional; if you need to support that case, you have to declare
+                              multiple APIs that match the different cases.
+                            </p>
+                          </>
+                        )
+                      }}
+                    />{' '}
                   </LineIndent>
                   <LineIndent>
-                    <Example>{`
-                    .query(['author'] as const)
-                    .optionalQuery(['timestamp'] as const)
-                    .queryBool(['notifyWatchers'] as const)
-                    `}</Example>
-                    <p>
-                      The format for entering query parameters is the same as with path parameters. There are, however, 3 different types of
-                      query parameters; normal, optional and boolean.
-                    </p>
-                    <p>You can have any combination of the 3 in any given API, but they must always be declared in that order.</p>
-                    <p>
-                      <FixedFont>query</FixedFont> and <FixedFont>optionalQuery</FixedFont> should hopefully be obvious,{' '}
-                      <FixedFont>queryBool</FixedFont> is a convenience option; when calling it expects a boolean value instead of a string.
-                      On the implementation side, the value <FixedFont>true</FixedFont> becomes the boolean true, any other value becomes
-                      false.
-                    </p>
+                    {' '}
+                    <VersionVariants
+                      isRecommendation
+                      variants={{
+                        '1.x': (
+                          <>
+                            <Example>{`
+                              .query(['author'] as const)
+                              .optionalQuery(['timestamp'] as const)
+                              .queryBool(['notifyWatchers'] as const)
+                              `}</Example>
+                            <p>
+                              The format for entering query parameters is the same as with path parameters. There are, however, 3 different
+                              types of query parameters; normal, optional and boolean.
+                            </p>
+                            <p>You can have any combination of the 3 in any given API, but they must always be declared in that order.</p>
+                            <p>
+                              <FixedFont>query</FixedFont> and <FixedFont>optionalQuery</FixedFont> should hopefully be obvious,{' '}
+                              <FixedFont>queryBool</FixedFont> is a convenience option; when calling it expects a boolean value instead of a
+                              string. On the implementation side, the value <FixedFont>true</FixedFont> becomes the boolean true, any other
+                              value becomes false.
+                            </p>
+                          </>
+                        ),
+                        '2.x': (
+                          <>
+                            <Example>{`
+                              .query({author: String, notifyWatchers: Boolean}})
+                              .optionalQuery({timestamp: String})
+                            `}</Example>
+                            <p>
+                              The format for entering query parameters is the same as with path parameters. Optional parameters are
+                              supported for queries, though they have to be separated from the required ones. While you can have both
+                              required and optional parameters in any given API, the required parameters must be declared first.
+                            </p>
+                            <p>
+                              Again, see <TypeMappingLink /> for more information on the supported types. The only difference to path
+                              parameters in this regard is that for query parameters arrays are supported.
+                            </p>
+                          </>
+                        )
+                      }}
+                    />
                   </LineIndent>
                   <LineIndent>
                     <Example>{`.body<string, Date>()`}</Example>

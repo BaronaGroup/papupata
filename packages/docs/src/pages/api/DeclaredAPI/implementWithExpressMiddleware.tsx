@@ -1,3 +1,4 @@
+import '../../../prepare'
 import ImplementBase from './implementBase'
 import { Example, Parameter } from '../../../components/api-components'
 
@@ -23,7 +24,7 @@ export default function ImplementWithExpressMiddleware() {
                 {key} = req.body
               res.set('x-my-header', 'Hello')
               return [param, q, key].join()
-            })            
+            })
           `}
         </Example>
       }

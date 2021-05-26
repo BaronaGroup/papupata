@@ -1,3 +1,4 @@
+import '../../../prepare'
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
@@ -51,10 +52,10 @@ export default function Mock() {
               .response<string>()
 
             myAPI.mockOnce('test')
-            
+
             const value1 = await myAPI() // value1 is now "test"
             const value2 = await myAPI() // value is now obtained by invoking the actual API
-            
+
           `}
           </Example>
           <Example label="Function">
@@ -65,10 +66,10 @@ export default function Mock() {
               .response<string>()
 
             myAPI.mock(() => 'test')
-            
+
             const value1 = await myAPI() // value1 is now "test"
             const value2 = await myAPI() // value is now obtained by invoking the actual API
-            
+
             myAPI.unmock()
           `}
           </Example>

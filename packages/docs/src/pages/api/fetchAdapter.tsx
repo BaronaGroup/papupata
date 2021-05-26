@@ -1,9 +1,11 @@
+import '../../prepare'
 import React from 'react'
 import IndexLayout from '../../layouts'
 import Page from '../../components/Page'
 import Container from '../../components/Container'
 import { Example, Examples, Purpose } from '../../components/api-components'
 import { ToDo } from '../../components/ToDo'
+import VersionVariants from '../../components/VersionVariants'
 
 export default function FetchAdapter() {
   return (
@@ -13,7 +15,12 @@ export default function FetchAdapter() {
           <h1>API Reference</h1>
           <h2>fetchAdapter</h2>
         </Container>
-        <Example>{`import fetchAdapter from 'papupata/dist/main/fetchAdapter'`}</Example>
+        <VersionVariants
+          variants={{
+            '1.x': <Example>{`import fetchAdapter from 'papupata/dist/main/fetchAdapter'`}</Example>,
+            '2.x': <Example>{`import fetchAdapter from 'papupata/adapters/fetch`}</Example>
+          }}
+        />
         <Purpose>An adapter that utilizes fetch to invoke APIs</Purpose>
         <ToDo>
           <p>
@@ -22,13 +29,33 @@ export default function FetchAdapter() {
           </p>
         </ToDo>
         <Examples>
-          <Example>{`
-          const API = new APIDeclaration()
-          API.configure({
-            baseURL: '',
-            makeRequest: fetchAdapter
-          })
-        `}</Example>
+          <VersionVariants
+            isRecommendation
+            variants={{
+              '1.x': (
+                <Example>
+                  {`
+                    const API = new APIDeclaration()
+                    API.configure({
+                      baseURL: '',
+                      makeRequest: fetchAdapter
+                    })
+                  `}
+                </Example>
+              ),
+              '2.x': (
+                <Example>
+                  {`
+                    const API = new APIDeclaration()
+                    API.configure({
+                      baseURL: '',
+                      requestAdapter: fetchAdapter
+                    })
+                  `}
+                </Example>
+              )
+            }}
+          />
         </Examples>
       </Page>
     </IndexLayout>
