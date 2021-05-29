@@ -35,9 +35,9 @@
     "uuid": "8.3.2"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
-    "qs": "^6.7.0",
-    "@papupata/common-types": "*"
+    "@papupata/common-types": "*",
+    "lodash": "4.17.21",
+    "qs": "^6.7.0"
   },
   "bundledDependencies": [
     "@papupata/common-types"
