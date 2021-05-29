@@ -2,7 +2,7 @@ import { TypedQueryType } from './responderTypes'
 import toPairs from 'lodash/toPairs'
 import fromPairs from 'lodash/fromPairs'
 import PapupataValidationError from './PapupataValidationError'
-import { integerToken, regexStringToken, StringEnum, stringEnumToken, StringMatching } from './customQueryTypes'
+import { integerToken, regexStringToken, StringEnum, stringEnumToken, StringMatching } from '@papupata/common-types'
 
 export enum Mode {
   REQUIRED,

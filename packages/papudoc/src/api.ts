@@ -1,10 +1,9 @@
 import { loadConfig, PapudocConfig } from './config'
 import getRequireableFilename from 'common-utils/lib/getRequirableFilename'
-import { papudoc as handlePapudoc } from './papudoc'
 import * as path from 'path'
 import * as fs from 'fs'
 import { generateAPISetJSON } from 'papupata-extractor'
-import { JSONAPISet } from '../../common-types'
+import { JSONAPISet } from '@papupata/common-types'
 import { locator } from './locator'
 import { generateOpenApi } from 'papupata-openapi-generator'
 
@@ -48,5 +47,3 @@ export function generatePapudoc(configOrConfigFile?: string | PapudocConfig) {
 function combineAnalysis(analysisSet: JSONAPISet[]) {
   return ([] as JSONAPISet).concat(...analysisSet)
 }
-
-export const papudoc = handlePapudoc

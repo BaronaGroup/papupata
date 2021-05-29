@@ -11,10 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "common-types": "*"
+    "@papupata/common-types": "*"
   },
   "bundledDependencies": [
-    "common-types"
+    "@papupata/common-types"
   ],
   "files": [
     "dist"

@@ -114,3 +114,20 @@ export function convertExpressMiddleware(expressMiddleware: Handler): PapupataMi
     return await next()
   }
 }
+
+const papudocCallbacks: Array<(apiSet: any) => void> = []
+
+/**
+ * Experimental support API for papudoc
+ *
+ * @param apiSet
+ */
+export function papudoc(apiSet: any) {
+  if (typeof apiSet === 'function') {
+    papudocCallbacks.push(apiSet)
+  } else {
+    for (const callback of papudocCallbacks) {
+      callback(apiSet)
+    }
+  }
+}

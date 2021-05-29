@@ -334,6 +334,7 @@ export function responder<
 
       return call
       function applyPathParams(reqParams: TypedQueryToTypes<ParamsType>) {
+        debugger
         const pathWithParams = paramMatchers(params).reduce((currPath, { matcher, name }) => {
           return currPath.replace(matcher, (_, before, after) => {
             return `${before}${encodeURIComponent((reqParams as any)[name])}${after}`

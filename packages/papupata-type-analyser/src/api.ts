@@ -1,5 +1,5 @@
 import generateJsonOutput from './generateJsonOutput'
-import { JSONApiType } from 'common-types'
+import { JSONApiType } from '@papupata/common-types'
 import ts from 'typescript'
 import { prepareTsTypeConverter } from './typeAnalyzer/typeAnalyzer'
 import TSTypeClass from './typeAnalyzer/TsType'

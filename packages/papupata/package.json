@@ -36,8 +36,12 @@
   },
   "dependencies": {
     "lodash": "^4.17.11",
-    "qs": "^6.7.0"
+    "qs": "^6.7.0",
+    "@papupata/common-types": "*"
   },
+  "bundledDependencies": [
+    "@papupata/common-types"
+  ],
   "main": "dist/main/index",
   "types": "dist/main/index.d.ts",
   "exports": {

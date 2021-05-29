@@ -1,6 +1,15 @@
 import { Analysis, AnalyzedAPI } from './analyzer'
-import { JSONAPISet } from 'common-types'
+import {
+  integerToken,
+  JSONAPI,
+  JSONAPISet,
+  regexStringToken,
+  stringEnumToken,
+  TypedQueryType,
+} from '@papupata/common-types'
 import { getAlternativeResponses } from './tags'
+
+type QueryParameter = JSONAPI['query'][number]
 
 export default function generateJsonOutput(analysis: Analysis): JSONAPISet {
   return analysis.map((api) => {
@@ -10,7 +19,7 @@ export default function generateJsonOutput(analysis: Analysis): JSONAPISet {
       path: api.url,
       method: api.method,
       query: composeQueryParameters(api),
-      pathParams: api.params.map((name) => ({ name })),
+      pathParams: Object.entries(api.params).map(([name, type]) => ({ name, ...getType(type) })),
       body: api.bodyJSONType,
       response: api.responseJSONType,
       alternativeResponses: getAlternativeResponses(api.tags),
@@ -20,8 +29,38 @@ export default function generateJsonOutput(analysis: Analysis): JSONAPISet {
 
 function composeQueryParameters(analysis: AnalyzedAPI) {
   return [
-    ...analysis.query.map((q) => ({ name: q, type: 'string' as const, optional: false })),
-    ...analysis.optionalQuery.map((q) => ({ name: q, type: 'string' as const, optional: true })),
-    ...analysis.boolQuery.map((q) => ({ name: q, type: 'boolean' as const, optional: false })),
+    ...Object.entries(analysis.query).map(([name, q]) => ({ name, optional: false, ...getType(q) })),
+    ...Object.entries(analysis.optionalQuery).map(([name, q]) => ({
+      name,
+      optional: true,
+      ...getType(q),
+    })),
+    ...Object.entries(analysis.boolQuery).map(([name, q]) => ({ name, optional: false, ...getType(q) })),
   ]
+}
+
+function getType(type: TypedQueryType[string]): Omit<QueryParameter, 'name' | 'optional'> {
+  if (type === String) return { type: 'string' }
+  if (type === Boolean) return { type: 'boolean' }
+  if (type === Number) return { type: 'number' }
+  if (type === Date) return { type: 'date' }
+  if (Array.isArray(type)) {
+    return { ...getType(type[0]), isArray: true }
+  }
+  if ('type' in type) {
+    switch (type.type) {
+      case regexStringToken: {
+        const regexStr = type.regex.toString()
+        return {
+          type: 'string',
+          pattern: regexStr.substring(1, regexStr.length - 1),
+        }
+      }
+      case integerToken:
+        return { type: 'number', pattern: '^[0-9]+$' }
+      case stringEnumToken:
+        return { type: 'string', enum: type.values.map((v) => v.toString()) }
+    }
+  }
+  throw new Error('Cannot handle type ' + type)
 }

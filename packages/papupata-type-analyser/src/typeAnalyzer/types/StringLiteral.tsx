@@ -1,6 +1,6 @@
 import TsType, { Complexity } from '../TsType'
 import ts from 'typescript'
-import { JSONApiType } from 'common-types'
+import { JSONApiType } from '@papupata/common-types'
 
 export default class StringLiteral extends TsType {
   constructor(type: ts.Type) {

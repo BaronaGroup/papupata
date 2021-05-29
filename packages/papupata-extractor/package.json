@@ -28,7 +28,7 @@
     "url": "https://github.com/BaronaGroup/papupata/issues"
   },
   "dependencies": {
-    "common-types": "^1.0.0",
+    "@papupata/common-types": "^1.0.0",
     "common-utils": "^1.0.0",
     "papupata-type-analyser": "^1.0.0"
   }

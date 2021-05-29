@@ -1,21 +1,10 @@
 import { Request as ExpressRequest, RequestHandler, Response } from 'express'
 import { PapupataMiddleware, TypedRequest } from '.'
-import { integerToken, regexStringToken, stringEnumToken } from './customQueryTypes'
+import { TypedQueryType as TypedQueryType2 } from '@papupata/common-types'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
 import { Method, PartialUnlessArray } from './types'
 
-type TypedQueryFieldType =
-  | typeof String
-  | typeof Number
-  | typeof Boolean
-  | typeof Date
-  | { type: typeof regexStringToken; regex: RegExp }
-  | { type: typeof integerToken }
-  | { type: typeof stringEnumToken }
-
-export type TypedQueryType = {
-  [key: string]: TypedQueryFieldType | [TypedQueryFieldType]
-}
+export type TypedQueryType = TypedQueryType2
 
 export type CallArgParam<CallArgs, BodyInputType, CallArgsWithoutBody, RequestOptions> = {} extends CallArgs
   ? [] | [CallArgs] | [CallArgs, RequestOptions]

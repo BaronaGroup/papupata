@@ -1,3 +1,8 @@
+2.0.1
+
+- Dependency updates
+- Includes experimental support for papudoc in papupata 2.x; not officially supported, hence only a patch version bump 
+
 2.0.0
 
 Breaking changes:

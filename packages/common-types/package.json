@@ -1,5 +1,5 @@
 {
-  "name": "common-types",
+  "name": "@papupata/common-types",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "Tapani Haka <tapani.haka@barona.fi>",
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/BaronaGroup/papupata/issues"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "scripts": {
+    "prepare": "tsc --project tsconfig.json"
+  }
 }

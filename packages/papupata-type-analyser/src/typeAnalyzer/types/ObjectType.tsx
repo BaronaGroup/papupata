@@ -1,7 +1,7 @@
 import ts from 'typescript'
 import TsType, { Complexity, RenderContext } from '../TsType'
 import { AnalyserContext } from '../typeAnalyzer'
-import { JSONApiType } from 'common-types'
+import { JSONApiType } from '@papupata/common-types'
 import last from '../../util/last'
 import compact from '../../util/compact'
 

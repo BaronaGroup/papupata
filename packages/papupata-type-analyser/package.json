@@ -28,6 +28,6 @@
     "url": "https://github.com/BaronaGroup/papupata/issues"
   },
   "dependencies": {
-    "common-types": "*"
+    "@papupata/common-types": "*"
   }
 }

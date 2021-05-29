@@ -1,4 +1,4 @@
-import { JSONAPI } from 'common-types'
+import { JSONAPI } from '@papupata/common-types'
 
 export type Tag = {
   name: string

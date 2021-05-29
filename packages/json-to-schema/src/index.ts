@@ -1,4 +1,4 @@
-import { JSONApiType } from 'common-types'
+import { JSONApiType } from '@papupata/common-types'
 
 export type JsonSchemaVariant = 'OpenAPI' | 'JSONSchemaDraft07'
 

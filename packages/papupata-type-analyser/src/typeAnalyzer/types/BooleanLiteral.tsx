@@ -1,7 +1,7 @@
 import TsType, { Complexity } from '../TsType'
 import ts from 'typescript'
 import { AnalyserContext } from '../typeAnalyzer'
-import { JSONApiType } from 'common-types'
+import { JSONApiType } from '@papupata/common-types'
 
 export default class BooleanLiteral extends TsType {
   private literalValue: boolean

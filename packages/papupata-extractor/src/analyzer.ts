@@ -1,9 +1,9 @@
 import * as ts from 'typescript'
+import { JSDocTagInfo } from 'typescript'
 import { generateTypeJSON, generateTypeString } from 'papupata-type-analyser'
 import { ExtractorConfig } from './config'
 import getRequireableFilename from 'common-utils/lib/getRequirableFilename'
-import { JSONApiType } from 'common-types'
-import { JSDocTagInfo } from 'typescript'
+import { JSONApiType, TypedQueryType } from '@papupata/common-types'
 import { getTagText, getTagTexts, Tag } from './tags'
 
 export type Analysis = ReturnType<typeof analyze>
@@ -16,10 +16,10 @@ interface FoundValue {
 export interface AnalyzedAPI {
   api: API
   url: string
-  params: string[]
-  query: string[]
-  optionalQuery: string[]
-  boolQuery: string[]
+  params: TypedQueryType
+  query: TypedQueryType
+  optionalQuery: TypedQueryType
+  boolQuery: TypedQueryType
   body: string
   response: string
   responseType: ts.Type | null
@@ -106,11 +106,10 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
     return apiData
 
     function getURL(route: any) {
-      // TODO: __parent is not at all available, needs to be added to papupata proper
       route.apiDeclaration.configure({ baseURL: '' })
       const params: string[] = route.apiUrlParameters.params
       const paramObj: any = {}
-      for (const param of params) {
+      for (const param of Object.keys(params)) {
         paramObj[param] = '[' + param + ']'
       }
       return route.getURL(paramObj).replace(/%5B(.+?)%5D/g, ':$1')
@@ -192,10 +191,10 @@ interface API {
   path: string[]
   route: {
     apiUrlParameters: {
-      query: string[]
-      params: string[]
-      optionalQuery: string[]
-      boolQuery: string[]
+      query: TypedQueryType
+      params: TypedQueryType
+      optionalQuery: TypedQueryType
+      boolQuery: TypedQueryType
     }
     method: string
   }

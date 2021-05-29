@@ -1,9 +1,21 @@
 import type { JSONApiType } from './jsonAPIType'
 
+type StringParameterTypes = 'string' | 'boolean' | 'number' | 'date'
+
 interface QueryParameter {
   name: string
   optional: boolean
-  type: 'string' | 'boolean'
+  isArray?: boolean
+  type: StringParameterTypes
+  pattern?: string
+  enum?: string[]
+}
+
+interface PathParameter {
+  name: string
+  type: StringParameterTypes
+  pattern?: string
+  enum?: string[]
 }
 
 export interface JSONAPI {
@@ -12,7 +24,7 @@ export interface JSONAPI {
   path: string
   method: string
   query: QueryParameter[]
-  pathParams: Array<{ name: string }>
+  pathParams: PathParameter[]
   body?: JSONApiType | null
   response?: JSONApiType | null
   alternativeResponses: Array<{

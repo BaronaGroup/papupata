@@ -5,7 +5,7 @@
 ## Usage
 
 ```
-const commonTypes = require('common-types');
+const commonTypes = require('@papupata/common-types');
 
 // TODO: DEMONSTRATE API
 ```

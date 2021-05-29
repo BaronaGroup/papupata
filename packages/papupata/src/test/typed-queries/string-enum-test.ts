@@ -1,5 +1,5 @@
 import requestPromise from 'request-promise'
-import { StringEnum } from '../../main/customQueryTypes'
+import { StringEnum } from '@papupata/common-types'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'

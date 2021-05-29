@@ -1,4 +1,4 @@
-import { JSONApiType } from 'common-types'
+import { JSONApiType } from '@papupata/common-types'
 import TSType, { RenderContext } from './typeAnalyzer/TsType'
 import uniqueId from './util/uniqueId'
 

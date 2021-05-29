@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-const commonTypes = require('..');
+const commonTypes = require('..')
 
-describe('common-types', () => {
-    it('needs tests');
-});
+describe('@papupata/common-types', () => {
+  it('needs tests')
+})

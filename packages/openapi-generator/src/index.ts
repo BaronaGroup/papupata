@@ -1,7 +1,5 @@
-import { JSONAPI } from 'common-types'
-import { OpenApiConfig } from 'common-types/lib/OpenApiConfig'
+import { JSONAPI, JSONApiType, OpenApiConfig } from '@papupata/common-types'
 import * as fs from 'fs'
-import { JSONApiType } from 'common-types/lib/jsonAPIType'
 import convertJSONAPIType from 'papupata-json-to-schema'
 
 export function generateOpenApi(config: OpenApiConfig, apis: JSONAPI[]) {
@@ -30,15 +28,14 @@ export function generateOpenApi(config: OpenApiConfig, apis: JSONAPI[]) {
         ...api.pathParams.map((param) => ({
           name: param.name,
           in: 'path',
-          schema: { type: 'string' },
+          schema: getSchema(param),
           required: true,
         })),
         ...api.query.map((q) => ({
           name: q.name,
           in: 'query',
-          required: !q.optional,
-          schema: { type: 'string' },
-          ...(q.type === 'boolean' ? { enum: ['true', 'false'] } : {}),
+          required: !q.optional && !q.isArray,
+          schema: getSchema(q),
         })),
       ],
       requestBody: api.body
@@ -80,4 +77,32 @@ function getAlternativeResponses(api: JSONAPI) {
     responses[entry.code] = { description: entry.description ?? 'No description.' }
   }
   return responses
+}
+
+function getSchema(parameter: JSONAPI['query'][number] | JSONAPI['pathParams'][number]): any {
+  if ('isArray' in parameter && parameter.isArray) {
+    return {
+      type: 'array',
+      items: getSchema({ ...parameter, isArray: false }),
+    }
+  }
+  const { enum: enumType, pattern } = parameter
+  const common = { enum: enumType, pattern }
+
+  switch (parameter.type) {
+    case 'string':
+      return { ...common, type: 'string', ...common }
+    case 'boolean':
+      return { ...common, type: 'string', enum: common.enum ?? ['true', 'false'] }
+    case 'number':
+      return { ...common, type: 'string', pattern: common.pattern || '^[0-9]+(.[0-9]+)?$' }
+    case 'date':
+      return {
+        ...common,
+        type: 'string',
+        pattern: common.pattern ?? '^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d.\\d\\d\\d(Z|[+-]\\d\\d(:?\\d\\d)?)$',
+      }
+    default:
+      throw new Error('OpenAPI conversion cannot handle type ' + parameter.type)
+  }
 }

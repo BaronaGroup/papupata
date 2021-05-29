@@ -1,4 +1,4 @@
-import { JSONAPISet } from 'common-types'
+import { JSONAPISet } from '@papupata/common-types'
 import { analyze } from './analyzer'
 import { ExtractorConfig } from './config'
 import generateJsonOutput from './generateJsonOutput'

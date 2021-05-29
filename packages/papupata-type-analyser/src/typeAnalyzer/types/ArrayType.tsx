@@ -2,7 +2,7 @@ import TsType, { Complexity, RenderContext } from '../TsType'
 import ts from 'typescript'
 import { AnalyserContext } from '../typeAnalyzer'
 import { findResolvedTypeAutonest } from './ObjectType'
-import { JSONApiType } from 'common-types'
+import { JSONApiType } from '@papupata/common-types'
 
 export default class ArrayType extends TsType {
   private elementType: TsType

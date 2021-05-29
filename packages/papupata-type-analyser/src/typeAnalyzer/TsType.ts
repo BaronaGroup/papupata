@@ -1,5 +1,5 @@
 import ts = require('typescript')
-import { JSONApiType } from 'common-types'
+import { JSONApiType } from '@papupata/common-types'
 
 export type CreateReference = (toType: TSType, context: string[]) => void
 
