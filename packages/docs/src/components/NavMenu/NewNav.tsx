@@ -151,7 +151,7 @@ function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
 
   return (
     <Container>
-      <TogglerSupport checked={checked} />
+      <TogglerSupport checked={checked} readOnly />
       <LinkContainer>
         {children && (
           <Toggler
