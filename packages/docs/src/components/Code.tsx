@@ -7,15 +7,13 @@ import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
 const Container = styled.div``
 
-export const Code: React.FC<{ language: string; children: string }> = ({ language, children }) => {
-  return (
+export const Code: React.FC<{ language: string; children: string }> = ({ language, children }) => (
     <Container>
       <SyntaxHighlighter language={language} style={docco}>
         {fixIndent(children)}
       </SyntaxHighlighter>
     </Container>
   )
-}
 
 function fixIndent(code: string) {
   const lines = code.split('\n')

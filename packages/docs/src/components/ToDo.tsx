@@ -9,6 +9,4 @@ const Container = styled(Banner)`
   margin: 20px;
 `
 
-export const ToDo: React.FC = ({ children }) => {
-  return <Container>{children || 'This section needs more work.'}</Container>
-}
+export const ToDo: React.FC = ({ children }) => <Container>{children || 'This section needs more work.'}</Container>

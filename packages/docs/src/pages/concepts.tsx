@@ -7,14 +7,12 @@ import { FixedFont } from '../components/guides'
 import Page from '../components/Page'
 import IndexLayout from '../layouts'
 
-const Concept: React.FC<{ children: React.ReactNode; label: React.ReactNode }> = ({ children, label }) => {
-  return (
+const Concept: React.FC<{ children: React.ReactNode; label: React.ReactNode }> = ({ children, label }) => (
     <Section>
       <SectionHeading>{label}</SectionHeading>
       <div>{children}</div>
     </Section>
   )
-}
 
 const ConceptsPage = () => (
   <IndexLayout>

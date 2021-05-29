@@ -12,9 +12,7 @@ const Container = styled.div`
 `
 const Heading = styled.h2``
 
-const Method: React.FC = ({ children }) => {
-  return <span>{children}()</span>
-}
+const Method: React.FC = ({ children }) => <span>{children}()</span>
 
 const Type = styled.span`
   font-style: italic;

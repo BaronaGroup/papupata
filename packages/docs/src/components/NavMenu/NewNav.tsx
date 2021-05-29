@@ -172,7 +172,5 @@ function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
 
 function isAChildSelected(entry: NavEntry, isCurrent: IsCurrentFn): boolean {
   if (typeof entry !== 'object' || !entry || !('children' in entry)) return false
-  return Object.entries(entry.children as NavEntries).some((child) => {
-    return isCurrent(child[0], true) || isAChildSelected(child[1], isCurrent)
-  })
+  return Object.entries(entry.children as NavEntries).some((child) => isCurrent(child[0], true) || isAChildSelected(child[1], isCurrent))
 }

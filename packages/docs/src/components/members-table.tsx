@@ -34,8 +34,7 @@ export const Members: React.FC<{ context: string; includeRequiredColumn?: boolea
   context,
   includeRequiredColumn,
   includeAvailableFrom
-}) => {
-  return (
+}) => (
     <Section>
       <MemberContext.Provider value={{ context, includeRequiredColumn: !!includeRequiredColumn }}>
         <IncludeAvailableFromContext.Provider value={!!includeAvailableFrom}>
@@ -55,7 +54,6 @@ export const Members: React.FC<{ context: string; includeRequiredColumn?: boolea
       </MemberContext.Provider>
     </Section>
   )
-}
 export const MethodMember: React.FC<{ name: string; dataType: any; required?: any; displayName?: any; availableFrom?: string }> = ({
   children,
   name,
@@ -99,8 +97,7 @@ export const PropertyMember: React.FC<{ name: ReactNode; dataType: any; required
   )
 }
 
-export const ExposedTypeMember: React.FC<{ name: string }> = ({ children, name }) => {
-  return (
+export const ExposedTypeMember: React.FC<{ name: string }> = ({ children, name }) => (
     <Row>
       <NameColumnBase>{name}</NameColumnBase>
       <TypeColumn>property</TypeColumn>
@@ -108,4 +105,3 @@ export const ExposedTypeMember: React.FC<{ name: string }> = ({ children, name }
       <DescriptionColumn>{children}. Type type itself must be accessed using the typeof operator.</DescriptionColumn>
     </Row>
   )
-}
