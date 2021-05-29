@@ -1,6 +1,6 @@
 {
   "name": "papupata-papudoc",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "API documentation generator for papupata",
   "license": "MIT",
   "author": {
@@ -61,7 +61,7 @@
     "papupata-extractor"
   ],
   "peerDependencies": {
-    "papupata": "^2.0.0",
+    "papupata": "^2.0.1",
     "typescript": "*"
   },
   "homepage": "https://baronagroup.github.io/papupata",
