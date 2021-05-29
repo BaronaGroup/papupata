@@ -21,14 +21,12 @@ interface GEProps {
   variants: string[]
 }
 
-const GotchaExample = ({ label, variants }: GEProps) => {
-  return (
+const GotchaExample = ({ label, variants }: GEProps) => (
     <LineIndent>
       <p>{label}</p>
       <Example>{variants.map((routing) => `API.declareGetAPI('/api?${routing}')`).join('\n')}</Example>
     </LineIndent>
   )
-}
 
 const QBVPage = () => (
   <IndexLayout>

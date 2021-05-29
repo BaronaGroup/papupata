@@ -9,6 +9,4 @@ const Container = styled(Banner)`
   margin: 20px;
 `
 
-export const MightChange: React.FC = ({ children }) => {
-  return <Container>{children || 'Beware! There is a good chance this will be changed before 1.0 release!'}</Container>
-}
+export const MightChange: React.FC = ({ children }) => <Container>{children || 'Beware! There is a good chance this will be changed before 1.0 release!'}</Container>
