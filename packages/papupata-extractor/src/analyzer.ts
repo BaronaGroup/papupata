@@ -10,7 +10,7 @@ export type Analysis = ReturnType<typeof analyze>
 
 interface FoundValue {
   symbol: ts.Symbol
-  tags: JSDocTagInfo[]
+  tags: Tag[]
 }
 
 export interface AnalyzedAPI {
@@ -74,6 +74,7 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
           })
         }*/
         const v = findValueAtPath(call.arguments[0], globalTags, singleAPI.path)
+
         if (!v) throw new Error('Failed to find value: ' + singleAPI.path.join('.'))
         const responseType = getTypeParameterFor(v.symbol, 'response')
         const bodyType = getTypeParameterFor(v.symbol, 'body')
@@ -92,8 +93,8 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
           method: singleAPI.route.method,
           checker,
           parameterDescriptions: getParameterDescriptions(v),
-          description: getTagText(v.tags, 'description'),
-          tags: v.tags,
+          description: getTagText(convertTags(v.tags), 'description'),
+          tags: convertTags(v.tags),
         }
         //console.log(api.tags)
 
@@ -133,7 +134,7 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
     }
 
     function getParameterDescriptions(value: FoundValue) {
-      const paramTags = getTagTexts(value.tags, 'param')
+      const paramTags = getTagTexts(convertTags(value.tags), 'param')
 
       const entries = paramTags.map((tag) => {
         const [, key, description] = tag?.match(/^([^\s]+) (.+)/) || [, '', '']
@@ -153,7 +154,7 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
       })
     }
 
-    function findValueAtPath(node: ts.Node, docTags: JSDocTagInfo[], path: string[]): FoundValue | null {
+    function findValueAtPath(node: ts.Node, docTags: Array<Tag>, path: string[]): FoundValue | null {
       const members = checker.getTypeAtLocation(node).getProperties()
       if (!members) return null
       const member = members.find((member) => member.escapedName === path[0])
@@ -165,16 +166,16 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
         return {
           symbol: member,
           tags: [
-            ...memberTags,
+            ...convertTags(memberTags),
             ...docTags,
             ...member.getDocumentationComment(checker).map((comment) => ({ name: 'description', text: comment.text })),
           ],
         }
-      return findValueAtPath(member.valueDeclaration, memberTags, path.slice(1))
+      return findValueAtPath(member.valueDeclaration!, convertTags(memberTags), path.slice(1))
     }
 
     function getTypeParameterFor(symbol: ts.Symbol, forType: string) {
-      const call = findNamedCall(symbol.valueDeclaration, forType)
+      const call = findNamedCall(symbol.valueDeclaration!, forType)
       if (call) {
         const x = call.parent.parent as ts.NodeWithTypeArguments
 
@@ -221,4 +222,11 @@ function getTsConfigFilename(config: ExtractorConfig) {
     return getRequireableFilename(config.baseDir, config.tsConfigFilename)
   }
   return getRequireableFilename(config.baseDir, 'tsconfig.json')
+}
+
+function convertTags(tags: Array<JSDocTagInfo | Tag>): Tag[] {
+  return tags.map((tag) => ({
+    name: tag.name,
+    text: Array.isArray(tag.text) ? tag.text?.map((text) => text.text).join('\n') : tag.text,
+  }))
 }

@@ -1,4 +1,4 @@
-import ts from 'typescript'
+import ts, { SymbolDisplayPart } from 'typescript'
 import TsType, { Complexity, RenderContext } from '../TsType'
 import { AnalyserContext } from '../typeAnalyzer'
 import { JSONApiType } from '@papupata/common-types'
@@ -37,7 +37,7 @@ export default class ObjectType extends TsType {
           ],
         }
         const description =
-          member.getJsDocTags().find((tag) => tag.name === 'description')?.text ??
+          jsdocCompatibility(member.getJsDocTags().find((tag) => tag.name === 'description')?.text) ??
           member.getDocumentationComment(ctx.checker).find((x) => x.kind === 'text')?.text
 
         if (member.flags & ts.SymbolFlags.Method) return null
@@ -273,4 +273,11 @@ function* getMappers(
     }
     return { sources, targets }
   }
+}
+
+// should work with both before and after ts 4.3 where things changed
+function jsdocCompatibility(param: string | undefined | SymbolDisplayPart[]) {
+  if (!param) return param
+  if (typeof param === 'string') return param
+  return param.map((p) => p.text).join('\n')
 }
