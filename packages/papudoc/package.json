@@ -1,6 +1,6 @@
 {
   "name": "papupata-papudoc",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "API documentation generator for papupata",
   "license": "MIT",
   "author": {
@@ -20,7 +20,8 @@
     "start": "ts-node -T src/bin ./src/demo/papudoc.ts",
     "tsc": "tsc --project tsconfig.json",
     "serve": "serve output",
-    "build": "npm run tsc"
+    "build": "npm run tsc",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@papupata/common-types": "*",
