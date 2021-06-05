@@ -16,5 +16,6 @@
     "outDir": "dist",
     "downlevelIteration": true
   },
+  "types": ["node"],
   "include": ["src/**/*"]
 }
