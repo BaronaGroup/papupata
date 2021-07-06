@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@papupata/common-types": "*",
-    "@types/express": "4.17.12",
+    "@types/express": "4.17.13",
     "common-utils": "*",
     "ejs": "3.1.6",
     "enzyme": "3.11.0",
