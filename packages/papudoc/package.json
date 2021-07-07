@@ -53,7 +53,7 @@
     "papupata": "^2.0.0",
     "prettier": "2.3.2",
     "serve": "12.0.0",
-    "typescript": "4.3.2"
+    "typescript": "4.3.5"
   },
   "bundledDependencies": [
     "@papupata/common-types",
