@@ -28,6 +28,6 @@
     "url": "https://github.com/BaronaGroup/papupata/issues"
   },
   "devDependencies": {
-    "@types/node": "14.17.12"
+    "@types/node": "14.17.13"
   }
 }
