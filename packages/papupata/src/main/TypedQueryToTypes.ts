@@ -1,4 +1,4 @@
-import { integerToken, regexStringToken, stringEnumToken } from '@papupata/common-types'
+import { integerToken, regexStringToken, stringEnumToken } from './common-types'
 import { StringTupleElementTypes } from './types'
 
 type GetType<T> = T extends { new (...args: any): any }

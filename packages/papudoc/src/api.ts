@@ -1,11 +1,11 @@
 import { loadConfig, PapudocConfig } from './config'
-import getRequireableFilename from 'common-utils/lib/getRequirableFilename'
+import getRequireableFilename from './getRequirableFilename'
 import * as path from 'path'
 import * as fs from 'fs'
-import { generateAPISetJSON } from 'papupata-extractor'
-import { JSONAPISet } from '@papupata/common-types'
+import { generateAPISetJSON } from './extractor'
+import { JSONAPISet } from './common-types'
 import { locator } from './locator'
-import { generateOpenApi } from 'papupata-openapi-generator'
+import { generateOpenApi } from './openapi-generator'
 
 export function generatePapudoc(configOrConfigFile?: string | PapudocConfig) {
   const config: PapudocConfig =

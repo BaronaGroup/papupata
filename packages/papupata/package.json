@@ -35,13 +35,9 @@
     "uuid": "8.3.2"
   },
   "dependencies": {
-    "@papupata/common-types": "*",
     "lodash": "4.17.21",
     "qs": "^6.7.0"
   },
-  "bundledDependencies": [
-    "@papupata/common-types"
-  ],
   "main": "dist/main/index",
   "types": "dist/main/index.d.ts",
   "exports": {
@@ -54,7 +50,8 @@
     "./invokers/supertest": "./dist/main/supertestInvoker.js",
     "./invokers/test": "./dist/main/testInvoker.js",
     "./ValidationError": "./dist/main/PapupataValidationError.js",
-    "./config": "./dist/main/config.js"
+    "./config": "./dist/main/config.js",
+    "./dist/main/common-types": "./dist/main/common-types/index.js"
   },
   "scripts": {
     "build": "npx tsc --project tsconfig.json",

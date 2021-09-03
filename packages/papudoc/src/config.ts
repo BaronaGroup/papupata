@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import getRequireableFilename from 'common-utils/lib/getRequirableFilename'
-import { OpenApiConfig } from '@papupata/common-types'
+import { OpenApiConfig } from './common-types'
+import getRequireableFilename from './getRequirableFilename'
 
 const MAX_DEPTH = 100
 

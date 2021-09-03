@@ -1,6 +1,6 @@
 import { Request as ExpressRequest, RequestHandler, Response } from 'express'
 import { PapupataMiddleware, TypedRequest } from '.'
-import { TypedQueryType as TypedQueryType2 } from '@papupata/common-types'
+import { TypedQueryType as TypedQueryType2 } from './common-types'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
 import { Method, PartialUnlessArray } from './types'
 

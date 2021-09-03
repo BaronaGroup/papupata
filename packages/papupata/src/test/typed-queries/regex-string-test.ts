@@ -1,4 +1,4 @@
-import { StringMatching } from '@papupata/common-types'
+import { StringMatching } from '../../main/common-types'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'

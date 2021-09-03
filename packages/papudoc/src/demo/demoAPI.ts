@@ -1,5 +1,5 @@
 import { APIDeclaration, papudoc } from 'papupata'
-import { Integer, StringEnum, StringMatching } from '@papupata/common-types'
+import { Integer, StringEnum, StringMatching } from '../common-types'
 
 const base = new APIDeclaration<any>()
 

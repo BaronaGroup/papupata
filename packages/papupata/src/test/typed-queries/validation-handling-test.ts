@@ -1,4 +1,4 @@
-import { Integer, StringMatching } from '@papupata/common-types'
+import { Integer, StringMatching } from '../../main/common-types'
 import { APIDeclaration } from '../../main'
 import { ValidationBehavior } from '../../main/config'
 import middleware204 from '../../main/middleware204'
