@@ -1,3 +1,11 @@
+2.0.3
+
+- No longer use bundled dependencies, the bits and pieces are integrated to the main papupata package
+
+2.0.2
+- Dependency updates
+- Remove a breakpoint
+
 2.0.1
 
 - Dependency updates
