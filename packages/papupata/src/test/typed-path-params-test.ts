@@ -1,4 +1,4 @@
-import { Integer, StringEnum, StringMatching } from '@papupata/common-types'
+import { Integer, StringEnum, StringMatching } from '../main/common-types'
 import { APIDeclaration } from '../main'
 import { ValidationBehavior } from '../main/config'
 import middleware204 from '../main/middleware204'

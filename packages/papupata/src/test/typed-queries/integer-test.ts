@@ -1,5 +1,5 @@
 import requestPromise from 'request-promise'
-import { Integer } from '@papupata/common-types'
+import { Integer } from '../../main/common-types'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'
