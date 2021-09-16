@@ -48,7 +48,7 @@
     "@types/styled-components": "5.1.12",
     "papupata": "2.0.3-rc1",
     "prettier": "2.3.2",
-    "serve": "12.0.0",
+    "serve": "12.0.1",
     "typescript": "4.3.2"
   },
   "peerDependencies": {
