@@ -186,6 +186,12 @@ export default function NavMenu() {
         '/api/invokeImplementationAdapter': 'invokeImplementationAdapter',
         '/api/testInvoker': 'testInvoker'
       }
+    },
+    '/experimental': {
+      label: 'Experimental',
+      children: {
+        '/experimental/papupata-from-openapi': 'Conversion from OpenAPI'
+      }
     }
   }
   return (

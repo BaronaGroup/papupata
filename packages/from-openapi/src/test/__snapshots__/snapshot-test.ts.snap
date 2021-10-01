@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshots basic 1`] = `
+"// Generated using papupata-from-openapi
+import { APIDeclaration } from 'papupata'
+const declarationBase = new APIDeclaration()
+export const generatedAPI = {
+  _papupataApiDeclaration: declarationBase,
+  /**
+   * @summary Returns a list of users.
+   * @description Optional extended description in CommonMark or HTML.
+   */
+  Users: declarationBase.declareGetAPI('/users').response<Array<string>>(),
+}
+"
+`;
+
+exports[`snapshots body 1`] = `
+"// Generated using papupata-from-openapi
+import { APIDeclaration } from 'papupata'
+const declarationBase = new APIDeclaration()
+export const generatedAPI = {
+  _papupataApiDeclaration: declarationBase,
+  /**
+   * @summary Returns a list of users.
+   * @description Optional extended description in CommonMark or HTML.
+   */
+  Users: declarationBase.declarePostAPI('/users').body<{ username: string; password: string }>().response<string>(),
+}
+"
+`;
+
+exports[`snapshots overview 1`] = `
+"// Generated using papupata-from-openapi
+import { APIDeclaration } from 'papupata'
+const declarationBase = new APIDeclaration()
+export const generatedAPI = {
+  _papupataApiDeclaration: declarationBase,
+  /**
+   * @summary List API versions
+   */
+  listVersionsv2: declarationBase.declareGetAPI('/').response<unknown>(),
+
+  /**
+   * @summary Show API version details
+   */
+  getVersionDetailsv2: declarationBase.declareGetAPI('/v2').response<unknown | unknown>(),
+}
+"
+`;
+
+exports[`snapshots trivial 1`] = `
+"// Generated using papupata-from-openapi
+import { APIDeclaration } from 'papupata'
+const declarationBase = new APIDeclaration()
+export const generatedAPI = { _papupataApiDeclaration: declarationBase }
+"
+`;
