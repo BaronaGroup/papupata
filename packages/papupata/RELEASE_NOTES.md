@@ -1,3 +1,7 @@
+2.0.4
+
+- Importing queryTypes was broken, fixed now.
+
 2.0.3
 
 - No longer use bundled dependencies, the bits and pieces are integrated to the main papupata package
