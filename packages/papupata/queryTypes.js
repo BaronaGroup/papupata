@@ -1,1 +1,1 @@
-module.exports = require('./dist/main/customQueryTypes')
+module.exports = require('./dist/main/common-types/customQueryTypes')

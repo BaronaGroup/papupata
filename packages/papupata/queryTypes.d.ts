@@ -1,1 +1,1 @@
-export * from './dist/main/customQueryTypes'
+export * from './dist/main/common-types/customQueryTypes'
