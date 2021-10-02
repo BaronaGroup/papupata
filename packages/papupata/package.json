@@ -42,7 +42,7 @@
   "types": "dist/main/index.d.ts",
   "exports": {
     ".": "./dist/main/index.js",
-    "./queryTypes": "./dist/main/customQueryTypes.js",
+    "./queryTypes": "./dist/main/common-types/customQueryTypes.js",
     "./adapters/fetch": "./dist/main/fetchAdapter.js",
     "./adapters/invokeImplementation": "./dist/main/invokeImplementationAdapter.js",
     "./adapters/requestPromise": "./dist/main/requestPromiseAdapter.js",
