@@ -256,6 +256,9 @@ function convertSimpleSchema(schema: OpenAPIV3.SchemaObject, state: ConversionSt
 }
 
 function convertSchema(schema: OpenAPIV3.SchemaObject, state: ConversionState): string {
+  if (schema.nullable) {
+    return `(null | (${convertSchema({ ...schema, nullable: false }, state)}))`
+  }
   const numParts = (schema.allOf ? 1 : 0) + (schema.anyOf ? 1 : 0) + (schema.type ? 1 : 0)
 
   if (numParts > 1) {
