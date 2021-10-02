@@ -27,6 +27,6 @@ async function run() {
 }
 
 run().catch((err) => {
-  console.error(err.message)
+  console.error(process.argv.includes('--debug') ? err.stack : err.message)
   process.exit(20)
 })
