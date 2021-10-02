@@ -55,7 +55,9 @@ export default function PapupataFromOpenapi() {
                         no effect when config file is used.
                       </Parameter>
                       <Parameter name={'exportName'} dataType={'string'}>
-                        The name used for the export of API declarations in the generated file. Has no effect when config file is used.
+                        The name used for the export of API declarations in the generated file. If the export name ends with an empty set of
+                        parenthesis, a function that returns a new copy of the API declaration is exported instead of just a const that has
+                        one instance of it. Has no effect when config file is used.
                       </Parameter>
                     </Parameters>
                   </>
@@ -99,7 +101,9 @@ export default function PapupataFromOpenapi() {
                         The filename where the converted API declaration is to be stored. no effect when config file is used.
                       </Parameter>
                       <Parameter name={'exportName'} dataType={'string'}>
-                        The name used for the export of API declarations in the generated file.
+                        The name used for the export of API declarations in the generated file. If the export name ends with an empty set of
+                        parenthesis, a function that returns a new copy of the API declaration is exported instead of just a const that has
+                        one instance of it.
                       </Parameter>
                     </Parameters>
                     <p>All relative paths are resolved relative to the configuration file.</p>

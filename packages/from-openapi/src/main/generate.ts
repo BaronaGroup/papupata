@@ -31,9 +31,16 @@ export default async function generate(
   builder.push("} from 'papupata'\n")
   const extraImports = new SlowString('')
   builder.push(extraImports)
-  builder.push(`const declarationBase = new APIDeclaration()\n;`)
 
-  builder.push(`export const ${config.exportName ?? 'generatedAPI'} = {`)
+  const exportFunction = !!config.exportName?.endsWith('()')
+  if (!exportFunction || !config.exportName) {
+    builder.push(`const declarationBase = new APIDeclaration()\n;`)
+    builder.push(`export const ${config.exportName ?? 'generatedAPI'} = {`)
+  } else {
+    builder.push(`export const ${config.exportName.substring(0, config.exportName.length - 2)}  = () => {\n`)
+    builder.push(`const declarationBase = new APIDeclaration()\n`)
+    builder.push('return {\n')
+  }
   builder.push(`_papupataApiDeclaration: declarationBase,\n`) // no risk of conflict as sanitising gets rid of underscores from actual APIs
   if (openapi.paths) {
     for (const path of Object.keys(openapi.paths)) {
@@ -151,6 +158,7 @@ export default async function generate(
   }
 
   builder.push('}')
+  if (exportFunction) builder.push('}')
 
   if (state.integerUsed || state.enumUsed) {
     extraImports.value += `import { ${state.integerUsed ? 'Integer, ' : ''} ${
