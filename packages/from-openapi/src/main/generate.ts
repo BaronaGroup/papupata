@@ -275,7 +275,10 @@ function convertSchema(schema: OpenAPIV3.SchemaObject, state: ConversionState): 
   switch (schema.type) {
     case 'string':
       if (schema.enum) {
-        return `(${schema.enum.map((x) => `'${x.replace(/'/g, '\\')}'`).join(' | ')})`
+        return `(${schema.enum
+          .filter((x) => typeof x === 'string')
+          .map((x) => `'${x.replace(/'/g, '\\')}'`)
+          .join(' | ')})`
       }
       return 'string'
     case 'number':
