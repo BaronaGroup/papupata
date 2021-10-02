@@ -295,7 +295,8 @@ function convertSchema(schema: OpenAPIV3.SchemaObject, state: ConversionState): 
       if (schema.properties) {
         for (const propName of Object.keys(schema.properties)) {
           const prop = schema.properties[propName]
-          builder.push(`"${propName}": ${convertSchema(handleRef(prop), state)},
+          const isRequired = schema.required?.includes(propName)
+          builder.push(`"${propName}"${isRequired ? '' : '?'}: ${convertSchema(handleRef(prop), state)},
           `)
         }
       }
