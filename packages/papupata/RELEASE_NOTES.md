@@ -1,3 +1,6 @@
+2.0.5
+- The export of queryTypes was also broken in package.json, fixed there too
+
 2.0.4
 
 - Importing queryTypes was broken, fixed now.
