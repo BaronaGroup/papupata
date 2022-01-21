@@ -9,6 +9,7 @@ interface QueryParameter {
   type: StringParameterTypes
   pattern?: string
   enum?: string[]
+  description?: string
 }
 
 interface PathParameter {
@@ -16,6 +17,7 @@ interface PathParameter {
   type: StringParameterTypes
   pattern?: string
   enum?: string[]
+  description?: string
 }
 
 export interface JSONAPI {
