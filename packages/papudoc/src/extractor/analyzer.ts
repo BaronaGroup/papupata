@@ -29,6 +29,10 @@ export interface AnalyzedAPI {
   bodyJSONType: JSONApiType | null
   method: string
   checker: ts.TypeChecker
+  parameterTags: Array<{
+    name: string
+    tags: Tag[]
+  }>
   parameterDescriptions: Map<string, string | undefined>
   description?: string
   tags: Tag[]
@@ -80,6 +84,13 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
       const responseType = getTypeParameterFor(v.symbol, 'response')
       const bodyType = getTypeParameterFor(v.symbol, 'body')
       const bodyName = [...singleAPI.path, 'body']
+
+      const parameterTags = [
+        ...getPartTags(v.symbol, 'params'),
+        ...getPartTags(v.symbol, 'query'),
+        ...getPartTags(v.symbol, 'optionalQuery'),
+      ]
+
       const responseName = [...singleAPI.path, 'response']
       const api: AnalyzedAPI = {
         api: singleAPI,
@@ -93,6 +104,7 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
         body: bodyType ? generateTypeString(bodyType, checker, bodyName, 'Inline') : 'unknown',
         method: singleAPI.route.method,
         checker,
+        parameterTags,
         parameterDescriptions: getParameterDescriptions(v),
         description: getTagText(convertTags(v.tags), 'description'),
         tags: convertTags(v.tags),
@@ -160,7 +172,6 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
       const member = members.find((member) => member.escapedName === path[0])
       if (!member) return null
       const memberTags = member.getJsDocTags()
-      member.getJsDocTags()
 
       if (path.length === 1)
         return {
@@ -184,6 +195,30 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
         return checker.getTypeAtLocation(x.typeArguments?.[0]!)
       }
       return null
+    }
+    function getPartTags(symbol: ts.Symbol, forType: string) {
+      const call = findNamedCall(symbol.valueDeclaration!, forType)
+      if (call) {
+        // TODO: this logic could for sure do with improvements
+        const children = call.parent.parent.getChildren()
+        const testchild = children[children.length - 2].getChildren()[0]
+        const type = checker.getTypeAtLocation(testchild).symbol
+        return Array.from(type.members!.entries() as any).map((entry: any) => {
+          const symbol = entry[1],
+            name: string = entry[0]
+          return {
+            name,
+            tags: [
+              ...convertTags(symbol.getJsDocTags(checker)),
+              ...symbol.getDocumentationComment(checker).map((comment: any) => ({
+                name: 'description',
+                text: comment.text as string,
+              })),
+            ],
+          }
+        })
+      }
+      return []
     }
   }
 }

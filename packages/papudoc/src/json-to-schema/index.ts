@@ -32,7 +32,11 @@ function convertType(apiType: JSONApiType): any {
         properties: fromPairs(
           apiType.properties.map((property) => [
             property.name,
-            { ...convertType(property.type), description: property.description },
+            {
+              ...convertType(property.type),
+              description: property.description,
+              deprecated: property.deprecated ? true : undefined,
+            },
           ])
         ),
         required: required.length ? required : undefined,

@@ -13,6 +13,8 @@ export function generateOpenApi(config: OpenApiConfig, apis: JSONAPI[]) {
       description: api.description,
       summary: api.name,
       'x-papupata-name': api.name,
+      operationId: api.name,
+      deprecated: api.deprecated || undefined,
       responses: {
         200: {
           description: 'Success',
@@ -30,12 +32,16 @@ export function generateOpenApi(config: OpenApiConfig, apis: JSONAPI[]) {
           in: 'path',
           schema: getSchema(param),
           required: true,
+          description: param.description,
+          deprecated: param.deprecated || undefined,
         })),
         ...api.query.map((q) => ({
           name: q.name,
           in: 'query',
           required: !q.optional && !q.isArray,
           schema: getSchema(q),
+          description: q.description,
+          deprecated: q.deprecated || undefined,
         })),
       ],
       requestBody: api.body
