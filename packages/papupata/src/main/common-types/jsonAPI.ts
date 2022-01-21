@@ -10,6 +10,7 @@ interface QueryParameter {
   pattern?: string
   enum?: string[]
   description?: string
+  deprecated?: boolean
 }
 
 interface PathParameter {
@@ -18,6 +19,7 @@ interface PathParameter {
   pattern?: string
   enum?: string[]
   description?: string
+  deprecated?: boolean
 }
 
 export interface JSONAPI {
@@ -33,6 +35,7 @@ export interface JSONAPI {
     code: number
     description?: string
   }>
+  deprecated?: boolean
 }
 
 export type JSONAPISet = JSONAPI[]

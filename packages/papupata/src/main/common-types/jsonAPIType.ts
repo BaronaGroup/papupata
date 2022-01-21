@@ -39,6 +39,7 @@ export interface ObjectApiType {
     description?: string
     required: boolean
     type: JSONApiType
+    deprecated?: boolean
   }>
 }
 
