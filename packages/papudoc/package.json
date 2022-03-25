@@ -1,6 +1,6 @@
 {
   "name": "papupata-papudoc",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "API documentation generator for papupata",
   "license": "MIT",
   "author": {
@@ -46,13 +46,13 @@
     "@types/react": "17.0.26",
     "@types/react-dom": "17.0.9",
     "@types/styled-components": "5.1.12",
-    "papupata": "2.0.3-rc1",
+    "papupata": "2.1.0-RC1",
     "prettier": "2.4.1",
     "serve": "12.0.1",
     "typescript": "4.3.2"
   },
   "peerDependencies": {
-    "papupata": "^2.0.1",
+    "papupata": "2.1.0-RC1",
     "typescript": "*"
   },
   "homepage": "https://baronagroup.github.io/papupata",

@@ -10,6 +10,7 @@ interface Property {
   type: TsType
   required: boolean
   description?: string
+  deprecated?: boolean
 }
 
 export default class ObjectType extends TsType {
@@ -40,6 +41,8 @@ export default class ObjectType extends TsType {
           jsdocCompatibility(member.getJsDocTags().find((tag) => tag.name === 'description')?.text) ??
           member.getDocumentationComment(ctx.checker).find((x) => x.kind === 'text')?.text
 
+        const deprecated = !!member.getJsDocTags().find((tag) => tag.name === 'deprecated')
+
         if (member.flags & ts.SymbolFlags.Method) return null
         let memberType = valueType
 
@@ -62,6 +65,7 @@ export default class ObjectType extends TsType {
           type: memberContext.analyse([...contextualName, member.name], memberType),
           required: !(member.flags & ts.SymbolFlags.Optional),
           description,
+          deprecated,
         }
       })
     )
@@ -94,6 +98,7 @@ export default class ObjectType extends TsType {
         description: property.description,
         required: property.required,
         type: ctx.renderNestedJSON!(property.type),
+        deprecated: property.deprecated,
       })),
       name: this.name,
     }

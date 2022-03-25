@@ -12,24 +12,50 @@ export default function generateJsonOutput(analysis: Analysis): JSONAPISet {
       path: api.url,
       method: api.method,
       query: composeQueryParameters(api),
-      pathParams: Object.entries(api.params).map(([name, type]) => ({ name, ...getType(type) })),
+      pathParams: Object.entries(api.params).map(([name, type]) => ({
+        name,
+        ...getType(type),
+        ...tagDetails(name, api),
+      })),
       body: api.bodyJSONType,
       response: api.responseJSONType,
       alternativeResponses: getAlternativeResponses(api.tags),
+      deprecated: api.tags.some((t) => t.name === 'deprecated'),
     }
   })
 }
 
 function composeQueryParameters(analysis: AnalyzedAPI) {
   return [
-    ...Object.entries(analysis.query).map(([name, q]) => ({ name, optional: false, ...getType(q) })),
+    ...Object.entries(analysis.query).map(([name, q]) => ({
+      name,
+      optional: false,
+      ...getType(q),
+      ...tagDetails(name, analysis),
+    })),
     ...Object.entries(analysis.optionalQuery).map(([name, q]) => ({
       name,
       optional: true,
       ...getType(q),
+      ...tagDetails(name, analysis),
     })),
-    ...Object.entries(analysis.boolQuery).map(([name, q]) => ({ name, optional: false, ...getType(q) })),
+    ...Object.entries(analysis.boolQuery).map(([name, q]) => ({
+      name,
+      optional: false,
+      ...getType(q),
+      ...tagDetails(name, analysis),
+    })),
   ]
+}
+
+function tagDetails(name: string, analysis: AnalyzedAPI) {
+  const tags = analysis.parameterTags.find((t) => t.name === name)
+  if (!tags) return {}
+
+  return {
+    description: tags.tags.find((t) => t.name === 'description')?.text,
+    deprecated: !!tags.tags.find((t) => t.name === 'deprecated'),
+  }
 }
 
 function getType(type: TypedQueryType[string]): Omit<QueryParameter, 'name' | 'optional'> {
