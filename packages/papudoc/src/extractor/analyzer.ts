@@ -86,9 +86,9 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
       const bodyName = [...singleAPI.path, 'body']
 
       const parameterTags = [
-        ...getPartTags(v.symbol, 'params'),
-        ...getPartTags(v.symbol, 'query'),
-        ...getPartTags(v.symbol, 'optionalQuery'),
+        ...getParameterTags(v.symbol, 'params'),
+        ...getParameterTags(v.symbol, 'query'),
+        ...getParameterTags(v.symbol, 'optionalQuery'),
       ]
 
       const responseName = [...singleAPI.path, 'response']
@@ -196,13 +196,13 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
       }
       return null
     }
-    function getPartTags(symbol: ts.Symbol, forType: string) {
+    function getParameterTags(symbol: ts.Symbol, forType: string) {
       const call = findNamedCall(symbol.valueDeclaration!, forType)
       if (call) {
         // TODO: this logic could for sure do with improvements
-        const children = call.parent.parent.getChildren()
-        const testchild = children[children.length - 2].getChildren()[0]
-        const type = checker.getTypeAtLocation(testchild).symbol
+        const peers = call.parent.parent.getChildren()
+        const callArgs = peers[peers.length - 2].getChildren()[0]
+        const type = checker.getTypeAtLocation(callArgs).symbol
         return Array.from(type.members!.entries() as any).map((entry: any) => {
           const symbol = entry[1],
             name: string = entry[0]
