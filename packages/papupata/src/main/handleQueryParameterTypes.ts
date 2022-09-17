@@ -10,32 +10,39 @@ export enum Mode {
   LEGACY_BOOL,
 }
 
-export default function handleQueryParameterTypes(query: any, types: TypedQueryType | string[], mode: Mode) {
+export default function handleQueryParameterTypes(
+  query: any,
+  types: TypedQueryType | string[],
+  mode: Mode,
+  context: 'query' | 'params'
+) {
   const fixedTypes = Array.isArray(types)
     ? fromPairs(types.map((type) => [type, mode === Mode.LEGACY_BOOL ? Boolean : String]))
     : types
 
   return {
     ...query,
-    ...fromPairs(toPairs(fixedTypes).map(([name, type]) => [name, convertValue(name, query[name], type, mode)])),
+    ...fromPairs(
+      toPairs(fixedTypes).map(([name, type]) => [name, convertValue(name, query[name], type, mode, [context, name])])
+    ),
   }
 }
 
-function convertValue(name: string, value: any, targetType: any, mode: Mode): any {
+function convertValue(name: string, value: any, targetType: any, mode: Mode, path: Array<string | number>): any {
   if (mode === Mode.LEGACY_BOOL) {
     return value === 'true'
   }
   if (value === undefined) {
     if (Array.isArray(targetType)) return []
     if (mode === Mode.OPTIONAL) return undefined
-    throw new PapupataValidationError(`${name} is required`)
+    throw PapupataValidationError.fromMessageAndPath(`${name} is required`, path)
   }
 
   if (!targetType) return value
 
   if (Array.isArray(targetType)) {
     const valueAsArray: any[] = Array.isArray(value) ? value : [value]
-    return valueAsArray.map((item) => convertValue(name, item, targetType[0], mode))
+    return valueAsArray.map((item, index) => convertValue(name, item, targetType[0], mode, [...path, index]))
   }
 
   const singleValue = Array.isArray(value) ? value[value.length - 1] : value
@@ -47,7 +54,7 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
     case Boolean: {
       const bool = singleValue
       if (bool !== 'false' && bool !== 'true' && bool !== '') {
-        throw new PapupataValidationError(`${bool} is not a valid boolean for ${name}`)
+        throw PapupataValidationError.fromMessageAndPath(`${bool} is not a valid boolean for ${name}`, path)
       }
       return bool === 'true'
     }
@@ -56,12 +63,13 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
     }
     case Number:
       if (!singleValue.match(/^((-|\+)?(\d+)(\.\d+)?)|-?Infinity|NaN$/)) {
-        throw new PapupataValidationError(`${singleValue} is not a valid number for ${name}`)
+        throw PapupataValidationError.fromMessageAndPath(`${singleValue} is not a valid number for ${name}`, path)
       }
       return +singleValue
     case Date: {
       const date = new Date(singleValue)
-      if (isNaN(date.valueOf())) throw new PapupataValidationError(`${singleValue} is not a valid date for ${name}`)
+      if (isNaN(date.valueOf()))
+        throw PapupataValidationError.fromMessageAndPath(`${singleValue} is not a valid date for ${name}`, path)
       return date
     }
     default:
@@ -70,20 +78,23 @@ function convertValue(name: string, value: any, targetType: any, mode: Mode): an
           case regexStringToken: {
             const actualType: ReturnType<typeof StringMatching> = targetType
             if (!singleValue.match(actualType.regex)) {
-              throw new PapupataValidationError(`${singleValue} failed validation for ${name}`)
+              throw PapupataValidationError.fromMessageAndPath(`${singleValue} failed validation for ${name}`, path)
             }
             return singleValue
           }
           case integerToken: {
             if (!singleValue.match(/^(-|\+)?(\d+)$/)) {
-              throw new PapupataValidationError(`${singleValue} is not a valid integer for ${name}`)
+              throw PapupataValidationError.fromMessageAndPath(
+                `${singleValue} is not a valid integer for ${name}`,
+                path
+              )
             }
             return +singleValue
           }
           case stringEnumToken:
             const actualType: ReturnType<typeof StringEnum> = targetType
             if (!actualType.values.includes(singleValue)) {
-              throw new PapupataValidationError(`${singleValue} failed validation for ${name}`)
+              throw PapupataValidationError.fromMessageAndPath(`${singleValue} failed validation for ${name}`, path)
             }
             return singleValue
         }

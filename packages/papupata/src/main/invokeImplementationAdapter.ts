@@ -55,15 +55,17 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
       // The middleware path takes care of this in the express request implementation
       req.query = handleQueryParameterTypes(
         handleQueryParameterTypes(
-          handleQueryParameterTypes(req.query, api.apiUrlParameters.query, Mode.REQUIRED),
+          handleQueryParameterTypes(req.query, api.apiUrlParameters.query, Mode.REQUIRED, 'query'),
           api.apiUrlParameters.boolQuery,
-          Mode.LEGACY_BOOL
+          Mode.LEGACY_BOOL,
+          'query'
         ),
         api.apiUrlParameters.optionalQuery,
-        Mode.OPTIONAL
+        Mode.OPTIONAL,
+        'query'
       )
 
-      req.params = handleQueryParameterTypes(req.params, api.apiUrlParameters.params, Mode.REQUIRED)
+      req.params = handleQueryParameterTypes(req.params, api.apiUrlParameters.params, Mode.REQUIRED, 'params')
 
       resp = await api.implementation(req, res)
     }

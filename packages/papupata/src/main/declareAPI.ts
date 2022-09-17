@@ -5,6 +5,7 @@ import { PartiallyDeclaredAPIAtEndpoint } from './partiallyDeclaredTypes'
 import { TypedQueryType } from './responderTypes'
 import fromPairs from 'lodash/fromPairs'
 import { PapupataRouteOptions } from './config'
+import { ZodTypeAny } from 'zod'
 
 type ConvertIfArray<T, U> = T extends readonly string[] ? ConvertLegacyQuery<T, U> : T
 
@@ -74,14 +75,17 @@ export function declareAPI<RequestType, RouteOptions, RequestOptions>(
     OQT extends TypedQueryType,
     BQT extends TypedQueryType
   >(params: PT, query: QT, optionalQuery: OQT, boolQuery: BQT) {
-    return <BT, BTInput = BT>() => {
+    return <BT, BTInput = BT, BodySchemaType extends ZodTypeAny | undefined = undefined>(
+      bodySchema?: BodySchemaType
+    ) => {
       return responder(
         params,
         query,
         optionalQuery,
         boolQuery,
-        (null as any) as BT,
-        (null as any) as BTInput,
+        null as any as BT,
+        null as any as BTInput,
+        bodySchema,
         method,
         path,
         parent,
