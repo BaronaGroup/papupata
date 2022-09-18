@@ -269,7 +269,20 @@ describe('schema validation test', () => {
         expect(response.message).toEqual('handled/' + validResponseTriggeringValue)
       })
 
-      it.todo('validation takes place after mapping')
+      it('validation takes place after mapping', async () => {
+        const testRoute = API.declarePostAPI('/server-response-mapping-test').response({
+          schema: z.object({ field: z.string() }),
+          mapper: (input) => JSON.parse(JSON.stringify(input)),
+        })
+
+        testRoute.implement(() => ({ field: new Date() as any }))
+
+        // When
+        const response = await testRoute()
+
+        // Then
+        expect(response).toEqual({ field: expect.any(String) })
+      })
 
       describe('validation failure behavior can be overridden', () => {
         it('in general', async () => {
