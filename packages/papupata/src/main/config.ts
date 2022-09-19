@@ -38,7 +38,7 @@ export type ValidationFailureHandler<TRequest, TResponse> = <
   error: PapupataValidationError,
   value: TType,
   context: {
-    dataContext: 'body' | 'response'
+    dataContext: 'request' | 'response'
     callContext: 'client' | 'server'
     request?: TRequest
     response?: TResponse

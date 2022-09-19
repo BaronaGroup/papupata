@@ -156,7 +156,7 @@ export function responder<
             const validationError = PapupataValidationError.fromZodError(result.error)
             const handledValidationFailure = await (
               parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure
-            )(validationError, { body: unparsedBody }, { dataContext: 'body', callContext: 'client' })
+            )(validationError, { body: unparsedBody }, { dataContext: 'request', callContext: 'client' })
             if (handledValidationFailure === skipHandlingRoute) throw new Error('Cannot reroute on client')
             reqBody = handledValidationFailure.body as any
           }
@@ -480,7 +480,7 @@ export function responder<
             const errorHandlingResult = await (parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure)(
               PapupataValidationError.fromZodError(validationResult.error),
               validationInput,
-              { dataContext: 'body', callContext: 'server', request: req, response: res }
+              { dataContext: 'request', callContext: 'server', request: req, response: res }
             )
             if (errorHandlingResult === skipHandlingRoute) return skipHandlingRoute
             req.params = { ...(stringParams ? {} : req.params), ...errorHandlingResult.params }
