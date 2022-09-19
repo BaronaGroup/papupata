@@ -3,7 +3,7 @@ import { APIDeclaration } from '../main'
 import { ValidationBehavior } from '../main/config'
 import middleware204 from '../main/middleware204'
 import createRequestAdapter from '../main/requestPromiseAdapter'
-import { expectFailure, prepareTestServerFor } from './test-utils'
+import { cleanupZodErrorMessage, expectFailure, prepareTestServerFor } from './test-utils'
 
 const getUniquePath = (function () {
   let index = 0
@@ -65,7 +65,7 @@ describe('typed-path-params', function () {
       const err = await expectFailure(api({ param: 'q' as any }))
 
       // Then
-      expect(err.message).toMatch(/q failed validation for param/)
+      expect(cleanupZodErrorMessage(err.message)).toMatch(/Invalid enum value. Expected 'a' \| 'b', received 'q'/)
     })
   })
 
@@ -97,7 +97,7 @@ describe('typed-path-params', function () {
       const err = await expectFailure(api({ param: 'q' }))
 
       // Then
-      expect(err.message).toMatch(/q failed validation for param/)
+      expect(cleanupZodErrorMessage(err.message)).toMatch(/invalid_string/)
     })
   })
 
@@ -164,7 +164,7 @@ describe('typed-path-params', function () {
       const err = await expectFailure(api({ param: 'test' as any }))
 
       // Then
-      expect(err.message).toMatch(/test is not a valid number for param/)
+      expect(cleanupZodErrorMessage(err.message)).toMatch(/invalid_string/)
     })
   })
 
@@ -201,13 +201,12 @@ describe('typed-path-params', function () {
 
       api.implement((req) => `${req.params.param} / ${typeof req.params.param}`)
 
-      expect((await expectFailure(api({ param: 'test' as any }))).message).toMatch(
-        /test is not a valid integer for param/
-      )
-      expect((await expectFailure(api({ param: NaN }))).message).toMatch(/NaN is not a valid integer for param/)
-      expect((await expectFailure(api({ param: Infinity }))).message).toMatch(
-        /Infinity is not a valid integer for param/
-      )
+      let message1 = (await expectFailure(api({ param: 'test' as any }))).message
+      expect(cleanupZodErrorMessage(message1)).toMatch(/invalid_string/)
+      let message2 = (await expectFailure(api({ param: NaN }))).message
+      expect(cleanupZodErrorMessage(message2)).toMatch(/invalid_string/)
+      let message3 = (await expectFailure(api({ param: Infinity }))).message
+      expect(cleanupZodErrorMessage(message3)).toMatch(/invalid_string/)
     })
   })
 
@@ -244,8 +243,9 @@ describe('typed-path-params', function () {
 
       api.implement((req) => `${req.params.param} / ${typeof req.params.param}`)
 
-      expect((await expectFailure(api({ param: 'test' as any }))).message).toMatch(
-        /test is not a valid boolean for param/
+      let message = (await expectFailure(api({ param: 'test' as any }))).message
+      expect(cleanupZodErrorMessage(message)).toMatch(
+        /Invalid enum value. Expected 'false' | 'true' | '', received 'test'/
       )
     })
   })
@@ -270,7 +270,8 @@ describe('typed-path-params', function () {
 
       api.implement((req) => `${req.params.param} / ${typeof req.params.param}`)
 
-      expect((await expectFailure(api({ param: 'test' as any }))).message).toMatch(/test is not a valid date for param/)
+      let message = (await expectFailure(api({ param: 'test' as any }))).message
+      expect(cleanupZodErrorMessage(message)).toMatch(/Invalid date/)
     })
   })
 

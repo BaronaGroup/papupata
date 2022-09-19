@@ -1,6 +1,7 @@
 import { Application, Router, Response } from 'express'
 import { Method } from './types'
 import PapupataValidationError from './PapupataValidationError'
+import { skipHandlingRoute } from './index'
 
 export enum ValidationBehavior {
   THROW = 'THROW',
@@ -24,16 +25,25 @@ export type MakeRequestAdapter<RequestOptions = void> = (
   requestOptions?: RequestOptions
 ) => Promise<any>
 
-export type ValidationFailureHandler<TRequest, TResponse> = (
+export type ValidationFailureHandler<TRequest, TResponse> = <
+  TType extends
+    | {
+        body: unknown
+        query: unknown
+        params: unknown
+      }
+    | { body: unknown }
+    | { response: unknown }
+>(
   error: PapupataValidationError,
-  value: unknown,
+  value: TType,
   context: {
     dataContext: 'body' | 'response'
     callContext: 'client' | 'server'
     request?: TRequest
     response?: TResponse
   }
-) => Promise<unknown | 'REROUTE'> | unknown | 'REROUTE' | never
+) => Promise<TType | typeof skipHandlingRoute> | TType | typeof skipHandlingRoute
 
 export interface Config<RequestType = void, RouteOptions = void, RequestOptions = void> {
   baseURL?: string
@@ -50,6 +60,7 @@ export interface Config<RequestType = void, RouteOptions = void, RequestOptions 
    */
   validationBehavior?: ValidationBehavior
   onValidationFailure?: ValidationFailureHandler<RequestType, Response>
+  strictPathAndQueryParams?: boolean
 }
 
 export interface PapupataRouteOptions {

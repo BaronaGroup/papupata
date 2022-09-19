@@ -60,3 +60,16 @@ export async function expectFailure(promise: Promise<any>): Promise<any> {
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+export function cleanupZodErrorMessage(message: string) {
+  const match = message.match(/ZodError:.+(?!Function.fromZodError)/)
+  return (
+    match?.[0]
+      .replace(/&quot;/g, '"')
+      .replace(/&nbsp;/g, '')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&#39;/g, "'")
+      .replace(/<br>/g, '\n') ?? message
+  )
+}

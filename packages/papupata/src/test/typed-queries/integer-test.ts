@@ -3,7 +3,7 @@ import { Integer } from '../../main/common-types'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'
-import { expectFailure, prepareTestServerFor } from '../test-utils'
+import { cleanupZodErrorMessage, expectFailure, prepareTestServerFor } from '../test-utils'
 
 const getUniquePath = (function () {
   let index = 0
@@ -80,7 +80,7 @@ describe('typed-queries/integer', function () {
       const err = await expectFailure(api({ q1: Infinity }))
 
       // Then
-      expect(err.message).toMatch('Infinity is not a valid integer for q1')
+      expect(cleanupZodErrorMessage(err.message)).toMatch(/invalid_string/)
     })
 
     it('decimal', async function () {
@@ -92,7 +92,7 @@ describe('typed-queries/integer', function () {
       const err = await expectFailure(api({ q1: 1.23 }))
 
       // Then
-      expect(err.message).toMatch('1.23 is not a valid integer for q1')
+      expect(cleanupZodErrorMessage(err.message)).toMatch(/invalid_string/)
     })
 
     it('nan', async function () {
@@ -104,7 +104,7 @@ describe('typed-queries/integer', function () {
       const err = await expectFailure(api({ q1: NaN }))
 
       // Then
-      expect(err.message).toMatch('NaN is not a valid integer for q1')
+      expect(cleanupZodErrorMessage(err.message)).toMatch(/invalid_string/)
     })
 
     it('optional (value present)', async function () {

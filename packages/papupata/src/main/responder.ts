@@ -3,7 +3,7 @@ import fromPairs from 'lodash/fromPairs'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import qs from 'qs'
-import handleQueryParameterTypes, { Mode } from './handleQueryParameterTypes'
+import { parametersToZodFields, Mode } from './parametersToZodFields'
 import PapupataValidationError from './PapupataValidationError'
 import { PapupataRouteOptions, ValidationBehavior, ValidationFailureHandler } from './config'
 import { IAPIDeclaration, skipHandlingRoute } from './index'
@@ -103,6 +103,16 @@ export function responder<
 
       let mockImpl: ActiveMock | null = null
 
+      const requestSchema = z.object({
+        body: bodySchema ?? z.unknown(),
+        params: z.object(parametersToZodFields(params, Mode.REQUIRED)),
+        query: z.object({
+          ...parametersToZodFields(query, Mode.REQUIRED),
+          ...parametersToZodFields(boolQuery, Mode.LEGACY_BOOL),
+          ...parametersToZodFields(optionalQuery, Mode.OPTIONAL),
+        }),
+      })
+
       async function call(
         ...argsArr: CallArgParam<
           CallArgs<ParamsType, QueryType, OptionalQueryType, BoolQueryType, BodyInputType>,
@@ -147,9 +157,9 @@ export function responder<
             const validationError = PapupataValidationError.fromZodError(result.error)
             const handledValidationFailure = await (
               parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure
-            )(validationError, unparsedBody, { dataContext: 'body', callContext: 'client' })
+            )(validationError, { body: unparsedBody }, { dataContext: 'body', callContext: 'client' })
             if (handledValidationFailure === skipHandlingRoute) throw new Error('Cannot reroute on client')
-            reqBody = handledValidationFailure as any
+            reqBody = handledValidationFailure.body as any
           }
         } else {
           reqBody = unparsedBody as any
@@ -200,14 +210,14 @@ export function responder<
 
         const handledError = await (parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure)(
           validatedResponse.error,
-          response,
+          { response },
           {
             callContext: 'client',
             dataContext: 'response',
           }
         )
         if (handledError === skipHandlingRoute) throw new Error('Cannot reroute on client')
-        return handledError as any
+        return handledError.response as any
       }
 
       function isValidAsNonBodyRequestData(obj: any) {
@@ -264,6 +274,7 @@ export function responder<
       call.implementation = undefined as any
       call.implementationMiddleware = {} as MyMiddlewareContainer
       call.expressImplementation = expressImplementation
+      call.requestSchema = requestSchema
 
       let expressHost: undefined | Application | Router
       const config = parent.getConfig()
@@ -375,7 +386,7 @@ export function responder<
           const error = PapupataValidationError.fromZodError(result.error)
           const errorHandlingResult = await (parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure)(
             error,
-            value,
+            { response: value },
             {
               dataContext: 'response',
               callContext: 'server',
@@ -384,7 +395,7 @@ export function responder<
             }
           )
           if (errorHandlingResult === skipHandlingRoute) throw new Error('Cannot reroute during response')
-          return errorHandlingResult
+          return errorHandlingResult.response
         }
       }
 
@@ -457,29 +468,27 @@ export function responder<
         const validationBehavior =
           papupataOptions.validationBehavior ?? parent.getConfig()?.validationBehavior ?? ValidationBehavior.THROW
         try {
-          const convertedParams = handleQueryParameterTypes(req.params, params, Mode.REQUIRED, 'params')
-          const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED, 'query')
-          const queryConversion2 = handleQueryParameterTypes(queryConversion1, boolQuery, Mode.LEGACY_BOOL, 'query')
-          const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL, 'query')
-          req.query = convertedQuery
-          req.params = convertedParams
-          const body = req.body ?? {}
-          if (bodySchema) {
-            const validationResult = bodySchema.safeParse(body)
-            if (validationResult.success) {
-              req.body = validationResult.data
-            } else {
-              const errorHandlingResult = await (parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure)(
-                PapupataValidationError.fromZodError(validationResult.error),
-                body,
-                { dataContext: 'body', callContext: 'server', request: req, response: res }
-              )
-              if (errorHandlingResult === skipHandlingRoute) return skipHandlingRoute
-              req.body = errorHandlingResult
-            }
+          const validationInput = { params: req.params, query: req.query, body: req.body }
+
+          const validationResult = requestSchema.safeParse(validationInput)
+          let stringParams = parent.getConfig()?.strictPathAndQueryParams
+
+          if (validationResult.success) {
+            req.params = { ...(stringParams ? {} : req.params), ...validationResult.data.params }
+            req.query = { ...(stringParams ? {} : req.query), ...validationResult.data.query }
+            req.body = validationResult.data.body
           } else {
-            req.body = req
+            const errorHandlingResult = await (parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure)(
+              PapupataValidationError.fromZodError(validationResult.error),
+              validationInput,
+              { dataContext: 'body', callContext: 'server', request: req, response: res }
+            )
+            if (errorHandlingResult === skipHandlingRoute) return skipHandlingRoute
+            req.params = { ...(stringParams ? {} : req.params), ...errorHandlingResult.params }
+            req.query = { ...(stringParams ? {} : req.query), ...errorHandlingResult.query }
+            req.body = errorHandlingResult.body
           }
+
           const resp = await next()
           return resp
         } catch (err) {

@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import { APIDeclaration } from '../main'
 import middleware204 from '../main/middleware204'
 import createRequestAdapter from '../main/requestPromiseAdapter'
-import { prepareTestServerFor } from './test-utils'
+import { expectFailure, prepareTestServerFor } from './test-utils'
 
 const API = new APIDeclaration()
 
@@ -168,7 +168,8 @@ describe('hard-coded-query-parameters-test', function () {
           .response<any>()
 
         // When/then
-        expect(() => api({ hardCoded: 'somethingElse' })).toThrowError(
+        const error = await expectFailure(api({ hardCoded: 'somethingElse' }))
+        expect(error.message).toEqual(
           `The parameter hardCoded, if present, is required to have the value "hcValue" (given: "somethingElse").`
         )
       })
@@ -262,9 +263,8 @@ describe('hard-coded-query-parameters-test', function () {
         })
 
         // When/then
-        expect(() => api({ hardCoded: 'green' })).toThrowError(
-          /The parameter hardCoded is not allowed to have the value green/
-        )
+        const err = await expectFailure(api({ hardCoded: 'green' }))
+        expect(err.message).toMatch(/The parameter hardCoded is not allowed to have the value green/)
       })
 
       it('explicitly setting any forbidden value throws', async function () {
@@ -277,9 +277,8 @@ describe('hard-coded-query-parameters-test', function () {
         })
 
         // When/then
-        expect(() => api({ hardCoded: 'green' })).toThrowError(
-          /The parameter hardCoded is not allowed to have the value green/
-        )
+        const err = await expectFailure(api({ hardCoded: 'green' }))
+        expect(err.message).toMatch(/The parameter hardCoded is not allowed to have the value green/)
       })
     })
   })

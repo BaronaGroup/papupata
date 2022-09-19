@@ -3,7 +3,7 @@ import { StringEnum } from '../../main/common-types'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'
-import { expectFailure, prepareTestServerFor } from '../test-utils'
+import { cleanupZodErrorMessage, expectFailure, prepareTestServerFor } from '../test-utils'
 
 const getUniquePath = (function () {
   let index = 0
@@ -79,7 +79,7 @@ describe('typed-queries/string enum', function () {
 
       // Then
       expect(response.statusCode).toEqual(500)
-      expect(response.message).toMatch(/q1 is required/)
+      expect(cleanupZodErrorMessage(response.message)).toMatch(/"message": "Required"/)
     })
 
     it('optional (value present)', async function () {
@@ -121,7 +121,9 @@ describe('typed-queries/string enum', function () {
       const err = await expectFailure(api({ q1: 'one' as any }))
 
       // Then
-      expect(err.message).toMatch(/one failed validation for q1/)
+      expect(cleanupZodErrorMessage(err.message)).toMatch(
+        /Invalid enum value. Expected 'alpha' | 'beta' | 'gamma', received 'one'/
+      )
     })
   })
 
@@ -166,7 +168,9 @@ describe('typed-queries/string enum', function () {
 
       // Then
 
-      expect(err.message).toMatch(/zero failed validation for q1/)
+      expect(cleanupZodErrorMessage(err.message)).toMatch(
+        /Invalid enum value. Expected 'alpha' | 'beta' | 'gamma', received 'zero'/
+      )
     })
 
     it('optional (value present)', async function () {

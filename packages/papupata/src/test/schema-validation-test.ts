@@ -51,7 +51,7 @@ describe('schema validation test', () => {
 
       describe('validation failure behavior can be overridden', () => {
         it('in general', async () => {
-          const fn = jest.fn().mockResolvedValue({})
+          const fn = jest.fn().mockResolvedValue({ body: {} })
           API.configure({ ...API.getConfig(), onValidationFailure: fn })
           const response = await route({ field: 10000 })
 
@@ -73,7 +73,7 @@ describe('schema validation test', () => {
         it('to override data', async () => {
           API.configure({
             ...API.getConfig(),
-            onValidationFailure: jest.fn().mockReturnValue({ field: 1 }),
+            onValidationFailure: jest.fn().mockReturnValue({ body: { field: 1 } }),
           })
           const response = await route({ field: 10000 })
 
@@ -123,7 +123,7 @@ describe('schema validation test', () => {
 
       describe('validation failure behavior can be overridden', () => {
         it('in general', async () => {
-          const fn = jest.fn().mockResolvedValue({})
+          const fn = jest.fn().mockResolvedValue({ body: {} })
           API.configure({ ...API.getConfig(), onValidationFailure: fn })
           const response = await requestPromise.post(route.getURL({}), { json: { field: 10000 } })
 
@@ -145,7 +145,7 @@ describe('schema validation test', () => {
         it('to override data', async () => {
           API.configure({
             ...API.getConfig(),
-            onValidationFailure: jest.fn().mockReturnValue({ field: 1 }),
+            onValidationFailure: jest.fn().mockReturnValue({ body: { field: 1 } }),
           })
           const response = await requestPromise.post(route.getURL({}), { json: { field: 10000 } })
 
@@ -196,7 +196,7 @@ describe('schema validation test', () => {
 
       describe('validation failure behavior can be overridden', () => {
         it('in general', async () => {
-          const fn = jest.fn().mockResolvedValue({})
+          const fn = jest.fn().mockResolvedValue({ response: {} })
           API.configure({ ...API.getConfig(), onValidationFailure: fn })
           const response = await manuallyImplementedRoute({ field: invalidResponseTriggeringValue })
 
@@ -218,7 +218,7 @@ describe('schema validation test', () => {
         it('to override data', async () => {
           API.configure({
             ...API.getConfig(),
-            onValidationFailure: jest.fn().mockReturnValue({ message: 'overridden' }),
+            onValidationFailure: jest.fn().mockReturnValue({ response: { message: 'overridden' } }),
           })
           const response = await manuallyImplementedRoute({ field: invalidResponseTriggeringValue })
 
@@ -286,7 +286,7 @@ describe('schema validation test', () => {
 
       describe('validation failure behavior can be overridden', () => {
         it('in general', async () => {
-          const fn = jest.fn().mockResolvedValue({})
+          const fn = jest.fn().mockResolvedValue({ response: {} })
           API.configure({ ...API.getConfig(), onValidationFailure: fn })
           const response = await requestPromise.post(route.getURL({}), {
             json: { field: invalidResponseTriggeringValue },
@@ -312,7 +312,7 @@ describe('schema validation test', () => {
         it('to override data', async () => {
           API.configure({
             ...API.getConfig(),
-            onValidationFailure: jest.fn().mockReturnValue({ message: 'handled overridden' }),
+            onValidationFailure: jest.fn().mockReturnValue({ response: { message: 'handled overridden' } }),
           })
           const response = await requestPromise.post(route.getURL({}), {
             json: { field: invalidResponseTriggeringValue },
