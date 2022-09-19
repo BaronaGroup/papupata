@@ -24,12 +24,15 @@ export default function Response() {
             the implementation.
           </p>
         </Usage>
-        <Parameters>
-          <Parameter name="<ResponseType>" dataType="Interface">
+        <Parameters includeAvailableFrom>
+          <Parameter name="<ResponseType>" dataType="Type">
             The response type as seen on the client side.
           </Parameter>
-          <Parameter name="<ServerResponseType>" dataType="Interface">
+          <Parameter name="<ServerResponseType>" dataType="Type">
             The response type as seen on the server side. Default to the value of ResponseType.
+          </Parameter>
+          <Parameter name="schema" dataType={'Zod Schema?'} availableFrom={'2.2.0'}>
+            A zod schema that is used for parsing and validating the body.
           </Parameter>
         </Parameters>
         <MethodReturnType>
@@ -37,17 +40,31 @@ export default function Response() {
         </MethodReturnType>
         <Caveats>
           <ul>
-            <li>There is no client side validation for the data types. Only typescript itself validates the response on server side</li>
-            <li>It's up to the developer to ensure that the ResponseType is really resulting from returning a ServerResponseType.</li>
+            <li>Validation for the response only takes place when a zod schema is given</li>
+            <li>
+              It's up to the developer to ensure that the ResponseType is really resulting from returning a ServerResponseType when the two
+              differ.
+            </li>
           </ul>
         </Caveats>
         <Examples>
-          <Example label="Example 1 Declaration">
+          <Example label="Example 1 Declaration, typescript-only">
             {`
             import { APIDeclaration } from 'papupata'
             const api = new APIDeclaration()
             const myAPI = api.declarePostAPI('/do-stuff')
               .response<string>()
+          `}
+          </Example>
+          <Example label="Example 1 Declaration, schema validation">
+            {`
+            import { APIDeclaration } from 'papupata'
+            import { z } from 'zod'
+
+            const api = new APIDeclaration()
+
+            const myAPI = api.declarePostAPI('/do-stuff')
+              .response(z.string())
           `}
           </Example>
           <Example label="Example 1 Usage in implementation">
