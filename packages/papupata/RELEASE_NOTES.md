@@ -1,3 +1,9 @@
+2.2.0
+- Support for zod for parsing bodies and responses
+
+2.1.0
+- Improvements to openAPI support; changes relevant only for papudoc 
+
 2.0.5
 - The export of queryTypes was also broken in package.json, fixed there too
 
