@@ -3,7 +3,7 @@ import fromPairs from 'lodash/fromPairs'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import qs from 'qs'
-import { parametersToZodFields, Mode } from './parametersToZodFields'
+import { Mode, parametersToZodFields } from './parametersToZodFields'
 import PapupataValidationError from './PapupataValidationError'
 import { PapupataRouteOptions, ValidationBehavior, ValidationFailureHandler } from './config'
 import { IAPIDeclaration, skipHandlingRoute } from './index'
@@ -31,7 +31,6 @@ import { paramMatchers } from './utils/paramMatchers'
 import { runHandlerChain } from './utils/runHandlerChain'
 import { ResponseOptionsType } from './partiallyDeclaredTypes'
 import { z, ZodTypeAny } from 'zod'
-import { ZodType } from 'zod/lib/types'
 
 const defaultOnValidationFailure: ValidationFailureHandler<any, any> = (error) => {
   throw error
@@ -508,7 +507,7 @@ export function responder<
         if (!responseOptions || typeof responseOptions !== 'object') return null
         if (typeof responseOptions === 'function') return null
 
-        if (responseOptions instanceof ZodType) return responseOptions as ZodTypeAny
+        if ('safeParse' in responseOptions) return responseOptions as ZodTypeAny
         if ('schema' in responseOptions && responseOptions.schema) return responseOptions.schema as ZodTypeAny
 
         return null
