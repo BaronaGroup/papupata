@@ -18,9 +18,9 @@ export default function Body() {
         <Usage>
           <p>Path params and query parameters must be defined before query.</p>
         </Usage>
-        <Parameters>
+        <Parameters includeAvailableFrom>
           <Parameter name="<BodyType>" dataType="Type">
-            The body type is declared as a type parameter.
+            The body type is declared as a type parameter. Inferrable from Zod schema, if given.
           </Parameter>
           <Parameter name="<BodyInputType>" dataType="Type">
             <p>The type of the body as seen when making a request. Defaults to BodyType.</p>
@@ -30,23 +30,38 @@ export default function Body() {
               function for making requests is meant to do other kind of transformation as well.
             </p>
           </Parameter>
+          <Parameter name="schema" dataType={'Zod Schema?'} availableFrom={'2.2.0'}>
+            A zod schema that is used for parsing and validating the body.
+          </Parameter>
         </Parameters>
         <MethodReturnType>
           <IncompleteApiDeclarationLink />
         </MethodReturnType>
         <Caveats>
           <ul>
-            <li>There is no validation for the shape of the body on the server</li>
+            <li>Validation for the shape of the body only takes place when a zod schema is given</li>
             <li>This option is presented for methods without body, even if it is does nothing useful in those cases.</li>
           </ul>
         </Caveats>
         <Examples>
-          <Example label="Declaration">
+          <Example label="Declaration, typescript-only">
             {`
             import { APIDeclaration } from 'papupata'
             const api = new APIDeclaration()
             const myAPI = api.declarePostAPI('/do-stuff')
               .body<{value: number}>()
+              .response<string>()
+          `}
+          </Example>
+          <Example label="Declaration, with validation and inferred type">
+            {`
+            import { APIDeclaration } from 'papupata'
+            import { z } from 'zod'
+
+            const api = new APIDeclaration()
+
+            const myAPI = api.declarePostAPI('/do-stuff')
+              .body(z.object({ value: z.number() })
               .response<string>()
           `}
           </Example>

@@ -49,7 +49,7 @@
     "papupata": "2.1.0-RC1",
     "prettier": "2.4.1",
     "serve": "12.0.1",
-    "typescript": "4.3.2"
+    "typescript": "4.8.3"
   },
   "peerDependencies": {
     "papupata": "2.1.0-RC1",

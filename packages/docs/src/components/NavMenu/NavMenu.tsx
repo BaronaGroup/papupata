@@ -38,13 +38,17 @@ export const guides: NavEntries = {
         description:
           'This guide will help you declare APIs whether to model the APIs your application is going to implement them, call them or both.'
       },
+      '/guides/declaring/schemas': {
+        label: 'Body and response validation',
+        description: 'An overview for how body and response validation can be set up.'
+      },
       '/guides/declaring/typeMapping': {
-        label: 'Types for path and query',
+        label: 'Path and query types',
         description:
           'This guide will help you understand all the possibilities and limitations of types supported in path and query parameters.'
       },
       '/guides/declaring/query-based-variants': {
-        label: 'Query-based variants',
+        label: 'Query-based routing',
         description: 'Sometimes APIs differ from each other just by their query parameters. This can be presented in papupata, as well.'
       }
     }

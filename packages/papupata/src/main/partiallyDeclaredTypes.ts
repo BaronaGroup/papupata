@@ -1,5 +1,20 @@
 import { DeclaredAPI, TypedQueryType } from './responderTypes'
 import { ConvertLegacyQuery } from './types'
+import { z, ZodTypeAny } from 'zod'
+
+type ResponseMapper<ResponseType, ResponseTypeOnServer> = (
+  payload: ResponseTypeOnServer
+) => ResponseType | Promise<ResponseType>
+
+export type ResponseOptionsType<
+  ResponseType,
+  ResponseTypeOnServer,
+  ResponseSchema extends ZodTypeAny | undefined = undefined
+> =
+  | undefined
+  | ResponseMapper<ResponseType, ResponseTypeOnServer>
+  | ResponseSchema
+  | { schema?: ResponseSchema; mapper?: ResponseMapper<ResponseType, ResponseTypeOnServer> }
 
 export interface PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, RouteOptions> {
   params<ParamsType extends TypedQueryType>(
@@ -56,20 +71,26 @@ export interface PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, Rou
     RequestType,
     RouteOptions
   >
-  body: <BodyType, BodyTypeOnServer = BodyType>() => PartiallyDeclaredAPIAtBody<
+  body: <BodyType, BodyTypeOnServer = BodyType>(
+    schema?: BodyType extends z.ZodTypeAny ? BodyType : undefined
+  ) => PartiallyDeclaredAPIAtBody<
     {},
     {},
     {},
     {},
-    BodyType,
-    BodyTypeOnServer,
+    BodyType extends z.ZodTypeAny ? z.infer<BodyType> : BodyType,
+    BodyTypeOnServer extends z.ZodTypeAny ? z.infer<BodyTypeOnServer> : BodyTypeOnServer,
     RequestOptions,
     RequestType,
     RouteOptions
   >
 
   response: <ResponseType, ResponseTypeOnServer = ResponseType>(
-    mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
+    responseOptions?: ResponseOptionsType<
+      ResponseType,
+      ResponseTypeOnServer,
+      ResponseType extends ZodTypeAny ? ResponseType : undefined
+    >
   ) => DeclaredAPI<
     {},
     {},
@@ -79,8 +100,8 @@ export interface PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, Rou
     {},
     RequestOptions,
     RequestType,
-    ResponseType,
-    ResponseTypeOnServer,
+    ResponseType extends z.ZodTypeAny ? z.infer<ResponseType> : ResponseType,
+    ResponseTypeOnServer extends z.ZodTypeAny ? z.infer<ResponseTypeOnServer> : ResponseTypeOnServer,
     RouteOptions
   >
 }
@@ -133,20 +154,26 @@ export interface PartiallyDeclaredAPIAtParams<
     RequestType,
     RouteOptions
   >
-  body: <BodyType, BodyTypeOnServer = BodyType>() => PartiallyDeclaredAPIAtBody<
+  body: <BodyType, BodyTypeOnServer = BodyType>(
+    schema?: BodyType extends z.ZodTypeAny ? BodyType : undefined
+  ) => PartiallyDeclaredAPIAtBody<
     ParamsType,
     {},
     {},
     {},
-    BodyType,
-    BodyTypeOnServer,
+    BodyType extends z.ZodTypeAny ? z.infer<BodyType> : BodyType,
+    BodyTypeOnServer extends z.ZodTypeAny ? z.infer<BodyTypeOnServer> : BodyTypeOnServer,
     RequestOptions,
     RequestType,
     RouteOptions
   >
 
   response: <ResponseType, ResponseTypeOnServer = ResponseType>(
-    mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
+    responseOptions?: ResponseOptionsType<
+      ResponseType,
+      ResponseTypeOnServer,
+      ResponseType extends ZodTypeAny ? ResponseType : undefined
+    >
   ) => DeclaredAPI<
     ParamsType,
     {},
@@ -156,8 +183,8 @@ export interface PartiallyDeclaredAPIAtParams<
     {},
     RequestOptions,
     RequestType,
-    ResponseType,
-    ResponseTypeOnServer,
+    ResponseType extends z.ZodTypeAny ? z.infer<ResponseType> : ResponseType,
+    ResponseTypeOnServer extends z.ZodTypeAny ? z.infer<ResponseTypeOnServer> : ResponseTypeOnServer,
     RouteOptions
   >
 }
@@ -203,20 +230,26 @@ export interface PartiallyDeclaredAPIAtQuery<
     RequestType,
     RouteOptions
   >
-  body: <BodyType, BodyTypeOnServer = BodyType>() => PartiallyDeclaredAPIAtBody<
+  body: <BodyType, BodyTypeOnServer = BodyType>(
+    schema?: BodyType extends z.ZodTypeAny ? BodyType : undefined
+  ) => PartiallyDeclaredAPIAtBody<
     ParamsType,
     QueryType,
     {},
     {},
-    BodyType,
-    BodyTypeOnServer,
+    BodyType extends z.ZodTypeAny ? z.infer<BodyType> : BodyType,
+    BodyTypeOnServer extends z.ZodTypeAny ? z.infer<BodyTypeOnServer> : BodyTypeOnServer,
     RequestOptions,
     RequestType,
     RouteOptions
   >
 
   response: <ResponseType, ResponseTypeOnServer = ResponseType>(
-    mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
+    responseOptions?: ResponseOptionsType<
+      ResponseType,
+      ResponseTypeOnServer,
+      ResponseType extends ZodTypeAny ? ResponseType : undefined
+    >
   ) => DeclaredAPI<
     ParamsType,
     QueryType,
@@ -226,8 +259,8 @@ export interface PartiallyDeclaredAPIAtQuery<
     {},
     RequestOptions,
     RequestType,
-    ResponseType,
-    ResponseTypeOnServer,
+    ResponseType extends z.ZodTypeAny ? z.infer<ResponseType> : ResponseType,
+    ResponseTypeOnServer extends z.ZodTypeAny ? z.infer<ResponseTypeOnServer> : ResponseTypeOnServer,
     RouteOptions
   >
 }
@@ -252,19 +285,26 @@ export interface PartiallyDeclaredAPIAtOptionalQuery<
     RequestType,
     RouteOptions
   >
-  body: <BodyType, BodyTypeOnServer = BodyType>() => PartiallyDeclaredAPIAtBody<
+
+  body: <BodyType, BodyTypeOnServer = BodyType>(
+    schema?: BodyType extends z.ZodTypeAny ? BodyType : undefined
+  ) => PartiallyDeclaredAPIAtBody<
     ParamsType,
     QueryType,
     OptionalQueryType,
     {},
-    BodyType,
-    BodyTypeOnServer,
+    BodyType extends z.ZodTypeAny ? z.infer<BodyType> : BodyType,
+    BodyTypeOnServer extends z.ZodTypeAny ? z.infer<BodyTypeOnServer> : BodyTypeOnServer,
     RequestOptions,
     RequestType,
     RouteOptions
   >
   response: <ResponseType, ResponseTypeOnServer = ResponseType>(
-    mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
+    responseOptions?: ResponseOptionsType<
+      ResponseType,
+      ResponseTypeOnServer,
+      ResponseType extends ZodTypeAny ? ResponseType : undefined
+    >
   ) => DeclaredAPI<
     ParamsType,
     QueryType,
@@ -274,8 +314,8 @@ export interface PartiallyDeclaredAPIAtOptionalQuery<
     {},
     RequestOptions,
     RequestType,
-    ResponseType,
-    ResponseTypeOnServer,
+    ResponseType extends z.ZodTypeAny ? z.infer<ResponseType> : ResponseType,
+    ResponseTypeOnServer extends z.ZodTypeAny ? z.infer<ResponseTypeOnServer> : ResponseTypeOnServer,
     RouteOptions
   >
 }
@@ -289,20 +329,26 @@ export interface PartiallyDeclaredAPIAtBoolQuery<
   RequestType,
   RouteOptions
 > {
-  body: <BodyType, BodyTypeOnServer = BodyType>() => PartiallyDeclaredAPIAtBody<
+  body: <BodyType, BodyTypeOnServer = BodyType>(
+    schema?: BodyType extends z.ZodTypeAny ? BodyType : undefined
+  ) => PartiallyDeclaredAPIAtBody<
     ParamsType,
     QueryType,
     OptionalQueryType,
     BoolQueryType,
-    BodyType,
-    BodyTypeOnServer,
+    BodyType extends z.ZodTypeAny ? z.infer<BodyType> : BodyType,
+    BodyTypeOnServer extends z.ZodTypeAny ? z.infer<BodyTypeOnServer> : BodyTypeOnServer,
     RequestOptions,
     RequestType,
     RouteOptions
   >
 
   response: <ResponseType, ResponseTypeOnServer = ResponseType>(
-    mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
+    responseOptions?: ResponseOptionsType<
+      ResponseType,
+      ResponseTypeOnServer,
+      ResponseType extends ZodTypeAny ? ResponseType : undefined
+    >
   ) => DeclaredAPI<
     ParamsType,
     QueryType,
@@ -312,8 +358,8 @@ export interface PartiallyDeclaredAPIAtBoolQuery<
     {},
     RequestOptions,
     RequestType,
-    ResponseType,
-    ResponseTypeOnServer,
+    ResponseType extends z.ZodTypeAny ? z.infer<ResponseType> : ResponseType,
+    ResponseTypeOnServer extends z.ZodTypeAny ? z.infer<ResponseTypeOnServer> : ResponseTypeOnServer,
     RouteOptions
   >
 }
@@ -330,7 +376,11 @@ export interface PartiallyDeclaredAPIAtBody<
   RouteOptions
 > {
   response: <ResponseType, ResponseTypeOnServer = ResponseType>(
-    mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
+    responseOptions?: ResponseOptionsType<
+      ResponseType,
+      ResponseTypeOnServer,
+      ResponseType extends ZodTypeAny ? ResponseType : undefined
+    >
   ) => DeclaredAPI<
     ParamsType,
     QueryType,
@@ -340,8 +390,8 @@ export interface PartiallyDeclaredAPIAtBody<
     BodyTypeOnServer,
     RequestOptions,
     RequestType,
-    ResponseType,
-    ResponseTypeOnServer,
+    ResponseType extends z.ZodTypeAny ? z.infer<ResponseType> : ResponseType,
+    ResponseTypeOnServer extends z.ZodTypeAny ? z.infer<ResponseTypeOnServer> : ResponseTypeOnServer,
     RouteOptions
   >
 }

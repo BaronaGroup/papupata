@@ -2,7 +2,7 @@ import requestPromise from 'request-promise'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'
-import { expectFailure, prepareTestServerFor } from '../test-utils'
+import { cleanupZodErrorMessage, expectFailure, prepareTestServerFor } from '../test-utils'
 
 const getUniquePath = (function () {
   let index = 0
@@ -70,7 +70,7 @@ describe('typed-queries/string', function () {
 
       // Then
       expect(response.statusCode).toEqual(500)
-      expect(response.message).toMatch(/q1 is required/)
+      expect(cleanupZodErrorMessage(response.message)).toMatch(/"message": "Required"/)
     })
 
     it('optional (value present)', async function () {

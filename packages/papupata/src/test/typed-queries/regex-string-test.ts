@@ -2,7 +2,7 @@ import { StringMatching } from '../../main/common-types'
 import { APIDeclaration } from '../../main'
 import middleware204 from '../../main/middleware204'
 import createRequestAdapter from '../../main/requestPromiseAdapter'
-import { expectFailure, prepareTestServerFor } from '../test-utils'
+import { cleanupZodErrorMessage, expectFailure, prepareTestServerFor } from '../test-utils'
 
 const getUniquePath = (function () {
   let index = 0
@@ -61,7 +61,7 @@ describe('typed-queries/regex-string', function () {
       const err = await expectFailure(api({ q1: 'howdy' }))
 
       // Then
-      expect(err.message).toMatch(/howdy failed validation for q1/)
+      expect(cleanupZodErrorMessage(err.message)).toMatch(/invalid_string/)
     })
   })
 
@@ -105,7 +105,7 @@ describe('typed-queries/regex-string', function () {
       const err = await expectFailure(api({ q1: ['oh hello', 'hello world', 'who are you again?'] }))
 
       // Then
-      expect(err.message).toMatch(/who are you again\? failed validation for q1/)
+      expect(cleanupZodErrorMessage(err.message)).toMatch(/invalid_string/)
     })
   })
 })

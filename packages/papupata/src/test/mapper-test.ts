@@ -4,10 +4,10 @@ import createRequestAdapter from '../main/requestPromiseAdapter'
 
 describe('mapper-test', function () {
   const API = new APIDeclaration()
-  const responseMapperAPI = API.declareGetAPI('/rm').response((input: { value: number }) => ({
+  const responseMapperAPI = API.declareGetAPI('/rm').response<{ value: string }, { value: number }>((input) => ({
     value: (input.value * 2).toString(),
   }))
-  const asyncResponseMapperAPI = API.declareGetAPI('/rm-async').response(async (input: { value: number }) => ({
+  const asyncResponseMapperAPI = API.declareGetAPI('/rm-async').response<{ value: number }>((input) => ({
     value: input.value * 3,
   }))
 

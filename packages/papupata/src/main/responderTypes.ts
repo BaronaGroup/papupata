@@ -3,6 +3,7 @@ import { PapupataMiddleware, TypedRequest } from '.'
 import { TypedQueryType as TypedQueryType2 } from './common-types'
 import { TypedQueryToTypes } from './TypedQueryToTypes'
 import { Method, PartialUnlessArray } from './types'
+import { ZodTypeAny } from 'zod'
 
 export type TypedQueryType = TypedQueryType2
 
@@ -157,4 +158,5 @@ export interface DeclaredAPI<
   apiDeclaration: any
   expressImplementation(req: ExpressRequest, res: Response, next: any): Promise<void>
   path: string
+  requestSchema: ZodTypeAny
 }

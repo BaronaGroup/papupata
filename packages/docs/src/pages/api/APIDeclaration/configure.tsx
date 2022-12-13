@@ -233,7 +233,15 @@ export function ConfigObject() {
             }}
           />
         </PropertyMember>
-        <PropertyMember name="validationBehavior" dataType="ValidationBehavior" availableFrom="2.0.0">
+        <PropertyMember
+          name={
+            <div>
+              <Deprecated>validationBehavior</Deprecated> (deprecated)
+            </div>
+          }
+          dataType="ValidationBehavior"
+          availableFrom="2.0.0"
+        >
           <p>
             Query and path parameter types introduced in 2.0.0 include validations. This option can be used to determine what happens when a
             validation fails, for example a string that cannot be converted to a number is sent in a context where a number is expected.
@@ -250,8 +258,8 @@ export function ConfigObject() {
                 <td>ValidationBehavior.THROW</td>
                 <td>Yes</td>
                 <td>
-                  A PapupataValidationError is thrown if a validation fails. This can be caught by middleware to add your own error handling
-                  to deal with the situation as you prefer.
+                  A PapupataValidationError is thrown if a path or query parameter validation fails. This can be caught by middleware to add
+                  your own error handling to deal with the situation as you prefer.
                 </td>
               </tr>
               <tr>
@@ -266,6 +274,61 @@ export function ConfigObject() {
             </tbody>
           </table>
           <p>Individual APIs can override this behavior using their own validationBehavior option.</p>
+          <p>Deprecated in favor of onValidationFailure, which is more flexible.</p>
+        </PropertyMember>
+        <PropertyMember name={'onValidationFailure'} dataType={'Function'} availableFrom={'2.2.0'}>
+          <p>
+            If given, this function is called when any validation fails within papupata, whether it has to do with path or query parameters,
+            body or response.
+          </p>
+          <p>If not given, the default implementation is to throw a PapupataValidationError, which extends ZodError.</p>
+          <Parameters>
+            <Parameter name={'error'} dataType={'PapupataValidationError'}>
+              An error from the validation; this extends ZodError. Much of the time the right thing to do would be to throw this and let
+              handling defer to typical error handling, but you can of course inspect the error in more detail to figure out what to do.
+            </Parameter>
+            <Parameter name={'value'} dataType={'Object'}>
+              The object being validated. Depending on the exact type of validation taking place, it takes one of the following forms:
+              <Example>{`{body: unknown}`}</Example>
+              <Example>{`{response: unknown}`}</Example>
+              <Example>{`{body: unknown, params: unknown, query: unknown}`}</Example>
+            </Parameter>
+            <Parameter name={'context'} dataType={'Object'}>
+              <p>Additional information about the validation taking place.</p>
+              <Members context={'onValidationFailure'} includeRequiredColumn>
+                <PropertyMember name={'callContext'} dataType={'client | server'} required>
+                  Indicates whether the validation is taking place on the papupata client or server. Can be useful if you use the same
+                  handler function in both domains.
+                </PropertyMember>
+                <PropertyMember name={'dataContext'} dataType={'request | response'} required>
+                  Indicates whether the data being validates is in request or response. It should be noted that if a schema is defined,
+                  validation takes place on both the client and the server, in both directions -- that is, even the server validates its
+                  response.
+                </PropertyMember>
+                <PropertyMember name={'request'} dataType={'Express request'}>
+                  Only available on the server; the express request being served.
+                </PropertyMember>
+                <PropertyMember name={'response'} dataType={'Express response'}>
+                  Only available on the server; the response for the express request being served.
+                </PropertyMember>
+              </Members>
+            </Parameter>
+          </Parameters>
+          <MethodReturnType>
+            <p>There are a few possibilities for what to return:</p>
+            <ul>
+              <li>
+                nothing; an error could be thrown to prevent the request processing from proceeding; this might be the error given in the
+                first parameter
+              </li>
+              <li>skipHandlingRoute (imported from papupata); ignores the request, attempts rerouting to another handler</li>
+              <li>
+                replacement for value; should be in the exact same form as the value given in the parameter. This is used to override the
+                value as needed after validation. If you simply return value, then validation is effectively optional, but you can still for
+                example log validation errors.
+              </li>
+            </ul>
+          </MethodReturnType>
         </PropertyMember>
       </Members>
       <div>*1: For invoking APIs or calling the getURL method on them</div>
@@ -274,3 +337,23 @@ export function ConfigObject() {
     </>
   )
 }
+/*export type ValidationFailureHandler<TRequest, TResponse> = <
+  TType extends
+    | {
+        body: unknown
+        query: unknown
+        params: unknown
+      }
+    | { body: unknown }
+    | { response: unknown }
+>(
+  error: PapupataValidationError,
+  value: TType,
+  context: {
+    dataContext: 'body' | 'response'
+    callContext: 'client' | 'server'
+    request?: TRequest
+    response?: TResponse
+  }
+) => Promise<TType | typeof skipHandlingRoute> | TType | typeof skipHandlingRoute
+*/

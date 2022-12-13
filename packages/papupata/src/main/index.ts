@@ -34,7 +34,8 @@ export interface IAPIDeclaration<RequestType, RouteOptions, RequestOptions> {
 }
 
 export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestOptions = void>
-  implements IAPIDeclaration<RequestType, RouteOptions, RequestOptions> {
+  implements IAPIDeclaration<RequestType, RouteOptions, RequestOptions>
+{
   private config: Config<RequestType, RouteOptions, RequestOptions> | null = null
   public __apis: Array<API> = []
 
@@ -103,7 +104,7 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
 }
 
 export const handleUndefinedResponsesMiddleware = middleware204
-export const skipHandlingRoute = 'papupata-skip-1d7eb033-19f8-47f7-a96c-f07d90d849f2' as any
+export const skipHandlingRoute = 'papupata-skip-1d7eb033-19f8-47f7-a96c-f07d90d849f2' as const
 
 export function convertExpressMiddleware(expressMiddleware: Handler): PapupataMiddleware<any, any> {
   return async (req, res, _route, next) => {

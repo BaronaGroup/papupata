@@ -3,9 +3,9 @@ import fromPairs from 'lodash/fromPairs'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import qs from 'qs'
-import handleQueryParameterTypes, { Mode } from './handleQueryParameterTypes'
+import { Mode, parametersToZodFields } from './parametersToZodFields'
 import PapupataValidationError from './PapupataValidationError'
-import { PapupataRouteOptions, ValidationBehavior } from './config'
+import { PapupataRouteOptions, ValidationBehavior, ValidationFailureHandler } from './config'
 import { IAPIDeclaration, skipHandlingRoute } from './index'
 import {
   CallArgParam,
@@ -29,6 +29,12 @@ import {
 } from './utils/hardCodedParameterSupport'
 import { paramMatchers } from './utils/paramMatchers'
 import { runHandlerChain } from './utils/runHandlerChain'
+import { ResponseOptionsType } from './partiallyDeclaredTypes'
+import { z, ZodTypeAny } from 'zod'
+
+const defaultOnValidationFailure: ValidationFailureHandler<any, any> = (error) => {
+  throw error
+}
 
 export function responder<
   ParamsType extends TypedQueryType,
@@ -47,6 +53,7 @@ export function responder<
   boolQuery: BoolQueryType,
   _bodyPlaceholder: BodyType,
   _bodyPlaceholder2: BodyInputType,
+  bodySchema: ZodTypeAny | undefined,
   method: Method,
   pathWithHardCodedParameters: string,
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
@@ -55,7 +62,11 @@ export function responder<
 ) {
   return {
     response<ResponseType, ResponseTypeOnServer = ResponseType>(
-      mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
+      responseOptions?: ResponseOptionsType<
+        ResponseType,
+        ResponseTypeOnServer,
+        ResponseType extends ZodTypeAny ? ResponseType : undefined
+      >
     ): DeclaredAPI<
       ParamsType,
       QueryType,
@@ -65,16 +76,18 @@ export function responder<
       BodyInputType,
       RequestOptions,
       RequestType,
-      ResponseType,
-      ResponseTypeOnServer,
+      ResponseType extends z.ZodTypeAny ? z.infer<ResponseType> : ResponseType,
+      ResponseTypeOnServer extends z.ZodTypeAny ? z.infer<ResponseTypeOnServer> : ResponseTypeOnServer,
       RouteOptions
     > {
       type MyMock = Mock<CallArgs<ParamsType, QueryType, OptionalQueryType, BoolQueryType, BodyInputType>, ResponseType>
+      type ActualBodyType = BodyType extends z.ZodTypeAny ? z.infer<BodyType> : BodyType
+      type ActualResponseType = ResponseType extends z.ZodTypeAny ? z.infer<ResponseType> : ResponseType
 
       type MockFn = (
         args: CallArgs<ParamsType, QueryType, OptionalQueryType, BoolQueryType, BodyInputType>,
         body?: BodyType
-      ) => ResponseType | Promise<ResponseType>
+      ) => ActualResponseType | Promise<ActualResponseType>
 
       interface ActiveMock extends MockOptions {
         mockFn: MockFn
@@ -89,14 +102,24 @@ export function responder<
 
       let mockImpl: ActiveMock | null = null
 
-      function call(
+      const requestSchema = z.object({
+        body: bodySchema ?? z.unknown(),
+        params: z.object(parametersToZodFields(params, Mode.REQUIRED)),
+        query: z.object({
+          ...parametersToZodFields(query, Mode.REQUIRED),
+          ...parametersToZodFields(boolQuery, Mode.LEGACY_BOOL),
+          ...parametersToZodFields(optionalQuery, Mode.OPTIONAL),
+        }),
+      })
+
+      async function call(
         ...argsArr: CallArgParam<
           CallArgs<ParamsType, QueryType, OptionalQueryType, BoolQueryType, BodyInputType>,
           BodyInputType,
           CallArgsWithoutBody<ParamsType, QueryType, OptionalQueryType, BoolQueryType>,
           RequestOptions
         >
-      ): Promise<ResponseType> {
+      ): Promise<ActualResponseType> {
         const separateBody =
           typeof argsArr[0] !== 'object' ||
           argsArr.length > 2 ||
@@ -113,7 +136,7 @@ export function responder<
             ...pick(args, Object.keys(optionalQuery)),
             ...fromPairs(Object.keys(boolQuery).map((key) => [key, (!!(args as any)[key]).toString()])),
           }),
-          reqBody = separateBody
+          unparsedBody = separateBody
             ? argsArr[0]
             : makeUndefinedIfEmpty(
                 omit(args, [
@@ -123,6 +146,23 @@ export function responder<
                   ...Object.keys(optionalQuery),
                 ])
               )
+
+        let reqBody: ActualBodyType
+        if (bodySchema) {
+          const result = bodySchema.safeParse(unparsedBody)
+          if (result.success) {
+            reqBody = result.data
+          } else {
+            const validationError = PapupataValidationError.fromZodError(result.error)
+            const handledValidationFailure = await (
+              parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure
+            )(validationError, { body: unparsedBody }, { dataContext: 'request', callContext: 'client' })
+            if (handledValidationFailure === skipHandlingRoute) throw new Error('Cannot reroute on client')
+            reqBody = handledValidationFailure.body as any
+          }
+        } else {
+          reqBody = unparsedBody as any
+        }
 
         if (mockImpl) {
           if (!mockImpl.includeBodySeparately) {
@@ -149,7 +189,34 @@ export function responder<
 
         const pathWithParams = getURL(reqParams as any)
 
-        return requestAdapter(method, pathWithParams, reqQuery, reqBody, reqParams, call, requestOptions)
+        const response = await requestAdapter(
+          method,
+          pathWithParams,
+          reqQuery,
+          reqBody,
+          reqParams,
+          call,
+          requestOptions
+        )
+
+        const responseSchema = getResponseSchema()
+
+        if (!responseSchema) {
+          return response
+        }
+        const validatedResponse = responseSchema.safeParse(response)
+        if (validatedResponse.success) return validatedResponse.data
+
+        const handledError = await (parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure)(
+          validatedResponse.error,
+          { response },
+          {
+            callContext: 'client',
+            dataContext: 'response',
+          }
+        )
+        if (handledError === skipHandlingRoute) throw new Error('Cannot reroute on client')
+        return handledError.response as any
       }
 
       function isValidAsNonBodyRequestData(obj: any) {
@@ -206,6 +273,7 @@ export function responder<
       call.implementation = undefined as any
       call.implementationMiddleware = {} as MyMiddlewareContainer
       call.expressImplementation = expressImplementation
+      call.requestSchema = requestSchema
 
       let expressHost: undefined | Application | Router
       const config = parent.getConfig()
@@ -284,8 +352,49 @@ export function responder<
             res.send('Not implemented')
           } else {
             const unmappedValue = await impl(req as any, res)
-            return mapper ? await mapper(unmappedValue) : unmappedValue
+            const mappedValue = await mapResponseValue(unmappedValue)
+            const validatedValue = await validateResponse(mappedValue)
+            return validatedValue
           }
+        }
+
+        async function mapResponseValue(value: any) {
+          if (!responseOptions) return value
+          const mapper =
+            typeof responseOptions === 'function'
+              ? responseOptions
+              : typeof responseOptions === 'object' && 'mapper' in responseOptions
+              ? responseOptions.mapper
+              : undefined
+
+          if (!mapper) return value
+
+          return await mapper(value)
+        }
+
+        async function validateResponse(value: any) {
+          const schema = getResponseSchema()
+          if (!schema) return value
+
+          const result = schema.safeParse(value)
+
+          if (result.success) {
+            return result.data
+          }
+
+          const error = PapupataValidationError.fromZodError(result.error)
+          const errorHandlingResult = await (parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure)(
+            error,
+            { response: value },
+            {
+              dataContext: 'response',
+              callContext: 'server',
+              request: req,
+              response: res,
+            }
+          )
+          if (errorHandlingResult === skipHandlingRoute) throw new Error('Cannot reroute during response')
+          return errorHandlingResult.response
         }
       }
 
@@ -351,20 +460,34 @@ export function responder<
         }
       }
 
-      async function parameterConverterMiddleware(req: any, _res: any, _options: any, next: any) {
+      async function parameterConverterMiddleware(req: any, res: any, _options: any, next: any) {
         const originalQuery = req.query,
           originalParams = req.params,
           originalBody = req.body
         const validationBehavior =
           papupataOptions.validationBehavior ?? parent.getConfig()?.validationBehavior ?? ValidationBehavior.THROW
         try {
-          const convertedParams = handleQueryParameterTypes(req.params, params, Mode.REQUIRED)
-          const queryConversion1 = handleQueryParameterTypes(req.query, query, Mode.REQUIRED)
-          const queryConversion2 = handleQueryParameterTypes(queryConversion1, boolQuery, Mode.LEGACY_BOOL)
-          const convertedQuery = handleQueryParameterTypes(queryConversion2, optionalQuery, Mode.OPTIONAL)
-          req.query = convertedQuery
-          req.params = convertedParams
-          req.body = req.body ?? {}
+          const validationInput = { params: req.params, query: req.query, body: req.body }
+
+          const validationResult = requestSchema.safeParse(validationInput)
+          let stringParams = parent.getConfig()?.strictPathAndQueryParams
+
+          if (validationResult.success) {
+            req.params = { ...(stringParams ? {} : req.params), ...validationResult.data.params }
+            req.query = { ...(stringParams ? {} : req.query), ...validationResult.data.query }
+            req.body = validationResult.data.body
+          } else {
+            const errorHandlingResult = await (parent.getConfig()?.onValidationFailure ?? defaultOnValidationFailure)(
+              PapupataValidationError.fromZodError(validationResult.error),
+              validationInput,
+              { dataContext: 'request', callContext: 'server', request: req, response: res }
+            )
+            if (errorHandlingResult === skipHandlingRoute) return skipHandlingRoute
+            req.params = { ...(stringParams ? {} : req.params), ...errorHandlingResult.params }
+            req.query = { ...(stringParams ? {} : req.query), ...errorHandlingResult.query }
+            req.body = errorHandlingResult.body
+          }
+
           const resp = await next()
           return resp
         } catch (err) {
@@ -378,6 +501,16 @@ export function responder<
           req.params = originalParams
           req.body = originalBody
         }
+      }
+
+      function getResponseSchema() {
+        if (!responseOptions || typeof responseOptions !== 'object') return null
+        if (typeof responseOptions === 'function') return null
+
+        if ('safeParse' in responseOptions) return responseOptions as ZodTypeAny
+        if ('schema' in responseOptions && responseOptions.schema) return responseOptions.schema as ZodTypeAny
+
+        return null
       }
     },
   }
