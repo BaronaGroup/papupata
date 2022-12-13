@@ -363,7 +363,8 @@ export function responder<
           const mapper =
             typeof responseOptions === 'function'
               ? responseOptions
-              : typeof responseOptions === 'object' && 'mapper' in responseOptions
+              : // @ts-ignore TS2638 -- seems to be a false positive
+              typeof responseOptions === 'object' && responseOptions && 'mapper' in responseOptions
               ? responseOptions.mapper
               : undefined
 
@@ -507,6 +508,7 @@ export function responder<
         if (!responseOptions || typeof responseOptions !== 'object') return null
         if (typeof responseOptions === 'function') return null
 
+        // @ts-ignore TS2638 -- seems to be a false positive
         if ('safeParse' in responseOptions) return responseOptions as ZodTypeAny
         if ('schema' in responseOptions && responseOptions.schema) return responseOptions.schema as ZodTypeAny
 

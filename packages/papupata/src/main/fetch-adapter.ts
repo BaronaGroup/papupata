@@ -4,6 +4,7 @@ import qs from 'qs'
 const fetchAdapter: MakeRequestAdapter = async (method: string, url: string, query: any, body: any) => {
   const queryString = qs.stringify(query)
   let urlWithQuery = url + (queryString ? '?' + queryString : '')
+  // @ts-ignore TS2304 -- expecting global fetch
   const response = await fetch(urlWithQuery, {
     method: method,
     headers: {
