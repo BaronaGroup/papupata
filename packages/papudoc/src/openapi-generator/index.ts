@@ -1,6 +1,8 @@
 import { JSONAPI, JSONApiType, OpenApiConfig } from '../common-types'
 import * as fs from 'fs'
 import convertJSONAPIType from '../json-to-schema'
+import { ZodTypeAny } from 'zod'
+import { generateSchema as zodSchemaToOpenapiSchema } from '@anatine/zod-openapi'
 
 export function generateOpenApi(config: OpenApiConfig, apis: JSONAPI[]) {
   const openAPI = { ...config.base }
@@ -58,7 +60,19 @@ export function generateOpenApi(config: OpenApiConfig, apis: JSONAPI[]) {
 
   fs.writeFileSync(config.filename, JSON.stringify(openAPI, null, 2), 'utf-8')
 
-  function determineContentType(type: JSONApiType | null | undefined) {
+  function determineContentType(type: JSONApiType | ZodTypeAny | null | undefined) {
+    if (type && 'parse' in type) {
+      // is zod type
+      const asOpenapiSchema = zodSchemaToOpenapiSchema(type)
+      switch (asOpenapiSchema.type) {
+        case 'object':
+          return 'application/json'
+        case 'string':
+          return 'text/plain'
+        default:
+          return '*/*'
+      }
+    }
     const vagueTypes = ['undefined', 'null', 'void', 'unknown', 'any']
     const textTypes = ['string', 'number', 'boolean', 'stringLiteral', 'numberLiteral', 'booleanLiteral']
     if (!type || vagueTypes.includes(type.type)) return '*/*'
@@ -67,8 +81,12 @@ export function generateOpenApi(config: OpenApiConfig, apis: JSONAPI[]) {
   }
 }
 
-function asSchema(type: JSONApiType | null | undefined) {
+function asSchema(type: JSONApiType | ZodTypeAny | null | undefined) {
   if (!type) return undefined
+  if ('parse' in type) {
+    // is zod type
+    return zodSchemaToOpenapiSchema(type)
+  }
   return convertJSONAPIType(type, 'OpenAPI')
 }
 

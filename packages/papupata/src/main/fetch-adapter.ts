@@ -31,5 +31,3 @@ const fetchAdapter: MakeRequestAdapter = async (method: string, url: string, que
 }
 
 export default fetchAdapter
-
-export const x = 5

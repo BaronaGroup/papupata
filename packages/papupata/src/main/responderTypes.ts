@@ -159,4 +159,6 @@ export interface DeclaredAPI<
   expressImplementation(req: ExpressRequest, res: Response, next: any): Promise<void>
   path: string
   requestSchema: ZodTypeAny
+  bodySchema?: ZodTypeAny
+  responseSchema?: ZodTypeAny
 }

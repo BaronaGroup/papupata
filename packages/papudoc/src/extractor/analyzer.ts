@@ -5,6 +5,7 @@ import { ExtractorConfig } from './config'
 import getRequireableFilename from '../getRequirableFilename'
 import { JSONApiType, TypedQueryType } from '../common-types'
 import { getTagText, getTagTexts, Tag } from './tags'
+import { ZodTypeAny } from 'zod'
 
 export type Analysis = ReturnType<typeof analyze>
 
@@ -23,10 +24,10 @@ export interface AnalyzedAPI {
   body: string
   response: string
   responseType: ts.Type | null
-  responseJSONType: JSONApiType | null
+  responseJSONType: JSONApiType | ZodTypeAny | null
 
   bodyType: ts.Type | null
-  bodyJSONType: JSONApiType | null
+  bodyJSONType: JSONApiType | ZodTypeAny | null
   method: string
   checker: ts.TypeChecker
   parameterTags: Array<{
@@ -97,9 +98,10 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
         url: getURL(singleAPI.route),
         ...singleAPI.route.apiUrlParameters,
         responseType,
-        responseJSONType: responseType && generateTypeJSON(responseType, checker, responseName),
+        responseJSONType:
+          singleAPI.route.responseSchema ?? (responseType && generateTypeJSON(responseType, checker, responseName)),
         bodyType,
-        bodyJSONType: bodyType && generateTypeJSON(bodyType, checker, bodyName),
+        bodyJSONType: singleAPI.route.bodySchema ?? (bodyType && generateTypeJSON(bodyType, checker, bodyName)),
         response: responseType ? generateTypeString(responseType, checker, responseName, 'Inline') : 'unknown',
         body: bodyType ? generateTypeString(bodyType, checker, bodyName, 'Inline') : 'unknown',
         method: singleAPI.route.method,
@@ -233,6 +235,8 @@ interface API {
       boolQuery: TypedQueryType
     }
     method: string
+    bodySchema?: ZodTypeAny
+    responseSchema?: ZodTypeAny
   }
 }
 

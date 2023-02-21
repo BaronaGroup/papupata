@@ -1,3 +1,6 @@
+2.3.0
+- Exposes bodySchema and requestSchema from a declared API
+
 2.2.0
 - Support for zod for parsing bodies and responses
 

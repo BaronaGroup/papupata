@@ -274,6 +274,8 @@ export function responder<
       call.implementationMiddleware = {} as MyMiddlewareContainer
       call.expressImplementation = expressImplementation
       call.requestSchema = requestSchema
+      call.bodySchema = bodySchema
+      call.responseSchema = getResponseSchema() ?? undefined
 
       let expressHost: undefined | Application | Router
       const config = parent.getConfig()
