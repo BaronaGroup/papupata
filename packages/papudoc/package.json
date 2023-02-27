@@ -1,6 +1,6 @@
 {
   "name": "papupata-papudoc",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "API documentation generator for papupata",
   "license": "MIT",
   "author": {
@@ -25,28 +25,14 @@
   },
   "dependencies": {
     "@anatine/zod-openapi": "1.12.0",
-    "@types/express": "4.17.13",
-    "ejs": "3.1.6",
-    "enzyme": "3.11.0",
-    "enzyme-adapter-react-16": "1.15.6",
-    "express": "4.17.1",
     "lodash": "4.17.21",
     "mkdirp": "1.0.4",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-test-renderer": "17.0.2",
-    "styled-components": "5.3.0",
-    "ts-node": "10.0.0"
+    "ts-node": ">= 10.0.0"
   },
   "devDependencies": {
-    "@types/enzyme": "3.10.9",
-    "@types/jsdom": "16.2.13",
     "@types/lodash": "4.14.175",
     "@types/mkdirp": "1.0.2",
     "@types/node": "14.17.20",
-    "@types/react": "17.0.26",
-    "@types/react-dom": "17.0.9",
-    "@types/styled-components": "5.1.12",
     "papupata": "2.3.0",
     "prettier": "2.4.1",
     "serve": "12.0.1",
