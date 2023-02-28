@@ -1,3 +1,6 @@
+2.3.1
+- Mocks are again called synchronously if body is not validated
+
 2.3.0
 - Exposes bodySchema and requestSchema from a declared API
 
