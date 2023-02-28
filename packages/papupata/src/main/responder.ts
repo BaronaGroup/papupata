@@ -147,7 +147,14 @@ export function responder<
                 ])
               )
 
-        let reqBody: ActualBodyType
+        let reqBody: ActualBodyType = unparsedBody as any
+
+        if (mockImpl && !bodySchema) {
+          // This branch is a bit odd, but does give more favourable timing in typical cases, as
+          // before the first await the mock will be called synchronously
+          return handleMock(mockImpl)
+        }
+
         if (bodySchema) {
           const result = bodySchema.safeParse(unparsedBody)
           if (result.success) {
@@ -160,25 +167,9 @@ export function responder<
             if (handledValidationFailure === skipHandlingRoute) throw new Error('Cannot reroute on client')
             reqBody = handledValidationFailure.body as any
           }
-        } else {
-          reqBody = unparsedBody as any
         }
-
         if (mockImpl) {
-          if (!mockImpl.includeBodySeparately) {
-            return Promise.resolve(
-              separateBody ? mockImpl.mockFn({ ...args, ...(reqBody || {}) }) : mockImpl.mockFn(args)
-            )
-          }
-          if (separateBody) {
-            if (typeof reqBody === 'object') {
-              return Promise.resolve(mockImpl.mockFn({ ...args, ...reqBody }, reqBody as any))
-            } else {
-              return Promise.resolve(mockImpl.mockFn(args, reqBody as any))
-            }
-          } else {
-            return Promise.resolve(mockImpl.mockFn(args, reqBody as any))
-          }
+          return handleMock(mockImpl)
         }
 
         const config = parent.getConfig()
@@ -217,6 +208,23 @@ export function responder<
         )
         if (handledError === skipHandlingRoute) throw new Error('Cannot reroute on client')
         return handledError.response as any
+
+        function handleMock(mockImpl: ActiveMock) {
+          if (!mockImpl.includeBodySeparately) {
+            return Promise.resolve(
+              separateBody ? mockImpl.mockFn({ ...args, ...(reqBody || {}) }) : mockImpl.mockFn(args)
+            )
+          }
+          if (separateBody) {
+            if (typeof reqBody === 'object') {
+              return Promise.resolve(mockImpl.mockFn({ ...args, ...reqBody }, reqBody as any))
+            } else {
+              return Promise.resolve(mockImpl.mockFn(args, reqBody as any))
+            }
+          } else {
+            return Promise.resolve(mockImpl.mockFn(args, reqBody as any))
+          }
+        }
       }
 
       function isValidAsNonBodyRequestData(obj: any) {
