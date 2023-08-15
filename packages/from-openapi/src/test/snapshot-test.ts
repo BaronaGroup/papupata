@@ -5,4 +5,5 @@ describe('snapshots', () => {
   it('basic', generatorTest('./basic.yaml'))
   it('body', generatorTest('./with-body.yaml'))
   it('overview', generatorTest('./overview.yaml'))
+  it('no response shema', generatorTest('./no-response-schema.yaml'))
 })

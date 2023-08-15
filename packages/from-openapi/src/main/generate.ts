@@ -148,6 +148,8 @@ export default async function generate(
                 } else {
                   builder.push('unknown')
                 }
+              } else {
+                builder.push('unknown')
               }
             }
           }
