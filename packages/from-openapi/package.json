@@ -1,6 +1,6 @@
 {
   "name": "papupata-from-openapi",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generates papupata API declarations from OpenAPI documents",
   "main": "dist/main/generate",
   "types": "dist/main/generate.d.ts",
