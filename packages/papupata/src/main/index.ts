@@ -19,6 +19,7 @@ export type PapupataMiddleware<RequestType = Request, RouteOptions = void> = Pap
   RequestType,
   RouteOptions
 >
+export * from './responderTypes'
 
 interface API {
   unmock(): void
