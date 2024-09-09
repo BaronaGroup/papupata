@@ -53,7 +53,8 @@
     "./invokers/test": "./dist/main/testInvoker.js",
     "./ValidationError": "./dist/main/PapupataValidationError.js",
     "./config": "./dist/main/config.js",
-    "./dist/main/common-types": "./dist/main/common-types/index.js"
+    "./dist/main/common-types": "./dist/main/common-types/index.js",
+    "./dist/main/responderTypes": "./dist/main/responderTypes.js"
   },
   "scripts": {
     "build": "npx tsc --project tsconfig.json",
