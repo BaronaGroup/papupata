@@ -32,7 +32,7 @@
   "devDependencies": {
     "@types/lodash": "4.14.175",
     "@types/mkdirp": "1.0.2",
-    "@types/node": "14.17.20",
+    "@types/node": "14.18.63",
     "papupata": "2.3.0",
     "prettier": "2.4.1",
     "serve": "12.0.1",
