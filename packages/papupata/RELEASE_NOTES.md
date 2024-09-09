@@ -1,3 +1,6 @@
+2.3.2
+- Fix type error that happened when importing a project using papupata as a dependency
+
 2.3.1
 - Mocks are again called synchronously if body is not validated
 
