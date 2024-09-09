@@ -30,21 +30,6 @@ export const generatedAPI = {
 "
 `;
 
-exports[`snapshots no response shema 1`] = `
-"// Generated using papupata-from-openapi
-import { APIDeclaration } from 'papupata'
-const declarationBase = new APIDeclaration()
-export const generatedAPI = {
-  _papupataApiDeclaration: declarationBase,
-  /**
-   * @summary Reboots the server
-   * @description Optional extended description in CommonMark or HTML.
-   */
-  Reboot: declarationBase.declarePostAPI('/reboot').response<unknown>(),
-}
-"
-`;
-
 exports[`snapshots overview 1`] = `
 "// Generated using papupata-from-openapi
 import { APIDeclaration } from 'papupata'
