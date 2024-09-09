@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "private": true,
   "dependencies": {
-    "@types/jest": "27.0.2",
+    "@types/jest": "27.5.2",
     "@types/node": "14.18.63",
     "@types/react": "17.0.26",
     "@types/react-dom": "17.0.9",
