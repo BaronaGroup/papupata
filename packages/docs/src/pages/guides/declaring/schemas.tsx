@@ -1,9 +1,9 @@
 import '../../../prepare'
 import { Link } from 'gatsby'
 import * as React from 'react'
-import { AvailableFrom, Example, Examples } from '../../../components/api-components'
+import { AvailableFrom, Example } from '../../../components/api-components'
 import Container from '../../../components/Container'
-import { FixedFont, GuideContent, Overview } from '../../../components/guides'
+import { GuideContent, Overview } from '../../../components/guides'
 import Page from '../../../components/Page'
 import IndexLayout from '../../../layouts'
 
