@@ -22,7 +22,7 @@
     "@types/lodash": "4.14.191",
     "@types/qs": "6.9.15",
     "@types/request-promise": "4.1.51",
-    "@types/supertest": "2.0.12",
+    "@types/supertest": "2.0.16",
     "@types/uuid": "9.0.0",
     "body-parser": "1.20.1",
     "express": "4.20.0",
