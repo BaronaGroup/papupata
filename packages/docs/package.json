@@ -40,7 +40,7 @@
     "gatsby-remark-smartypants": "4.3.0",
     "gatsby-source-filesystem": "3.6.0",
     "gatsby-transformer-json": "3.6.0",
-    "gatsby-transformer-remark": "4.3.0",
+    "gatsby-transformer-remark": "5.25.1",
     "gatsby-transformer-sharp": "3.6.0",
     "lodash": "4.17.21",
     "modern-normalize": "1.1.0",
