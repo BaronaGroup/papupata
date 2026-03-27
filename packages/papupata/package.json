@@ -37,7 +37,7 @@
     "zod": "3.20.2"
   },
   "dependencies": {
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "qs": "6.11.0"
   },
   "main": "dist/main/index",
