@@ -17,6 +17,8 @@ See https://baronagroup.github.io/papupata/
 
 ## Development
 
+To get started developing, follow the steps that CI does in [.github/workflows/build.yml.github/workflows/build.yml](.github/workflows/build.yml)
+
 Code styles are done using prettier. Run tests with `npm test`. The example application can and should be expanded to demonstrate how various features work.
 
 ## Releasing
